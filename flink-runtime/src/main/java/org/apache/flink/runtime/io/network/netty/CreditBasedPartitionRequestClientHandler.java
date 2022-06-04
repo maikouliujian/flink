@@ -175,6 +175,7 @@ class CreditBasedPartitionRequestClientHandler extends ChannelInboundHandlerAdap
         }
     }
 
+    //todo channel 读数据
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         try {
@@ -184,6 +185,7 @@ class CreditBasedPartitionRequestClientHandler extends ChannelInboundHandlerAdap
         }
     }
 
+    //todo channel 写数据
     /**
      * Triggered by notifying credit available in the client handler pipeline.
      *
@@ -198,6 +200,7 @@ class CreditBasedPartitionRequestClientHandler extends ChannelInboundHandlerAdap
             clientOutboundMessages.add((ClientOutboundMessage) msg);
 
             if (triggerWrite) {
+                //todo 从tail->head写数据
                 writeAndFlushNextMessageIfPossible(ctx.channel());
             }
         } else if (msg instanceof ConnectionErrorMessage) {
@@ -262,7 +265,7 @@ class CreditBasedPartitionRequestClientHandler extends ChannelInboundHandlerAdap
         // ---- Buffer --------------------------------------------------------
         if (msgClazz == NettyMessage.BufferResponse.class) {
             NettyMessage.BufferResponse bufferOrEvent = (NettyMessage.BufferResponse) msg;
-
+            //todo 通过bufferOrEvent.receiverId找到对应的inputChannel来处理数据
             RemoteInputChannel inputChannel = inputChannels.get(bufferOrEvent.receiverId);
             if (inputChannel == null || inputChannel.isReleased()) {
                 bufferOrEvent.releaseBuffer();
@@ -273,6 +276,7 @@ class CreditBasedPartitionRequestClientHandler extends ChannelInboundHandlerAdap
             }
 
             try {
+                //todo 处理数据
                 decodeBufferOrEvent(inputChannel, bufferOrEvent);
             } catch (Throwable t) {
                 inputChannel.onError(t);
@@ -361,6 +365,7 @@ class CreditBasedPartitionRequestClientHandler extends ChannelInboundHandlerAdap
 
             // It is no need to notify credit or resume data consumption for the released channel.
             if (!outboundMessage.inputChannel.isReleased()) {
+                //todo 组装msg
                 Object msg = outboundMessage.buildMessage();
                 if (msg == null) {
                     continue;
@@ -368,6 +373,9 @@ class CreditBasedPartitionRequestClientHandler extends ChannelInboundHandlerAdap
 
                 // Write and flush and wait until this is done before
                 // trying to continue with the next input channel.
+                //todo 开启执行pipeline中的outbound，最终会调用各msg的write/Flush方法，如NewBufferSize 的 write
+                //todo 一个节点写完成后会触发writeListener
+                //todo 从tail->head写数据
                 channel.writeAndFlush(msg).addListener(writeListener);
 
                 return;
@@ -375,6 +383,7 @@ class CreditBasedPartitionRequestClientHandler extends ChannelInboundHandlerAdap
         }
     }
 
+    //todo netty发送数据的回调
     private class WriteAndFlushNextMessageIfPossibleListener implements ChannelFutureListener {
 
         @Override

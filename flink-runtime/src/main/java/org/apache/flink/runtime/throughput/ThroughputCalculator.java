@@ -63,13 +63,16 @@ public class ThroughputCalculator {
     /** @return Calculated throughput based on the collected data for the last period. */
     public long calculateThroughput() {
         if (measurementStartTime != NOT_TRACKED) {
+            // 获取当前时间
             long absoluteTimeMillis = clock.absoluteTimeMillis();
+            //todo 获取计量吞吐量期间时长
             currentMeasurementTime += absoluteTimeMillis - measurementStartTime;
+            //todo 设置下一个计量起始时间
             measurementStartTime = absoluteTimeMillis;
         }
-
+        //todo 计算吞吐量，方法参数为这段时间累积的数据量和时长
         long throughput = calculateThroughput(currentAccumulatedDataSize, currentMeasurementTime);
-
+        //todo 变量重置
         currentAccumulatedDataSize = currentMeasurementTime = 0;
 
         return throughput;

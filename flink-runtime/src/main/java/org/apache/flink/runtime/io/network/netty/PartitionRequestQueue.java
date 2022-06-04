@@ -171,6 +171,7 @@ class PartitionRequestQueue extends ChannelInboundHandlerAdapter {
         enqueueAvailableReader(reader);
     }
 
+
     void acknowledgeAllRecordsProcessed(InputChannelID receiverId) {
         if (fatalError) {
             return;
@@ -190,6 +191,7 @@ class PartitionRequestQueue extends ChannelInboundHandlerAdapter {
         // ignore the new buffer size.
         NetworkSequenceViewReader reader = allReaders.get(receiverId);
         if (reader != null) {
+            //todo 通知更新newbuffer
             reader.notifyNewBufferSize(newBufferSize);
         }
     }

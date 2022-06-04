@@ -188,7 +188,7 @@ class NettyClient {
                                             channel.alloc(),
                                             serverSocketAddress.getAddress().getCanonicalHostName(),
                                             serverSocketAddress.getPort());
-                            channel.pipeline().addLast("ssl", sslHandler);
+                            channel.pipeline().addLast("ssl", sslHandler);//todo outhander
                         }
                         channel.pipeline().addLast(protocol.getClientChannelHandlers());
                     }

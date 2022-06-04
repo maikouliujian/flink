@@ -75,21 +75,27 @@ public class BufferDebloater {
     }
 
     public OptionalInt recalculateBufferSize(long currentThroughput, int buffersInUse) {
+        // todo 当前实际buffer使用量
         int actualBuffersInUse = Math.max(1, buffersInUse);
+        // todo 计算期待的buffer大小，计算公式为：
+        // 当前吞吐量 x buffer数据被全部消费的期望等待时间（taskmanager.network.memory.buffer-debloat.target）
         long desiredTotalBufferSizeInBytes =
                 (currentThroughput * targetTotalBufferSize) / MILLIS_IN_SECOND;
 
         int newSize =
+                //todo 使用指数滑动平均算法（Exponential moving average），计算新的buffer大小
                 bufferSizeEMA.calculateBufferSize(
                         desiredTotalBufferSizeInBytes, actualBuffersInUse);
-
+        //todo 估算buffer数据完全消费的所需时间
         lastEstimatedTimeToConsumeBuffers =
                 Duration.ofMillis(
                         newSize
                                 * actualBuffersInUse
                                 * MILLIS_IN_SECOND
                                 / Math.max(1, currentThroughput));
-
+        //todo // 如果新计算出的大小和旧的很接近，不更新buffer大小
+        //    // 旧buffer大小乘以taskmanager.network.memory.buffer-debloat.threshold-percentages计算出变化量
+        //    // 如果newSize和旧buffer大小差异值小于变化量，则不更新buffer大小
         boolean skipUpdate = skipUpdate(newSize);
 
         LOG.debug(
@@ -105,6 +111,8 @@ public class BufferDebloater {
                 !skipUpdate);
 
         // Skip update if the new value pretty close to the old one.
+        //todo // Skip update if the new value pretty close to the old one.
+        //    // 如果不需要更新，返回empty
         if (skipUpdate) {
             return OptionalInt.empty();
         }

@@ -413,7 +413,10 @@ public class SingleInputGate extends IndexedInputGate {
         checkState(bufferDebloater != null, "Buffer debloater should not be null");
         final long currentThroughput = throughputCalculator.calculateThroughput();
         bufferDebloater
+                //todo 重新计算buffer大小
                 .recalculateBufferSize(currentThroughput, getBuffersInUseCount())
+                //todo 如果返回的不为empty，说明需要更新buffer size
+                //todo 设置各个channel的buffer size
                 .ifPresent(this::announceBufferSize);
     }
 

@@ -128,6 +128,7 @@ class PartitionRequestServerHandler extends SimpleChannelInboundHandler<NettyMes
                 AckAllUserRecordsProcessed request = (AckAllUserRecordsProcessed) msg;
 
                 outboundQueue.acknowledgeAllRecordsProcessed(request.receiverId);
+                //todo 接收到NewBufferSize的请求
             } else if (msgClazz == NewBufferSize.class) {
                 NewBufferSize request = (NewBufferSize) msg;
 

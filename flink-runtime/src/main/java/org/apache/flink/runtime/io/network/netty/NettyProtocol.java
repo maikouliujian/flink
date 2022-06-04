@@ -79,10 +79,10 @@ public class NettyProtocol {
                         partitionProvider, taskEventPublisher, queueOfPartitionQueues);
 
         return new ChannelHandler[] {
-            messageEncoder,
-            new NettyMessage.NettyMessageDecoder(),
-            serverHandler,
-            queueOfPartitionQueues
+            messageEncoder, //outbound
+            new NettyMessage.NettyMessageDecoder(), //inbound
+            serverHandler,//inbound
+            queueOfPartitionQueues//inbound
         };
     }
 
@@ -122,9 +122,9 @@ public class NettyProtocol {
         NetworkClientHandler networkClientHandler = new CreditBasedPartitionRequestClientHandler();
 
         return new ChannelHandler[] {
-            messageEncoder,
-            new NettyMessageClientDecoderDelegate(networkClientHandler),
-            networkClientHandler
+            messageEncoder,//todo outbound hander
+            new NettyMessageClientDecoderDelegate(networkClientHandler), //inbound
+            networkClientHandler//inbound
         };
     }
 }

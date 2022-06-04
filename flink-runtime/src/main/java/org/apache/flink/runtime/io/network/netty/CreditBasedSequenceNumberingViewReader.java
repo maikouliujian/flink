@@ -172,6 +172,7 @@ class CreditBasedSequenceNumberingViewReader
         return receiverId;
     }
 
+    //todo 通知newbuffersize
     @Override
     public void notifyNewBufferSize(int newBufferSize) {
         subpartitionView.notifyNewBufferSize(newBufferSize);

@@ -27,6 +27,9 @@ import org.apache.flink.runtime.io.network.partition.ResultPartitionID;
 import org.apache.flink.runtime.io.network.partition.consumer.InputChannel;
 import org.apache.flink.runtime.io.network.partition.consumer.InputChannelID;
 import org.apache.flink.runtime.jobgraph.IntermediateResultPartitionID;
+
+import org.apache.flink.shaded.netty4.io.netty.channel.DefaultChannelPipeline;
+
 import org.apache.flink.util.ExceptionUtils;
 
 import org.apache.flink.shaded.netty4.io.netty.buffer.ByteBuf;
@@ -168,6 +171,7 @@ public abstract class NettyMessage {
         public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise)
                 throws IOException {
             if (msg instanceof NettyMessage) {
+                //todo 调用各个NettyMessage的write方法
                 ((NettyMessage) msg).write(ctx, promise, ctx.alloc());
             } else {
                 ctx.write(msg, promise);
@@ -859,6 +863,9 @@ public abstract class NettyMessage {
             this.receiverId = receiverId;
         }
 
+        /**
+         * todo 此方法会在{@link NettyMessage.NettyMessageEncoder}中被调用，msg变成ByteBuf
+         */
         @Override
         void write(ChannelOutboundInvoker out, ChannelPromise promise, ByteBufAllocator allocator)
                 throws IOException {
@@ -870,7 +877,9 @@ public abstract class NettyMessage {
                                 allocator, ID, Integer.BYTES + InputChannelID.getByteBufLength());
                 result.writeInt(bufferSize);
                 receiverId.writeTo(result);
-
+                /***
+                 * todo 继续向pipeline的{@link DefaultChannelPipeline.HeadContext}方向传递
+                 */
                 out.write(result, promise);
             } catch (Throwable t) {
                 handleException(result, null, t);

@@ -109,6 +109,7 @@ public class NettyMessageClientDecoderDelegate extends ChannelInboundHandlerAdap
                     if (!result.isFinished()) {
                         break;
                     }
+                    //todo 向下传递channelread
                     ctx.fireChannelRead(result.getMessage());
 
                     currentDecoder = null;

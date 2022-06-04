@@ -234,6 +234,11 @@ public class NettyPartitionRequestClient implements PartitionRequestClient {
     }
 
     private void sendToChannel(Object message) {
+        //todo 最终调用的是tcpchannel pipeline中注册handler的userEventTriggered方法
+        //todo 在这里是按照inbound顺序依次调用其handler中的userEventTriggered方法
+        //todo 按照NettyProtocol中定义的inbound顺序:NettyMessageClientDecoderDelegate--->CreditBasedPartitionRequestClientHandler
+        //todo 因为NettyMessageClientDecoderDelegate中没有具体实现userEventTriggered方法，按照ChannelInboundHandlerAdapter中的逻辑，会调用
+        //todo next.fireUserEventTriggered方法，则就跳到CreditBasedPartitionRequestClientHandler中的userEventTriggered
         tcpChannel.eventLoop().execute(() -> tcpChannel.pipeline().fireUserEventTriggered(message));
     }
 

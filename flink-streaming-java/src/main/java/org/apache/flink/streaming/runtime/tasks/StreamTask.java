@@ -768,7 +768,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 
         // final check to exit early before starting to run
         ensureNotCanceled();
-
+        //todo 创建buffer debloating定时任务
         scheduleBufferDebloater();
 
         // let the task do its work
@@ -791,15 +791,19 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
                 || !environment
                         .getTaskManagerInfo()
                         .getConfiguration()
+                         //todo 是否开启buffer debloat
                         .getBoolean(TaskManagerOptions.BUFFER_DEBLOAT_ENABLED)) {
             return;
         }
+        // 注册一个事件，在buffer debloat间隔时间之后调用debloat方法
+        // buffer debloat间隔时间由配置项taskmanager.network.memory.buffer-debloat.period决定
         systemTimerService.registerTimer(
                 systemTimerService.getCurrentProcessingTime() + bufferDebloatPeriod,
                 timestamp ->
                         mainMailboxExecutor.execute(
                                 () -> {
                                     debloat();
+                                    //todo 再schedule一个作业，实现周期定时调用
                                     scheduleBufferDebloater();
                                 },
                                 "Buffer size recalculation"));
