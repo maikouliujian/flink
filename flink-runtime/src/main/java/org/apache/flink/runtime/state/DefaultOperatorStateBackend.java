@@ -162,6 +162,7 @@ public class DefaultOperatorStateBackend implements OperatorStateBackend {
                 (BackendWritableBroadcastState<K, V>) registeredBroadcastStates.get(name);
 
         if (broadcastState == null) {
+            //todo 初始化为HeapBroadcastState
             broadcastState =
                     new HeapBroadcastState<>(
                             new RegisteredBroadcastStateBackendMetaInfo<>(

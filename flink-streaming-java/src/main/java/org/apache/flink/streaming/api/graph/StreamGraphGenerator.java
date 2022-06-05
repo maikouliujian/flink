@@ -181,7 +181,8 @@ public class StreamGraphGenerator {
                     Class<? extends Transformation>,
                     TransformationTranslator<?, ? extends Transformation>>
             translatorMap;
-
+    //todo 每一个Transformation都对应一个TransformationTranslator,
+    // TransformationTranslator的作用是将Transformation转化和添加为StreamNode和StreamEdge
     static {
         @SuppressWarnings("rawtypes")
         Map<Class<? extends Transformation>, TransformationTranslator<?, ? extends Transformation>>
@@ -201,6 +202,7 @@ public class StreamGraphGenerator {
         tmp.put(
                 TimestampsAndWatermarksTransformation.class,
                 new TimestampsAndWatermarksTransformationTranslator<>());
+        //todo 广播的处理按照主流是否为keyed分为两种translator
         tmp.put(BroadcastStateTransformation.class, new BroadcastStateTransformationTranslator<>());
         tmp.put(
                 KeyedBroadcastStateTransformation.class,
@@ -302,6 +304,7 @@ public class StreamGraphGenerator {
         this.savepointRestoreSettings = savepointRestoreSettings;
     }
 
+    //todo 生成StreamGraph
     public StreamGraph generate() {
         streamGraph = new StreamGraph(executionConfig, checkpointConfig, savepointRestoreSettings);
         streamGraph.setEnableCheckpointsAfterTasksFinish(
@@ -313,6 +316,7 @@ public class StreamGraphGenerator {
         alreadyTransformed = new IdentityHashMap<>();
 
         for (Transformation<?> transformation : transformations) {
+            //todo 真正执行将transformation依据transformationTransfer转化为StreamNode或者StreamEdge
             transform(transformation);
         }
 
@@ -545,6 +549,7 @@ public class StreamGraphGenerator {
         // call at least once to trigger exceptions about MissingTypeInfo
         transform.getOutputType();
 
+        //todo 寻找transformation对应的transformationTransfer
         @SuppressWarnings("unchecked")
         final TransformationTranslator<?, Transformation<?>> translator =
                 (TransformationTranslator<?, Transformation<?>>)
@@ -552,6 +557,7 @@ public class StreamGraphGenerator {
 
         Collection<Integer> transformedIds;
         if (translator != null) {
+            //todo 真正执行将transformation依据transformationTransfer转化为StreamNode或者StreamEdge
             transformedIds = translate(translator, transform);
         } else {
             transformedIds = legacyTransform(transform);
@@ -819,7 +825,7 @@ public class StreamGraphGenerator {
 
         final TransformationTranslator.Context context =
                 new ContextImpl(this, streamGraph, slotSharingGroup, configuration);
-
+        //todo 根据不同的执行模式调用不同的方法
         return shouldExecuteInBatchMode
                 ? translator.translateForBatch(transform, context)
                 : translator.translateForStreaming(transform, context);

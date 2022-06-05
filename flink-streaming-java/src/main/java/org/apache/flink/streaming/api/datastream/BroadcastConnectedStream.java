@@ -218,6 +218,7 @@ public class BroadcastConnectedStream<IN1, IN2> {
         return transform(function, outTypeInfo);
     }
 
+    //todo
     @Internal
     private <OUT> SingleOutputStreamOperator<OUT> transform(
             final BroadcastProcessFunction<IN1, IN2, OUT> userFunction,
@@ -226,7 +227,7 @@ public class BroadcastConnectedStream<IN1, IN2> {
         // read the output type of the input Transforms to coax out errors about MissingTypeInfo
         nonBroadcastStream.getType();
         broadcastStream.getType();
-
+        //todo 处理的核心逻辑
         final BroadcastStateTransformation<IN1, IN2, OUT> transformation =
                 new BroadcastStateTransformation<>(
                         "Co-Process-Broadcast",

@@ -51,6 +51,7 @@ import java.util.Map;
 import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkState;
 
+
 /**
  * A {@link TwoInputStreamOperator} for executing {@link KeyedBroadcastProcessFunction
  * KeyedBroadcastProcessFunctions}.
@@ -99,17 +100,19 @@ public class CoBroadcastWithKeyedOperator<KS, IN1, IN2, OUT>
 
         this.broadcastStates = new HashMap<>(broadcastStateDescriptors.size());
         for (MapStateDescriptor<?, ?> descriptor : broadcastStateDescriptors) {
+            //todo 获取状态
             broadcastStates.put(
                     descriptor, getOperatorStateBackend().getBroadcastState(descriptor));
         }
-
+        //todo 读写
         rwContext =
                 new ReadWriteContextImpl(
                         getExecutionConfig(),
                         getKeyedStateBackend(),
                         userFunction,
                         broadcastStates,
-                        timerService);
+                          timerService);
+        //todo 只读
         rContext =
                 new ReadOnlyContextImpl(
                         getExecutionConfig(), userFunction, broadcastStates, timerService);
@@ -121,7 +124,7 @@ public class CoBroadcastWithKeyedOperator<KS, IN1, IN2, OUT>
     @Override
     public void processElement1(StreamRecord<IN1> element) throws Exception {
         collector.setTimestamp(element);
-        rContext.setElement(element);
+        rContext.setElement(element);//todo 非广播流只能读
         userFunction.processElement(element.getValue(), rContext, collector);
         rContext.setElement(null);
     }
@@ -129,7 +132,7 @@ public class CoBroadcastWithKeyedOperator<KS, IN1, IN2, OUT>
     @Override
     public void processElement2(StreamRecord<IN2> element) throws Exception {
         collector.setTimestamp(element);
-        rwContext.setElement(element);
+        rwContext.setElement(element);//todo 广播流可读可写
         userFunction.processBroadcastElement(element.getValue(), rwContext, collector);
         rwContext.setElement(null);
     }
@@ -190,7 +193,7 @@ public class CoBroadcastWithKeyedOperator<KS, IN1, IN2, OUT>
             checkState(element != null);
             return element.getTimestamp();
         }
-
+        //todo 返回BroadcastState
         @Override
         public <K, V> BroadcastState<K, V> getBroadcastState(
                 MapStateDescriptor<K, V> stateDescriptor) {
@@ -289,7 +292,7 @@ public class CoBroadcastWithKeyedOperator<KS, IN1, IN2, OUT>
             checkArgument(outputTag != null, "OutputTag must not be null.");
             output.collect(outputTag, new StreamRecord<>(value, element.getTimestamp()));
         }
-
+        //todo 返回ReadOnlyBroadcastState
         @Override
         public <K, V> ReadOnlyBroadcastState<K, V> getBroadcastState(
                 MapStateDescriptor<K, V> stateDescriptor) {

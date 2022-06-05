@@ -76,14 +76,14 @@ public class KeyedBroadcastStateTransformationTranslator<KEY, IN1, IN2, OUT>
 
         return result;
     }
-
+    //todo broadtransformation对应的translator
     @Override
     protected Collection<Integer> translateForStreamingInternal(
             final KeyedBroadcastStateTransformation<KEY, IN1, IN2, OUT> transformation,
             final Context context) {
         checkNotNull(transformation);
         checkNotNull(context);
-
+        //todo 执行CoBroadcastWithKeyedOperator的算子
         CoBroadcastWithKeyedOperator<KEY, IN1, IN2, OUT> operator =
                 new CoBroadcastWithKeyedOperator<>(
                         transformation.getUserFunction(),

@@ -2130,6 +2130,7 @@ public class StreamExecutionEnvironment {
      * @param clearTransformations Whether or not to clear previously registered transformations
      * @return The stream graph representing the transformations
      */
+    //todo 根据transformations集合生成StreamGraph
     @Internal
     public StreamGraph getStreamGraph(boolean clearTransformations) {
         final StreamGraph streamGraph = getStreamGraphGenerator(transformations).generate();

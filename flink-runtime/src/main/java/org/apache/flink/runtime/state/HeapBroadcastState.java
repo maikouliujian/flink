@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+
 /**
  * A {@link BroadcastState Broadcast State} backed a heap-based {@link Map}.
  *
@@ -44,6 +45,7 @@ public class HeapBroadcastState<K, V> implements BackendWritableBroadcastState<K
     private RegisteredBroadcastStateBackendMetaInfo<K, V> stateMetaInfo;
 
     /** The internal map the holds the elements of the state. */
+    //todo broadstate的数据最终存储在java map中
     private final Map<K, V> backingMap;
 
     /** A serializer that allows to perform deep copies of internal map state. */

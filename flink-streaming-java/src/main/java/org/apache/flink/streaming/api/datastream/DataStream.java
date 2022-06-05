@@ -419,6 +419,7 @@ public class DataStream<T> {
         return setConnectionType(new BroadcastPartitioner<T>());
     }
 
+    //todo 广播流的创建
     /**
      * Sets the partitioning of the {@link DataStream} so that the output elements are broadcasted
      * to every parallel instance of the next operation. In addition, it implicitly as many {@link

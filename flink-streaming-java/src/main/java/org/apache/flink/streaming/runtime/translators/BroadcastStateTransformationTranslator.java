@@ -72,7 +72,7 @@ public class BroadcastStateTransformationTranslator<IN1, IN2, OUT>
             final Context context) {
         checkNotNull(transformation);
         checkNotNull(context);
-
+        //todo 执行CoBroadcastWithNonKeyedOperator的算子
         CoBroadcastWithNonKeyedOperator<IN1, IN2, OUT> operator =
                 new CoBroadcastWithNonKeyedOperator<>(
                         transformation.getUserFunction(),
