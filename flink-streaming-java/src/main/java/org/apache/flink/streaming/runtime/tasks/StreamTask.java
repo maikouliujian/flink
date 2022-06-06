@@ -1602,7 +1602,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
                             i,
                             environment,
                             environment.getTaskInfo().getTaskNameWithSubtasks(),
-                            edge.getBufferTimeout()));
+                            edge.getBufferTimeout())); //todo 获取buffertimeout
         }
         return recordWriters;
     }

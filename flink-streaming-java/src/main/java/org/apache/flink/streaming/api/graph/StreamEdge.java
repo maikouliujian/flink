@@ -68,7 +68,7 @@ public class StreamEdge implements Serializable {
     private final String targetOperatorName;
 
     private final StreamExchangeMode exchangeMode;
-
+    //todo bufferTimeout
     private long bufferTimeout;
 
     private boolean supportsUnalignedCheckpoints = true;

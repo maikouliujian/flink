@@ -50,6 +50,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
  * A nonEmptyReader of partition queues, which listens for channel writability changed events before
  * writing and flushing {@link Buffer} instances.
  */
+//todo server端组件
 class PartitionRequestQueue extends ChannelInboundHandlerAdapter {
 
     private static final Logger LOG = LoggerFactory.getLogger(PartitionRequestQueue.class);
@@ -87,6 +88,7 @@ class PartitionRequestQueue extends ChannelInboundHandlerAdapter {
         // TODO This could potentially have a bad performance impact as in the
         // worst case (network consumes faster than the producer) each buffer
         // will trigger a separate event loop task being scheduled.
+        //todo 通过head--->tail调用，最终会调用到233行的userEventTriggered方法
         ctx.executor().execute(() -> ctx.pipeline().fireUserEventTriggered(reader));
     }
 
@@ -119,6 +121,7 @@ class PartitionRequestQueue extends ChannelInboundHandlerAdapter {
         registerAvailableReader(reader);
 
         if (triggerWrite) {
+            //todo 从tail->head写出数据，写给下游
             writeAndFlushNextMessageIfPossible(ctx.channel());
         }
     }

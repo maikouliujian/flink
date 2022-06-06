@@ -42,6 +42,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
  * <p>It also keeps track of available buffers and notifies the outbound handler about
  * non-emptiness, similar to the {@link LocalInputChannel}.
  */
+//todo server端组件
 class CreditBasedSequenceNumberingViewReader
         implements BufferAvailabilityListener, NetworkSequenceViewReader {
 

@@ -86,6 +86,7 @@ public abstract class RecordWriter<T extends IOReadableWritable> implements Avai
         this.serializer = new DataOutputSerializer(128);
 
         checkArgument(timeout >= ExecutionOptions.DISABLED_NETWORK_BUFFER_TIMEOUT);
+        //todo 如果buffertime = 0，则每来一条数据发送一次
         this.flushAlways = (timeout == ExecutionOptions.FLUSH_AFTER_EVERY_RECORD);
         if (timeout == ExecutionOptions.DISABLED_NETWORK_BUFFER_TIMEOUT
                 || timeout == ExecutionOptions.FLUSH_AFTER_EVERY_RECORD) {
@@ -95,7 +96,7 @@ public abstract class RecordWriter<T extends IOReadableWritable> implements Avai
                     taskName == null
                             ? DEFAULT_OUTPUT_FLUSH_THREAD_NAME
                             : DEFAULT_OUTPUT_FLUSH_THREAD_NAME + " for " + taskName;
-
+            //todo OutputFlusher使用专门的线程，异步定时调用targetPartition的flushAll()方法。调用时间间隔就是setBufferTimeout的值。
             outputFlusher = new OutputFlusher(threadName, timeout);
             outputFlusher.start();
         }
@@ -246,6 +247,7 @@ public abstract class RecordWriter<T extends IOReadableWritable> implements Avai
             try {
                 while (running) {
                     try {
+                        //todo timeout就是设置的buffertimeout
                         Thread.sleep(timeout);
                     } catch (InterruptedException e) {
                         // propagate this if we are still running, because it should not happen
@@ -257,6 +259,7 @@ public abstract class RecordWriter<T extends IOReadableWritable> implements Avai
 
                     // any errors here should let the thread come to a halt and be
                     // recognized by the writer
+                    //todo 定期刷写数据
                     flushAll();
                 }
             } catch (Throwable t) {

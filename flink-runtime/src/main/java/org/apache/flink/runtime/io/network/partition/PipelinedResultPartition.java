@@ -185,6 +185,7 @@ public class PipelinedResultPartition extends BufferWritingResultPartition
 
     @Override
     public void flushAll() {
+        //todo 刷写数据
         flushAllSubpartitions(false);
     }
 

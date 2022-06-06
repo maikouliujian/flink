@@ -674,6 +674,7 @@ public class PipelinedSubpartition extends ResultSubpartition
         return Math.max(buffers.size(), 0);
     }
 
+    //todo 刷写数据
     @Override
     public void flush() {
         final boolean notifyDataAvailable;
@@ -764,6 +765,7 @@ public class PipelinedSubpartition extends ResultSubpartition
     private void notifyDataAvailable() {
         final PipelinedSubpartitionView readView = this.readView;
         if (readView != null) {
+            //todo 通知有数据
             readView.notifyDataAvailable();
         }
     }

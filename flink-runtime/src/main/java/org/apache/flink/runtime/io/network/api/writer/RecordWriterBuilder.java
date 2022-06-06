@@ -44,6 +44,7 @@ public class RecordWriterBuilder<T extends IOReadableWritable> {
         return this;
     }
 
+
     public RecordWriter<T> build(ResultPartitionWriter writer) {
         if (selector.isBroadcast()) {
             return new BroadcastRecordWriter<>(writer, timeout, taskName);

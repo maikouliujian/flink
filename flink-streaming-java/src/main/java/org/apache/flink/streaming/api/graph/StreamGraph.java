@@ -773,7 +773,7 @@ public class StreamGraph implements Pipeline {
         node.setStatePartitioners(keySelectors.stream().toArray(KeySelector[]::new));
         node.setStateKeySerializer(keySerializer);
     }
-
+    //todo 给node设置buffertimeout
     public void setBufferTimeout(Integer vertexID, long bufferTimeout) {
         if (getStreamNode(vertexID) != null) {
             getStreamNode(vertexID).setBufferTimeout(bufferTimeout);
