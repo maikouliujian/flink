@@ -27,6 +27,7 @@ import org.apache.flink.table.planner.utils.Logging
 import org.apache.flink.table.runtime.generated.GeneratedOperator
 import org.apache.flink.table.types.logical.LogicalType
 
+
 /** A code generator for generating Flink [[StreamOperator]]s. */
 object OperatorCodeGenerator extends Logging {
 

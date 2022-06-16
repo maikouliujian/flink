@@ -32,6 +32,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 /**
  * A wrapper for generated class, defines a {@link #newInstance(ClassLoader)} method to get an
  * instance by reference objects easily.
+ * todo codegen base class
  */
 public abstract class GeneratedClass<T> implements Serializable {
 
