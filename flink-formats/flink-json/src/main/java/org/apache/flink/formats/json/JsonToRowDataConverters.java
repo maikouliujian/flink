@@ -342,6 +342,7 @@ public class JsonToRowDataConverters implements Serializable {
         return jsonNode -> {
             ObjectNode node = (ObjectNode) jsonNode;
             int arity = fieldNames.length;
+            //todo // 初始化 GenericRowData 这个里面会会设置 FLink RowKind
             GenericRowData row = new GenericRowData(arity);
             for (int i = 0; i < arity; i++) {
                 String fieldName = fieldNames[i];

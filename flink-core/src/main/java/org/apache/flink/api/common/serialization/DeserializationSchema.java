@@ -77,6 +77,7 @@ public interface DeserializationSchema<T> extends Serializable, ResultTypeQuerya
      * @param message The message, as a byte array.
      * @param out The collector to put the resulting messages.
      */
+
     @PublicEvolving
     default void deserialize(byte[] message, Collector<T> out) throws IOException {
         T deserialize = deserialize(message);

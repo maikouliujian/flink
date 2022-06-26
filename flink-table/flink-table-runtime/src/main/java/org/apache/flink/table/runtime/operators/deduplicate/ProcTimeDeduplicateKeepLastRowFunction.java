@@ -77,6 +77,7 @@ public class ProcTimeDeduplicateKeepLastRowFunction
                     isStateTtlEnabled,
                     equaliser);
         } else {
+            //todo 处理有update的逻辑
             processLastRowOnChangelog(
                     input, generateUpdateBefore, state, out, isStateTtlEnabled, equaliser);
         }

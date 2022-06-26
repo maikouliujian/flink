@@ -35,6 +35,7 @@ import java.util
  * changelog stream containing duplicate events. This node normalize such stream into a regular
  * changelog stream that contains INSERT/UPDATE_BEFORE/UPDATE_AFTER/DELETE records without
  * duplication.
+ * //todo changelog
  */
 class StreamPhysicalChangelogNormalize(
     cluster: RelOptCluster,
@@ -67,6 +68,7 @@ class StreamPhysicalChangelogNormalize(
 
   override def translateToExecNode(): ExecNode[_] = {
     val generateUpdateBefore = ChangelogPlanUtils.generateUpdateBefore(this)
+    //todo 产生一个 StreamExecChangelogNormalize
     new StreamExecChangelogNormalize(
       unwrapTableConfig(this),
       uniqueKeys,

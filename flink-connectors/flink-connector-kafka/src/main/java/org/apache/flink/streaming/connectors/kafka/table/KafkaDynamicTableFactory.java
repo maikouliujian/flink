@@ -96,6 +96,7 @@ import static org.apache.flink.streaming.connectors.kafka.table.KafkaConnectorOp
 /**
  * Factory for creating configured instances of {@link KafkaDynamicSource} and {@link
  * KafkaDynamicSink}.
+ *
  */
 @Internal
 public class KafkaDynamicTableFactory

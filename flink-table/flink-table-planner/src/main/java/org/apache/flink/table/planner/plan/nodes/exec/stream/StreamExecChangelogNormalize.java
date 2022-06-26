@@ -152,6 +152,7 @@ public class StreamExecChangelogNormalize extends ExecNodeBase<RowData>
             CountBundleTrigger<RowData> trigger = AggregateUtil.createMiniBatchTrigger(config);
             operator = new KeyedMapBundleOperator<>(processFunction, trigger);
         } else {
+            //todo 本质上是这个function
             ProcTimeDeduplicateKeepLastRowFunction processFunction =
                     new ProcTimeDeduplicateKeepLastRowFunction(
                             rowTypeInfo,

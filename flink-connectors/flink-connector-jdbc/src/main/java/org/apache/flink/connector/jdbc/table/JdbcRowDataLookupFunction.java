@@ -55,6 +55,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /** A lookup function for {@link JdbcDynamicTableSource}. */
+//todo lookup for jdbc
 @Internal
 public class JdbcRowDataLookupFunction extends TableFunction<RowData> {
 

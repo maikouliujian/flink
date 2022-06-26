@@ -94,6 +94,7 @@ public class DeduplicateFunctionHelper {
      * @param generateUpdateBefore whether need to send UPDATE_BEFORE message for updates
      * @param state state of function
      * @param out underlying collector
+     *
      */
     static void processLastRowOnChangelog(
             RowData currentRow,

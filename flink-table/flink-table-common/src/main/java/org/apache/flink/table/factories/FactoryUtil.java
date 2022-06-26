@@ -514,6 +514,7 @@ public final class FactoryUtil {
     @SuppressWarnings("unchecked")
     public static <T extends Factory> T discoverFactory(
             ClassLoader classLoader, Class<T> factoryClass, String factoryIdentifier) {
+        //todo 采用spi加载实现类
         final List<Factory> factories = discoverFactories(classLoader);
 
         final List<Factory> foundFactories =
@@ -527,7 +528,7 @@ public final class FactoryUtil {
                             "Could not find any factories that implement '%s' in the classpath.",
                             factoryClass.getName()));
         }
-
+        //todo 根据factoryIdentifier过滤出本次要加载的factory
         final List<Factory> matchingFactories =
                 foundFactories.stream()
                         .filter(f -> f.factoryIdentifier().equals(factoryIdentifier))
@@ -812,6 +813,7 @@ public final class FactoryUtil {
                                         "Unexpected error when trying to load service provider for factories.",
                                         loadResult.getError());
                             }
+
                             result.add(loadResult.getService());
                         });
         return result;

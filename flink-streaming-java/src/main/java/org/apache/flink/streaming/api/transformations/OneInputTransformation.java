@@ -43,7 +43,7 @@ import java.util.List;
  */
 @Internal
 public class OneInputTransformation<IN, OUT> extends PhysicalTransformation<OUT> {
-
+    //todo 持有上游引用
     private final Transformation<IN> input;
     //todo StreamOperatorFactory中持有算子
     private final StreamOperatorFactory<OUT> operatorFactory;

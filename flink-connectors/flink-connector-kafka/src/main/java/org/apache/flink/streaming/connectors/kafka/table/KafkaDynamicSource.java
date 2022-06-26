@@ -230,6 +230,7 @@ public class KafkaDynamicSource
                 if (watermarkStrategy == null) {
                     watermarkStrategy = WatermarkStrategy.noWatermarks();
                 }
+                //todo 创建kafka source datastream
                 DataStreamSource<RowData> sourceStream =
                         execEnv.fromSource(
                                 kafkaSource, watermarkStrategy, "KafkaSource-" + tableIdentifier);

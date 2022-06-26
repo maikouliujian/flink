@@ -71,6 +71,7 @@ import static org.apache.flink.streaming.connectors.kafka.table.KafkaConnectorOp
 import static org.apache.flink.streaming.connectors.kafka.table.KafkaConnectorOptionsUtil.getSourceTopicPattern;
 import static org.apache.flink.streaming.connectors.kafka.table.KafkaConnectorOptionsUtil.getSourceTopics;
 
+
 /** Upsert-Kafka factory. */
 public class UpsertKafkaDynamicTableFactory
         implements DynamicTableSourceFactory, DynamicTableSinkFactory {
@@ -126,6 +127,7 @@ public class UpsertKafkaDynamicTableFactory
         String keyPrefix = tableOptions.getOptional(KEY_FIELDS_PREFIX).orElse(null);
         Properties properties = getKafkaProperties(context.getCatalogTable().getOptions());
         // always use earliest to keep data integrity
+        //todo：upsert kafka 默认写死从 earilest 开始消费
         StartupMode earliest = StartupMode.EARLIEST;
 
         return new KafkaDynamicSource(

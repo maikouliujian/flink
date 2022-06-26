@@ -963,6 +963,7 @@ object AggregateUtil extends Enumeration {
     (aggBufferNames ++ distinctBufferNames).toArray
   }
 
+
   /** Return true if the given agg rel needs retraction message, else false. */
   def needRetraction(agg: StreamPhysicalRel): Boolean = {
     // need to call `retract()` if input contains update or delete

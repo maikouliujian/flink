@@ -118,6 +118,7 @@ public class JsonRowDataDeserializationSchema implements DeserializationSchema<R
     }
 
     public RowData convertToRowData(JsonNode message) {
+        //todo JsonToRowDataConverters
         return (RowData) runtimeConverter.convert(message);
     }
 
