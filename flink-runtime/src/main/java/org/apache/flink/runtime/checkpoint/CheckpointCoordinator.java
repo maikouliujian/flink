@@ -1697,6 +1697,7 @@ public class CheckpointCoordinator {
                     LOG);
 
             if (operatorCoordinatorRestoreBehavior != OperatorCoordinatorRestoreBehavior.SKIP) {
+                //todo 从checkpoint中重启Coordinators
                 restoreStateToCoordinators(latest.getCheckpointID(), operatorStates);
             }
 
@@ -1984,6 +1985,7 @@ public class CheckpointCoordinator {
             final ByteStreamStateHandle coordinatorState =
                     state == null ? null : state.getCoordinatorState();
             final byte[] bytes = coordinatorState == null ? null : coordinatorState.getData();
+            //todo 从checkpoint中重启coordinator
             coordContext.resetToCheckpoint(checkpointId, bytes);
         }
     }

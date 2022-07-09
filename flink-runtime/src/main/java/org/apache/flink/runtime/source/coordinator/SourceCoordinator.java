@@ -194,6 +194,7 @@ public class SourceCoordinator<SplitT extends SourceSplit, EnumChkT>
                     context.getCoordinatorContext().getUserCodeClassloader();
             try (TemporaryClassLoaderContext ignored =
                     TemporaryClassLoaderContext.of(userCodeClassLoader)) {
+                //todo 创建SplitEnumerator
                 enumerator = source.createEnumerator(context);
             } catch (Throwable t) {
                 ExceptionUtils.rethrowIfFatalErrorOrOOM(t);
@@ -218,6 +219,7 @@ public class SourceCoordinator<SplitT extends SourceSplit, EnumChkT>
         LOG.info("Source coordinator for source {} closed.", operatorName);
     }
 
+    //todo source coordinator处理来自operator的事件
     @Override
     public void handleEventFromOperator(int subtask, OperatorEvent event) {
         runInEventLoop(
@@ -238,6 +240,7 @@ public class SourceCoordinator<SplitT extends SourceSplit, EnumChkT>
                                 subtask,
                                 sourceEvent);
                         enumerator.handleSourceEvent(subtask, sourceEvent);
+                        //todo ReaderRegistrationEvent
                     } else if (event instanceof ReaderRegistrationEvent) {
                         final ReaderRegistrationEvent registrationEvent =
                                 (ReaderRegistrationEvent) event;
@@ -275,6 +278,7 @@ public class SourceCoordinator<SplitT extends SourceSplit, EnumChkT>
                 subtaskId);
     }
 
+    //todo 从checkpoint恢复，重置subtask
     @Override
     public void subtaskReset(int subtaskId, long checkpointId) {
         runInEventLoop(
@@ -361,6 +365,7 @@ public class SourceCoordinator<SplitT extends SourceSplit, EnumChkT>
                 "calling notifyCheckpointAborted()");
     }
 
+    //todo 来自OperatorCoordinatorHolder的调用
     @Override
     public void resetToCheckpoint(final long checkpointId, @Nullable final byte[] checkpointData)
             throws Exception {
@@ -493,7 +498,9 @@ public class SourceCoordinator<SplitT extends SourceSplit, EnumChkT>
     // --------------------- private methods -------------
 
     private void handleReaderRegistrationEvent(ReaderRegistrationEvent event) {
+        //todo 注册 subtask和运行该subtask的机器的关系
         context.registerSourceReader(new ReaderInfo(event.subtaskId(), event.location()));
+        //todo enumerator添加reader
         enumerator.addReader(event.subtaskId());
     }
 

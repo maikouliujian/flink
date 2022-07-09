@@ -51,6 +51,7 @@ public class KafkaRecordEmitter<T>
             sourceOutputWrapper.setSourceOutput(output);
             sourceOutputWrapper.setTimestamp(consumerRecord.timestamp());
             deserializationSchema.deserialize(consumerRecord, sourceOutputWrapper);
+            //todo 更新state中的offset
             splitState.setCurrentOffset(consumerRecord.offset() + 1);
         } catch (Exception e) {
             throw new IOException("Failed to deserialize consumer record due to", e);

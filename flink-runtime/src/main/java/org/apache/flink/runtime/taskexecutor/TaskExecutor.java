@@ -1274,6 +1274,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
         }
 
         try {
+            //todo 处理来自sourcecoordinator的dispatchOperatorEvent rpc请求
             task.deliverOperatorEvent(operatorId, evt);
             return CompletableFuture.completedFuture(Acknowledge.get());
         } catch (Throwable t) {

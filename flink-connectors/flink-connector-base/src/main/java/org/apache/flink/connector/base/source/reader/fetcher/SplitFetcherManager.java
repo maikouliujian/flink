@@ -161,6 +161,7 @@ public abstract class SplitFetcherManager<E, SplitT extends SourceSplit> {
         SplitReader<E, SplitT> splitReader = splitReaderFactory.get();
 
         int fetcherId = fetcherIdGenerator.getAndIncrement();
+        //todo 创建SplitFetcher，负责从外部系统拉取数据
         SplitFetcher<E, SplitT> splitFetcher =
                 new SplitFetcher<>(
                         fetcherId,

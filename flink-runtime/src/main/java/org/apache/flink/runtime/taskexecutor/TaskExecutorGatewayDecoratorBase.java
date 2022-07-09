@@ -221,6 +221,7 @@ public class TaskExecutorGatewayDecoratorBase implements TaskExecutorGateway {
     @Override
     public CompletableFuture<Acknowledge> sendOperatorEventToTask(
             ExecutionAttemptID task, OperatorID operator, SerializedValue<OperatorEvent> evt) {
+        //todo 处理来自source coordinator的dispatchOperatorEvent rpc请求
         return originalGateway.sendOperatorEventToTask(task, operator, evt);
     }
 

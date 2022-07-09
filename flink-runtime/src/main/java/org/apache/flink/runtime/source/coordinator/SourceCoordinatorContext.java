@@ -212,6 +212,7 @@ public class SourceCoordinatorContext<SplitT extends SourceSplit>
                             .assignment()
                             .forEach(
                                     (id, splits) -> {
+                                        //todo 获取subtask的gateway
                                         final OperatorCoordinator.SubtaskGateway gateway =
                                                 getGatewayAndCheckReady(id);
 
@@ -223,7 +224,7 @@ public class SourceCoordinatorContext<SplitT extends SourceSplit>
                                             throw new FlinkRuntimeException(
                                                     "Failed to serialize splits.", e);
                                         }
-
+                                        //todo 向各个subtask发送处理event事件的rpc请求
                                         gateway.sendEvent(addSplitEvent);
                                     });
                     return null;

@@ -111,6 +111,7 @@ public class KafkaSourceReader<T>
                 // If the checkpoint is triggered before the partition starting offsets
                 // is retrieved, do not commit the offsets for those partitions.
                 if (split.getStartingOffset() >= 0) {
+                    //todo 将topic中每个partition的offset记录到offsetsToCommit中
                     offsetsMap.put(
                             split.getTopicPartition(),
                             new OffsetAndMetadata(split.getStartingOffset()));
@@ -139,6 +140,7 @@ public class KafkaSourceReader<T>
         }
 
         ((KafkaSourceFetcherManager) splitFetcherManager)
+                //todo checkpoint完成后提交offset
                 .commitOffsets(
                         committedPartitions,
                         (ignored, e) -> {

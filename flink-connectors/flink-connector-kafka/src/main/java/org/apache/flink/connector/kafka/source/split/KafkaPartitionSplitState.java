@@ -47,10 +47,11 @@ public class KafkaPartitionSplitState extends KafkaPartitionSplit {
      *
      * @return a new KafkaPartitionSplit which uses the current offset as its starting offset.
      */
+    //todo 以CurrentOffset为startingOffset 创建kafka PartitionSplit
     public KafkaPartitionSplit toKafkaPartitionSplit() {
         return new KafkaPartitionSplit(
                 getTopicPartition(),
-                getCurrentOffset(),
+                getCurrentOffset(), //todo CurrentOffset在发送数据时会被更新
                 getStoppingOffset().orElse(NO_STOPPING_OFFSET));
     }
 }

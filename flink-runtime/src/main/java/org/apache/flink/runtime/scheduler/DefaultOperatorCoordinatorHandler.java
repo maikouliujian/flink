@@ -118,6 +118,7 @@ public class DefaultOperatorCoordinatorHandler implements OperatorCoordinatorHan
         }
 
         try {
+            //todo coordinator处理来自算子的事件请求
             coordinator.handleEventFromOperator(exec.getParallelSubtaskIndex(), evt);
         } catch (Throwable t) {
             ExceptionUtils.rethrowIfFatalErrorOrOOM(t);

@@ -73,6 +73,7 @@ class SubtaskGatewayImpl implements OperatorCoordinator.SubtaskGateway {
         }
 
         final Callable<CompletableFuture<Acknowledge>> sendAction =
+                //todo 处理来自source coordinator的dispatchOperatorEvent rpc请求
                 subtaskAccess.createEventSendAction(serializedEvent);
 
         final CompletableFuture<Acknowledge> sendResult = new CompletableFuture<>();

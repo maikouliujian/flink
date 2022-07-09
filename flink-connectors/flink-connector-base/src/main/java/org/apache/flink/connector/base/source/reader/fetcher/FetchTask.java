@@ -55,6 +55,7 @@ class FetchTask<E, SplitT extends SourceSplit> implements SplitFetcherTask {
     public boolean run() throws IOException {
         try {
             if (!isWakenUp() && lastRecords == null) {
+                //todo 读取kafka数据的逻辑
                 lastRecords = splitReader.fetch();
             }
 
@@ -95,6 +96,7 @@ class FetchTask<E, SplitT extends SourceSplit> implements SplitFetcherTask {
             // 2. The records has been enqueued and set to null.
             // In case 1, we just wakeup the split reader. In case 2, the next run might be skipped.
             // In any case, the records won't be enqueued in the ongoing run().
+            //todo 唤醒被阻塞的线程，如kafka consumer
             splitReader.wakeUp();
         } else {
             // The task might be blocking on enqueuing the records, just interrupt.

@@ -65,6 +65,7 @@ class SpecifiedOffsetsInitializer implements OffsetsInitializer, OffsetsInitiali
                 offsets.put(tp, offset);
             }
         }
+        //todo 处理不在范围内的offset
         if (!toLookup.isEmpty()) {
             // First check the committed offsets.
             Map<TopicPartition, Long> committedOffsets =

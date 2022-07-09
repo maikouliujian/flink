@@ -551,6 +551,7 @@ public class JobMaster extends PermanentlyFencedRpcEndpoint<JobMasterId>
 
         try {
             final OperatorEvent evt = serializedEvent.deserializeValue(userCodeLoader);
+            //todo 将OperatorEvent分发给Coordinator
             schedulerNG.deliverOperatorEventToCoordinator(task, operatorID, evt);
             return CompletableFuture.completedFuture(Acknowledge.get());
         } catch (Exception e) {

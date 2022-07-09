@@ -85,6 +85,7 @@ import static org.apache.flink.util.Preconditions.checkState;
  *
  * @param <OUT> The output type of the operator.
  */
+//todo Source的base class
 @Internal
 public class SourceOperator<OUT, SplitT extends SourceSplit> extends AbstractStreamOperator<OUT>
         implements OperatorEventHandler, PushingAsyncDataInput<OUT> {
@@ -282,7 +283,7 @@ public class SourceOperator<OUT, SplitT extends SourceSplit> extends AbstractStr
                         };
                     }
                 };
-
+        //todo 创建sourceReader，调用KafkaSource 130行
         sourceReader = readerFactory.apply(context);
     }
 
@@ -310,12 +311,15 @@ public class SourceOperator<OUT, SplitT extends SourceSplit> extends AbstractStr
         }
 
         // restore the state if necessary.
+        //todo 获取state，如果是从state恢复，则splits不为空，否则splits为空
         final List<SplitT> splits = CollectionUtil.iterableToList(readerState.get());
         if (!splits.isEmpty()) {
+            //todo splits不为空，说明从state恢复
             sourceReader.addSplits(splits);
         }
 
         // Register the reader to the coordinator.
+        //todo 发送给source coordinator ReaderRegistrationEvent事件
         registerReader();
 
         sourceMetricGroup.idlingStarted();
@@ -473,6 +477,7 @@ public class SourceOperator<OUT, SplitT extends SourceSplit> extends AbstractStr
                 new ReportedWatermarkEvent(lastEmittedWatermark));
     }
 
+    //todo 触发checkpoint
     @Override
     public void snapshotState(StateSnapshotContext context) throws Exception {
         long checkpointId = context.getCheckpointId();
@@ -497,14 +502,17 @@ public class SourceOperator<OUT, SplitT extends SourceSplit> extends AbstractStr
         }
     }
 
+    //todo 从checkpoint恢复，先调用initializeState，再调用open
     @Override
     public void initializeState(StateInitializationContext context) throws Exception {
         super.initializeState(context);
         final ListState<byte[]> rawState =
                 context.getOperatorStateStore().getListState(SPLITS_STATE_DESC);
+        //todo 获取state
         readerState = new SimpleVersionedListState<>(rawState, splitSerializer);
     }
 
+    //todo checkpoint完成
     @Override
     public void notifyCheckpointComplete(long checkpointId) throws Exception {
         super.notifyCheckpointComplete(checkpointId);
@@ -517,12 +525,14 @@ public class SourceOperator<OUT, SplitT extends SourceSplit> extends AbstractStr
         sourceReader.notifyCheckpointAborted(checkpointId);
     }
 
+    //todo 处理来自source coordinator的rpc请求
     @SuppressWarnings("unchecked")
     public void handleOperatorEvent(OperatorEvent event) {
         if (event instanceof WatermarkAlignmentEvent) {
             updateMaxDesiredWatermark((WatermarkAlignmentEvent) event);
             checkWatermarkAlignment();
         } else if (event instanceof AddSplitEvent) {
+            //todo 处理AddSplitEvent事件
             handleAddSplitsEvent(((AddSplitEvent<SplitT>) event));
         } else if (event instanceof SourceEventWrapper) {
             sourceReader.handleSourceEvents(((SourceEventWrapper) event).getSourceEvent());
@@ -545,6 +555,7 @@ public class SourceOperator<OUT, SplitT extends SourceSplit> extends AbstractStr
                 // Create output directly for new splits if the main output is already initialized.
                 createOutputForSplits(newSplits);
             }
+            //todo 添加newSplits
             sourceReader.addSplits(newSplits);
         } catch (IOException e) {
             throw new FlinkRuntimeException("Failed to deserialize the splits.", e);

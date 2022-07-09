@@ -48,6 +48,7 @@ class AddSplitsTask<SplitT extends SourceSplit> implements SplitFetcherTask {
         for (SplitT s : splitsToAdd) {
             assignedSplits.put(s.splitId(), s);
         }
+        //todo 从状态恢复或者初始化时，设置开始消费的offset
         splitReader.handleSplitsChanges(new SplitsAddition<>(splitsToAdd));
         return true;
     }

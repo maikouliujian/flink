@@ -248,6 +248,7 @@ public class OperatorCoordinatorHolder
         mainThreadExecutor.execute(() -> coordinator.notifyCheckpointAborted(checkpointId));
     }
 
+    //todo 来自CheckpointCoordinator的调用
     @Override
     public void resetToCheckpoint(long checkpointId, @Nullable byte[] checkpointData)
             throws Exception {

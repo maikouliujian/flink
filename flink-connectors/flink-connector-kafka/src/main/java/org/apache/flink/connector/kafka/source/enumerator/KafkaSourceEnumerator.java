@@ -71,6 +71,7 @@ public class KafkaSourceEnumerator
     private final Boundedness boundedness;
 
     /** Partitions that have been assigned to readers. */
+    //todo 记录已经被分配过的TopicPartition，如果从checkpoint恢复，assignedPartitions是有值的
     private final Set<TopicPartition> assignedPartitions;
 
     /**
@@ -155,8 +156,11 @@ public class KafkaSourceEnumerator
                             + "with partition discovery interval of {} ms.",
                     consumerGroupId,
                     partitionDiscoveryIntervalMs);
+            //todo 定期检查分区
             context.callAsync(
+                    //todo 获取订阅的TopicPartitions
                     this::getSubscribedTopicPartitions,
+                    //todo 检查分区改变
                     this::checkPartitionChanges,
                     0,
                     partitionDiscoveryIntervalMs);
@@ -184,6 +188,7 @@ public class KafkaSourceEnumerator
         }
     }
 
+    //todo 来自于source coordinator对ReaderRegistrationEvent的处理
     @Override
     public void addReader(int subtaskId) {
         LOG.debug(
@@ -234,12 +239,16 @@ public class KafkaSourceEnumerator
             throw new FlinkRuntimeException(
                     "Failed to list subscribed topic partitions due to ", t);
         }
+        //todo 1）如果是第一次启动都是新分区
+        //todo 2）如果是从checkpoint恢复，partitionChange是空的
         final PartitionChange partitionChange = getPartitionChange(fetchedPartitions);
         if (partitionChange.isEmpty()) {
             return;
         }
         context.callAsync(
+                //todo 初始化PartitionSplits
                 () -> initializePartitionSplits(partitionChange),
+                //todo 处理分区改变
                 this::handlePartitionSplitChanges);
     }
 
@@ -263,11 +272,12 @@ public class KafkaSourceEnumerator
      * @return {@link KafkaPartitionSplit} of new partitions and {@link TopicPartition} of removed
      *     partitions
      */
+    //todo 对于第一次启动或者新的分区起作用，对从checkpoint恢复的不起作用
     private PartitionSplitChange initializePartitionSplits(PartitionChange partitionChange) {
         Set<TopicPartition> newPartitions =
                 Collections.unmodifiableSet(partitionChange.getNewPartitions());
         OffsetsInitializer.PartitionOffsetsRetriever offsetsRetriever = getOffsetsRetriever();
-
+        //todo 根据不同的策略初始化分区offset
         Map<TopicPartition, Long> startingOffsets =
                 startingOffsetInitializer.getPartitionOffsets(newPartitions, offsetsRetriever);
         Map<TopicPartition, Long> stoppingOffsets =
@@ -303,6 +313,7 @@ public class KafkaSourceEnumerator
             noMoreNewPartitionSplits = true;
         }
         // TODO: Handle removed partitions.
+        //todo 对于新增的分区添加reader
         addPartitionSplitChangeToPendingAssignments(partitionSplitChange.newPartitionSplits);
         assignPendingPartitionSplits(context.registeredReaders().keySet());
     }
@@ -312,6 +323,7 @@ public class KafkaSourceEnumerator
             Collection<KafkaPartitionSplit> newPartitionSplits) {
         int numReaders = context.currentParallelism();
         for (KafkaPartitionSplit split : newPartitionSplits) {
+            //todo 分配reader
             int ownerReader = getSplitOwner(split.getTopicPartition(), numReaders);
             pendingPartitionSplitAssignment
                     .computeIfAbsent(ownerReader, r -> new HashSet<>())
@@ -334,6 +346,7 @@ public class KafkaSourceEnumerator
 
             // Remove pending assignment for the reader
             final Set<KafkaPartitionSplit> pendingAssignmentForReader =
+                    //todo 从checkpoint恢复pendingPartitionSplitAssignment是空的
                     pendingPartitionSplitAssignment.remove(pendingReader);
 
             if (pendingAssignmentForReader != null && !pendingAssignmentForReader.isEmpty()) {
@@ -351,6 +364,8 @@ public class KafkaSourceEnumerator
         // Assign pending splits to readers
         if (!incrementalAssignment.isEmpty()) {
             LOG.info("Assigning splits to readers {}", incrementalAssignment);
+            //todo 发送给source coordinator assignSplits请求，source coordinator再下发给各subtask
+            //todo 最终会调用到SourceReaderBase的238行 addSplits方法
             context.assignSplits(new SplitsAssignment<>(incrementalAssignment));
         }
 

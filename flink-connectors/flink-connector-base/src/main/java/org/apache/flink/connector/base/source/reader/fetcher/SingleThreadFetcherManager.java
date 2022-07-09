@@ -81,9 +81,11 @@ public class SingleThreadFetcherManager<E, SplitT extends SourceSplit>
     public void addSplits(List<SplitT> splitsToAdd) {
         SplitFetcher<E, SplitT> fetcher = getRunningFetcher();
         if (fetcher == null) {
+            //todo 创建从外部系统拉取数据的SplitFetcher
             fetcher = createSplitFetcher();
             // Add the splits to the fetchers.
             fetcher.addSplits(splitsToAdd);
+            //todo 启动fetcher线程
             startFetcher(fetcher);
         } else {
             fetcher.addSplits(splitsToAdd);

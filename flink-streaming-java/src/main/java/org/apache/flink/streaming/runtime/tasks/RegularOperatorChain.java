@@ -77,6 +77,7 @@ public class RegularOperatorChain<OUT, OP extends StreamOperator<OUT>>
     @Override
     public void dispatchOperatorEvent(OperatorID operator, SerializedValue<OperatorEvent> event)
             throws FlinkException {
+        //todo 处理来自source coordinator的rpc请求
         operatorEventDispatcher.dispatchEventToHandlers(operator, event);
     }
 

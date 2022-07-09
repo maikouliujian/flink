@@ -64,6 +64,7 @@ final class ExecutionSubtaskAccess implements SubtaskAccess {
             SerializedValue<OperatorEvent> event) {
         return () -> {
             final CompletableFuture<Acknowledge> result =
+                    //todo 处理来自source coordinator的dispatchOperatorEvent rpc请求
                     taskExecution.sendOperatorEvent(operator, event);
             futuresTracker.trackFutureWhileIncomplete(result);
             return result;

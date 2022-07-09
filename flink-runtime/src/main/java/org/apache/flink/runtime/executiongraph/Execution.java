@@ -866,6 +866,7 @@ public class Execution
 
         if (slot != null && (getState() == RUNNING || getState() == INITIALIZING)) {
             final TaskExecutorOperatorEventGateway eventGateway = slot.getTaskManagerGateway();
+            //todo 处理来自source coordinator的dispatchOperatorEvent rpc请求
             return eventGateway.sendOperatorEventToTask(getAttemptId(), operatorId, event);
         } else {
             return FutureUtils.completedExceptionally(

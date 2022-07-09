@@ -1484,6 +1484,7 @@ public class Task
 
         if (invokable instanceof CoordinatedTask) {
             try {
+                //todo 处理来自source coordinator的dispatchOperatorEvent rpc请求
                 ((CoordinatedTask) invokable).dispatchOperatorEvent(operator, evt);
             } catch (Throwable t) {
                 ExceptionUtils.rethrowIfFatalErrorOrOOM(t);

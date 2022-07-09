@@ -90,6 +90,7 @@ public class SplitFetcher<E, SplitT extends SourceSplit> implements Runnable {
                         splitReader,
                         elementsQueue,
                         ids -> {
+                            //todo 移除assignedSplits
                             ids.forEach(assignedSplits::remove);
                             splitFinishedHook.accept(ids);
                             LOG.info("Finished reading from splits {}", ids);
@@ -102,6 +103,7 @@ public class SplitFetcher<E, SplitT extends SourceSplit> implements Runnable {
         LOG.info("Starting split fetcher {}", id);
         try {
             while (!closed.get()) {
+                //todo 轮训处理fetcher任务
                 runOnce();
             }
         } catch (Throwable t) {
@@ -121,13 +123,18 @@ public class SplitFetcher<E, SplitT extends SourceSplit> implements Runnable {
     }
 
     /** Package private method to help unit test. */
+    //todo 此任务一直在轮训
     void runOnce() {
         try {
             // The fetch task should run if the split assignment is not empty or there is a split
             // change.
+            //todo 从taskQueue取出来的SplitFetcherTask任务只是为了设置消费的offset，并不会拉取数据
+            //todo 等设置完offset后通过FetchTask才能拉取数据
             if (shouldRunFetchTask()) {
                 runningTask = fetchTask;
             } else {
+                //todo 1、从checkpoint恢复，taskQueue不为空，runningTask为AddSplitsTask
+                //todo 2、第一次启动时，taskQueue不为空，runningTask为AddSplitsTask
                 runningTask = taskQueue.take();
             }
             // Now the running task is not null. If wakeUp() is called after this point,
@@ -171,6 +178,7 @@ public class SplitFetcher<E, SplitT extends SourceSplit> implements Runnable {
      * @param splitsToAdd the splits to add.
      */
     public void addSplits(List<SplitT> splitsToAdd) {
+        //todo splitReader由各子类去实现，如KafkaPartitionSplitReader
         enqueueTask(new AddSplitsTask<>(splitReader, splitsToAdd, assignedSplits));
         wakeUp(true);
     }
@@ -273,6 +281,7 @@ public class SplitFetcher<E, SplitT extends SourceSplit> implements Runnable {
             if (isRunningTask(currentTask)) {
                 // The running task may have missed our wakeUp flag and running, wake it up.
                 LOG.debug("Waking up running task {}", currentTask);
+                //todo 加入AddSplitsTask后，唤醒被阻塞的线程
                 currentTask.wakeUp();
             } else if (!taskOnly) {
                 // The task has not started running yet, and it will not run for this

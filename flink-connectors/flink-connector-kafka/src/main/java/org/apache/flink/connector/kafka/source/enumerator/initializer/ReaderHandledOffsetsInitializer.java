@@ -54,6 +54,7 @@ class ReaderHandledOffsetsInitializer implements OffsetsInitializer, OffsetsInit
         this.offsetResetStrategy = offsetResetStrategy;
     }
 
+
     @Override
     public Map<TopicPartition, Long> getPartitionOffsets(
             Collection<TopicPartition> partitions,

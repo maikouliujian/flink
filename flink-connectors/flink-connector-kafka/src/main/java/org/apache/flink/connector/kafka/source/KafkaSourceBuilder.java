@@ -141,6 +141,7 @@ public class KafkaSourceBuilder<OUT> {
      */
     public KafkaSourceBuilder<OUT> setTopics(List<String> topics) {
         ensureSubscriberIsNull("topics");
+        //todo 一般调用TopicListSubscriber
         subscriber = KafkaSubscriber.getTopicListSubscriber(topics);
         return this;
     }
@@ -401,6 +402,7 @@ public class KafkaSourceBuilder<OUT> {
      *
      * @return a KafkaSource with the settings made for this builder.
      */
+    //todo 创建KafkaSource
     public KafkaSource<OUT> build() {
         sanityCheck();
         parseAndSetRequiredProperties();

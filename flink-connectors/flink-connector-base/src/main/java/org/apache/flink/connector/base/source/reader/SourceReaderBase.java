@@ -73,6 +73,7 @@ public abstract class SourceReaderBase<E, T, SplitT extends SourceSplit, SplitSt
     private final FutureCompletingBlockingQueue<RecordsWithSplitIds<E>> elementsQueue;
 
     /** The state of the splits. */
+    //todo 存放source state
     private final Map<String, SplitContext<T, SplitStateT>> splitStates;
 
     /** The record emitter to handle the records read by the SplitReaders. */
@@ -140,6 +141,7 @@ public abstract class SourceReaderBase<E, T, SplitT extends SourceSplit, SplitSt
             if (record != null) {
                 // emit the record.
                 numRecordsInCounter.inc(1);
+                //todo 发送数据，并更新state中的offset
                 recordEmitter.emitRecord(record, currentSplitOutput, currentSplitContext.state);
                 LOG.trace("Emitted record: {}", record);
 
@@ -230,10 +232,13 @@ public abstract class SourceReaderBase<E, T, SplitT extends SourceSplit, SplitSt
         return splits;
     }
 
+    //todo 1）如果是初始化或者发现新的分区，来自SourceOperator的559行
+    //todo 2）如果从checkpoint恢复，来自SourceOperator的318行
     @Override
     public void addSplits(List<SplitT> splits) {
         LOG.info("Adding split(s) to reader: {}", splits);
         // Initialize the state for each split.
+        //todo 初始化state for each split
         splits.forEach(
                 s ->
                         splitStates.put(

@@ -394,9 +394,11 @@ public abstract class SchedulerBase implements SchedulerNG, CheckpointScheduling
         if (checkpointCoordinator == null) {
             // batch failover case - we only need to notify the OperatorCoordinators,
             // not do any actual state restore
+            //todo 任务全局恢复
             if (isGlobalRecovery) {
                 notifyCoordinatorsOfEmptyGlobalRestore();
             } else {
+                //todo 从checkpoint恢复
                 notifyCoordinatorsOfSubtaskRestore(
                         getInvolvedExecutionJobVerticesAndSubtasks(vertices),
                         OperatorCoordinator.NO_CHECKPOINT);
@@ -457,6 +459,7 @@ public abstract class SchedulerBase implements SchedulerNG, CheckpointScheduling
                 final int subtask =
                         subtasks.removeLast(); // this is how IntArrayList implements iterations
                 for (final OperatorCoordinatorHolder opCoordinator : coordinators) {
+                    //todo 从checkpoint恢复，reset subtask
                     opCoordinator.subtaskReset(subtask, checkpointId);
                 }
             }
@@ -469,6 +472,7 @@ public abstract class SchedulerBase implements SchedulerNG, CheckpointScheduling
                 continue;
             }
             for (final OperatorCoordinatorHolder coordinator : ejv.getOperatorCoordinators()) {
+                //todo coordinator从checkpoint恢复
                 coordinator.resetToCheckpoint(OperatorCoordinator.NO_CHECKPOINT, null);
             }
         }

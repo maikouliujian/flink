@@ -132,6 +132,7 @@ public class KafkaSource<OUT>
         return createReader(readerContext, (ignore) -> {});
     }
 
+    //todo 创建source reader
     @VisibleForTesting
     SourceReader<OUT, KafkaPartitionSplit> createReader(
             SourceReaderContext readerContext, Consumer<Collection<String>> splitFinishedHook)
@@ -156,7 +157,7 @@ public class KafkaSource<OUT>
         Supplier<KafkaPartitionSplitReader> splitReaderSupplier =
                 () -> new KafkaPartitionSplitReader(props, readerContext, kafkaSourceReaderMetrics);
         KafkaRecordEmitter<OUT> recordEmitter = new KafkaRecordEmitter<>(deserializationSchema);
-
+        //todo 创建KafkaSourceReader，用来从kafka读取数据
         return new KafkaSourceReader<>(
                 elementsQueue,
                 new KafkaSourceFetcherManager(
@@ -179,7 +180,7 @@ public class KafkaSource<OUT>
                 enumContext,
                 boundedness);
     }
-
+    //todo 从checkpoint恢复
     @Internal
     @Override
     public SplitEnumerator<KafkaPartitionSplit, KafkaSourceEnumState> restoreEnumerator(

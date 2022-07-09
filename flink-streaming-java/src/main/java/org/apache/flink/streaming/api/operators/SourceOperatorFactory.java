@@ -87,7 +87,7 @@ public class SourceOperatorFactory<OUT> extends AbstractStreamOperatorFactory<OU
         final OperatorID operatorId = parameters.getStreamConfig().getOperatorID();
         final OperatorEventGateway gateway =
                 parameters.getOperatorEventDispatcher().getOperatorEventGateway(operatorId);
-
+        //todo 创建StreamOperator
         final SourceOperator<OUT, ?> sourceOperator =
                 instantiateSourceOperator(
                         source::createReader,

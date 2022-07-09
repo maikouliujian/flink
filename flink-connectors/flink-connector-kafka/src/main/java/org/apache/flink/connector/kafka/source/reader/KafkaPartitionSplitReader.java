@@ -93,10 +93,12 @@ public class KafkaPartitionSplitReader
         this.kafkaSourceReaderMetrics.registerNumBytesIn(consumer);
     }
 
+    //todo 读取kafka数据的逻辑
     @Override
     public RecordsWithSplitIds<ConsumerRecord<byte[], byte[]>> fetch() throws IOException {
         ConsumerRecords<byte[], byte[]> consumerRecords;
         try {
+            //todo 如果在AddSplitsTask中已经设置了offset，则从设置的offset进行消费；否则从topic中记录的offset进行消费
             consumerRecords = consumer.poll(Duration.ofMillis(POLL_TIMEOUT));
         } catch (WakeupException we) {
             return new KafkaPartitionSplitRecords(
@@ -119,6 +121,7 @@ public class KafkaPartitionSplitReader
                 // exist. Keep polling will just block forever.
                 if (lastRecord.offset() >= stoppingOffset - 1) {
                     recordsBySplits.setPartitionStoppingOffset(tp, stoppingOffset);
+                    //todo 读取到最后一条数据
                     finishSplitAtRecord(
                             tp,
                             stoppingOffset,
@@ -150,6 +153,7 @@ public class KafkaPartitionSplitReader
         return recordsBySplits;
     }
 
+    //todo 从状态恢复或者初始化时，设置开始消费的offset
     @Override
     public void handleSplitsChanges(SplitsChange<KafkaPartitionSplit> splitsChange) {
         // Get all the partition assignments and stopping offsets.
@@ -175,12 +179,15 @@ public class KafkaPartitionSplitReader
                 .splits()
                 .forEach(
                         s -> {
+                            //todo topic partition
                             newPartitionAssignments.add(s.getTopicPartition());
+                            //todo 解析开始offset
                             parseStartingOffsets(
                                     s,
                                     partitionsStartingFromEarliest,
                                     partitionsStartingFromLatest,
                                     partitionsStartingFromSpecifiedOffsets);
+                            //todo 解析结束offset
                             parseStoppingOffsets(
                                     s, partitionsStoppingAtLatest, partitionsStoppingAtCommitted);
                             // Track the new topic partition in metrics
@@ -192,6 +199,7 @@ public class KafkaPartitionSplitReader
         consumer.assign(newPartitionAssignments);
 
         // Seek on the newly assigned partitions to their stating offsets.
+        //todo 根据不同的判断条件从不同的offset进行消费
         seekToStartingOffsets(
                 partitionsStartingFromEarliest,
                 partitionsStartingFromLatest,
@@ -204,7 +212,7 @@ public class KafkaPartitionSplitReader
 
         maybeLogSplitChangesHandlingResult(splitsChange);
     }
-
+    //todo 唤醒被阻塞的kafka consumer
     @Override
     public void wakeUp() {
         consumer.wakeup();
@@ -245,6 +253,7 @@ public class KafkaPartitionSplitReader
             // Do nothing here, the consumer will first try to get the committed offsets of
             // these partitions by default.
         } else {
+            //todo 从checkpoint中恢复，state中的StartingOffset是有具体值的
             partitionsStartingFromSpecifiedOffsets.put(tp, split.getStartingOffset());
         }
     }
@@ -287,7 +296,7 @@ public class KafkaPartitionSplitReader
             LOG.trace("Seeking starting offsets to end: {}", partitionsStartingFromLatest);
             consumer.seekToEnd(partitionsStartingFromLatest);
         }
-
+        //todo 从checkpoint恢复走这个逻辑
         if (!partitionsStartingFromSpecifiedOffsets.isEmpty()) {
             LOG.trace(
                     "Seeking starting offsets to specified offsets: {}",

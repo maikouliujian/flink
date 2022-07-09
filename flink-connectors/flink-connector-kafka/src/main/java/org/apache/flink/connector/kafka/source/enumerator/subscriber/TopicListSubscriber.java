@@ -48,6 +48,7 @@ class TopicListSubscriber implements KafkaSubscriber {
     @Override
     public Set<TopicPartition> getSubscribedTopicPartitions(AdminClient adminClient) {
         LOG.debug("Fetching descriptions for topics: {}", topics);
+        //todo 获取topic元数据
         final Map<String, TopicDescription> topicMetadata =
                 getTopicMetadata(adminClient, new HashSet<>(topics));
 

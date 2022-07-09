@@ -124,6 +124,7 @@ public class RpcTaskManagerGateway implements TaskManagerGateway {
     @Override
     public CompletableFuture<Acknowledge> sendOperatorEventToTask(
             ExecutionAttemptID task, OperatorID operator, SerializedValue<OperatorEvent> evt) {
+        //todo 处理来自source coordinator的dispatchOperatorEvent rpc请求
         return taskExecutorGateway.sendOperatorEventToTask(task, operator, evt);
     }
 }
