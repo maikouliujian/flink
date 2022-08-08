@@ -83,6 +83,7 @@ public class ProgramOptions extends CommandLineOptions {
         this.programArgs = extractProgramArgs(line);
 
         List<URL> classpaths = new ArrayList<URL>();
+        //todo 通过命令行解析classpath
         if (line.hasOption(CLASSPATH_OPTION.getOpt())) {
             for (String path : line.getOptionValues(CLASSPATH_OPTION.getOpt())) {
                 try {

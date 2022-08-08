@@ -91,6 +91,7 @@ public final class YarnApplicationClusterEntryPoint extends ApplicationClusterEn
         final Configuration configuration =
                 YarnEntrypointUtils.loadConfiguration(workingDirectory, dynamicParameters, env);
 
+        //todo 获取启动所需要的jar、config、file、classpaths（classpaths是通过解析shell命令行获取的）等【准备执行Program所需要的配置，jar包，运行主类等的必要的信息】
         PackagedProgram program = null;
         try {
             program = getPackagedProgram(configuration);
@@ -100,6 +101,7 @@ public final class YarnApplicationClusterEntryPoint extends ApplicationClusterEn
         }
 
         try {
+            //todo 设置配置，如jar、classpaths等
             configureExecution(configuration, program);
         } catch (Exception e) {
             LOG.error("Could not apply application configuration.", e);

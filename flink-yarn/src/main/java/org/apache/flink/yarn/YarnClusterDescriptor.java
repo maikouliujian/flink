@@ -617,7 +617,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
 
         flinkConfiguration.setString(
                 ClusterEntrypoint.INTERNAL_CLUSTER_EXECUTION_MODE, executionMode.toString());
-
+        //todo 启动appmaster
         ApplicationReport report =
                 startAppMaster(
                         flinkConfiguration,
@@ -792,7 +792,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
 
         org.apache.flink.core.fs.FileSystem.initialize(
                 configuration, PluginUtils.createPluginManagerFromRootFolder(configuration));
-
+        //todo 获取hdfs client
         final FileSystem fs = FileSystem.get(yarnConfiguration);
 
         // hard coded check for the GoogleHDFS client because its not overriding the getScheme()
@@ -809,11 +809,13 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
 
         ApplicationSubmissionContext appContext = yarnApplication.getApplicationSubmissionContext();
 
+        //todo 已经在hdfs上提供的共享文件
         final List<Path> providedLibDirs =
                 Utils.getQualifiedRemoteSharedPaths(configuration, yarnConfiguration);
 
         Path stagingDirPath = getStagingDir(fs);
         FileSystem stagingDirFs = stagingDirPath.getFileSystem(yarnConfiguration);
+        //todo 将client文件上传到hdfs上
         final YarnApplicationFileUploader fileUploader =
                 YarnApplicationFileUploader.from(
                         stagingDirFs,
@@ -894,6 +896,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
 
         // Register all files in provided lib dirs as local resources with public visibility
         // and upload the remaining dependencies as local resources with APPLICATION visibility.
+        //todo 获取要被yarn缓存， 被所有app共享的资源，classpaths：LocalResourceVisibility.PUBLIC级别
         final List<String> systemClassPaths = fileUploader.registerProvidedLocalResources();
         final List<String> uploadedDependencies =
                 fileUploader.registerMultipleLocalResources(
@@ -978,6 +981,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
         }
 
         // Setup jar for ApplicationMaster
+        //todo 上传flink-dist.jar到hdfs【flink-dist.jar中包含了flink的基础核心依赖】
         final YarnLocalResourceDescriptor localResourceDescFlinkJar =
                 fileUploader.uploadFlinkDist(flinkJarPath);
         classPathBuilder
@@ -1156,7 +1160,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
             }
             Utils.setTokensFor(amContainer, pathsToObtainToken, yarnConfiguration, fetchToken);
         }
-
+        //todo appmaster container设置当前app要上传的资源
         amContainer.setLocalResources(fileUploader.getRegisteredLocalResources());
         fileUploader.close();
 

@@ -75,8 +75,9 @@ class YarnApplicationFileUploader implements AutoCloseable {
      * All files in the provided lib directories. The key is the remote path to the file relative to
      * the provided dir and value is remote FileStatus.
      */
+    //todo hdfs中已经提供的共享资源包
     private final Map<String, FileStatus> providedSharedLibs;
-
+    //todo 被yarn缓存，并被所有应用共享的资源
     private final Map<String, LocalResource> localResources;
 
     private final int fileReplication;
@@ -84,7 +85,7 @@ class YarnApplicationFileUploader implements AutoCloseable {
     private final List<Path> remotePaths;
 
     private final List<YarnLocalResourceDescriptor> envShipResourceList;
-
+    //todo flink-dist.jar
     private YarnLocalResourceDescriptor flinkDist;
 
     private YarnApplicationFileUploader(
@@ -177,6 +178,7 @@ class YarnApplicationFileUploader implements AutoCloseable {
         }
 
         final File localFile = new File(resourcePath.toUri().getPath());
+        //todo 上传本地文件
         final Tuple2<Path, Long> remoteFileInfo =
                 uploadLocalFileToRemote(resourcePath, relativeDstPath);
         final YarnLocalResourceDescriptor descriptor =
@@ -198,7 +200,7 @@ class YarnApplicationFileUploader implements AutoCloseable {
         final File localFile = new File(localSrcPath.toUri().getPath());
         checkArgument(
                 !localFile.isDirectory(), "File to copy cannot be a directory: " + localSrcPath);
-
+        //todo 其实就是调用的hdfs的命令上传的
         final Path dst = copyToRemoteApplicationDir(localSrcPath, relativeDstPath, fileReplication);
 
         // Note: If we directly used registerLocalResource(FileSystem, Path) here, we would access
@@ -360,8 +362,10 @@ class YarnApplicationFileUploader implements AutoCloseable {
                     envShipResourceList.add(descriptor);
 
                     if (!isFlinkDistJar(filePath.getName()) && !isPlugin(filePath)) {
+                        //todo classpaths
                         classPaths.add(fileName);
                     } else if (isFlinkDistJar(filePath.getName())) {
+                        //todo flinkdist
                         flinkDist = descriptor;
                     }
                 });
@@ -393,7 +397,7 @@ class YarnApplicationFileUploader implements AutoCloseable {
                 localSrcPath,
                 dst,
                 replicationFactor);
-
+        //todo 其实就是调用的hdfs的命令上传的
         fileSystem.copyFromLocalFile(false, true, localSrcPath, dst);
         fileSystem.setReplication(dst, (short) replicationFactor);
         return dst;

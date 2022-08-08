@@ -17,11 +17,13 @@
 # limitations under the License.
 ################################################################################
 
+
 constructFlinkClassPath() {
     local FLINK_DIST
     local FLINK_CLASSPATH
 
     while read -d '' -r jarfile ; do
+        # ~是对后面的正则表达式匹配的意思
         if [[ "$jarfile" =~ .*/flink-dist[^/]*.jar$ ]]; then
             FLINK_DIST="$FLINK_DIST":"$jarfile"
         elif [[ "$FLINK_CLASSPATH" == "" ]]; then
@@ -82,6 +84,7 @@ manglePath() {
 manglePathList() {
     UNAME=$(uname -s)
     # a path list, for example a java classpath
+    # Cygwin是一个在Window下运行的类似linux的环境
     if [ "${UNAME:0:6}" == "CYGWIN" ]; then
         echo `cygpath -wp "$1"`
     else

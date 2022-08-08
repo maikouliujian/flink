@@ -859,6 +859,7 @@ public class CliFrontend {
 
         String[] programArgs = runOptions.getProgramArgs();
         String jarFilePath = runOptions.getJarFilePath();
+        //todo 获取classpaths
         List<URL> classpaths = runOptions.getClasspaths();
 
         // Get assembler class
@@ -867,6 +868,7 @@ public class CliFrontend {
 
         return PackagedProgram.newBuilder()
                 .setJarFile(jarFile)
+                 //todo 设置classpaths
                 .setUserClassPaths(classpaths)
                 .setEntryPointClassName(entryPointClass)
                 .setConfiguration(configuration)

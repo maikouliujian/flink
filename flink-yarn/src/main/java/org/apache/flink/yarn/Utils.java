@@ -582,6 +582,7 @@ public final class Utils {
 
     static boolean isRemotePath(String path) throws IOException {
         org.apache.flink.core.fs.Path flinkPath = new org.apache.flink.core.fs.Path(path);
+        //todo 是否在hdfs上
         return flinkPath.getFileSystem().isDistributedFS();
     }
 
@@ -642,6 +643,7 @@ public final class Utils {
                 configuration,
                 pathStr -> {
                     final Path path = new Path(pathStr);
+                    //todo
                     return path.getFileSystem(yarnConfiguration).makeQualified(path);
                 });
     }

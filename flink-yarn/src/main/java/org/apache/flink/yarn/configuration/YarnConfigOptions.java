@@ -328,6 +328,7 @@ public class YarnConfigOptions {
                                     + "resource directory. If set to false, Flink"
                                     + " will try to directly locate the keytab from the path itself.");
 
+    //todo flink classpaths的key,是一个list
     public static final ConfigOption<List<String>> PROVIDED_LIB_DIRS =
             key("yarn.provided.lib.dirs")
                     .stringType()

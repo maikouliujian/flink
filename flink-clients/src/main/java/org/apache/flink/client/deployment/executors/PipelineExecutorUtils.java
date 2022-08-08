@@ -61,6 +61,7 @@ public class PipelineExecutorUtils {
                 .ifPresent(strJobID -> jobGraph.setJobID(JobID.fromHexString(strJobID)));
 
         jobGraph.addJars(executionConfigAccessor.getJars());
+        //todo 在jobgraph中设置classpaths
         jobGraph.setClasspaths(executionConfigAccessor.getClasspaths());
         jobGraph.setSavepointRestoreSettings(executionConfigAccessor.getSavepointRestoreSettings());
 

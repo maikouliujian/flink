@@ -91,6 +91,7 @@ public class ApplicationClusterEntryPoint extends ClusterEntrypoint {
                 PipelineOptions.JARS,
                 program.getJobJarAndDependencies(),
                 URL::toString);
+        //todo 给config设置classpaths
         ConfigUtils.encodeCollectionToConfig(
                 configuration,
                 PipelineOptions.CLASSPATHS,
