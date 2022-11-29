@@ -251,6 +251,7 @@ public final class FactoryUtil {
                         isTemporary);
 
         try {
+
             final DynamicTableSinkFactory factory =
                     preferredFactory != null
                             ? preferredFactory
@@ -258,6 +259,7 @@ public final class FactoryUtil {
 
             return factory.createDynamicTableSink(context);
         } catch (Throwable t) {
+
             throw new ValidationException(
                     String.format(
                             "Unable to create a sink for writing table '%s'.\n\n"

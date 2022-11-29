@@ -62,6 +62,7 @@ public enum ClientUtils {
         for (int i = 0; i < classpaths.size(); i++) {
             urls[i + jars.size()] = classpaths.get(i);
         }
+        //todo 必须由ParentFirstLoaderPatterns加载的包
         final String[] alwaysParentFirstLoaderPatterns =
                 CoreOptions.getParentFirstLoaderPatterns(configuration);
         final String classLoaderResolveOrder =

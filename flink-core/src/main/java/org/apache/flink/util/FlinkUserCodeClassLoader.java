@@ -25,6 +25,9 @@ import java.util.function.Consumer;
 /**
  * This class loader accepts a custom handler if an exception occurs in {@link #loadClass(String,
  * boolean)}.
+ *
+ * todo FlinkUserCodeClassLoader继承自URLClassLoader。
+ * todo 因为Flink App的用户代码在运行期才能确定，所以通过URL在JAR包内寻找全限定名对应的类是比较合适的。
  */
 public abstract class FlinkUserCodeClassLoader extends URLClassLoader {
     public static final Consumer<Throwable> NOOP_EXCEPTION_HANDLER = classLoadingException -> {};
@@ -45,6 +48,7 @@ public abstract class FlinkUserCodeClassLoader extends URLClassLoader {
         this.classLoadingExceptionHandler = classLoadingExceptionHandler;
     }
 
+    //todo 加载class的方法！！！
     @Override
     public final Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         try {
@@ -65,6 +69,7 @@ public abstract class FlinkUserCodeClassLoader extends URLClassLoader {
      */
     protected Class<?> loadClassWithoutExceptionHandling(String name, boolean resolve)
             throws ClassNotFoundException {
+        //todo 调度父类的loadClass
         return super.loadClass(name, resolve);
     }
 }

@@ -51,26 +51,32 @@ public final class ChildFirstClassLoader extends FlinkUserCodeClassLoader {
         this.alwaysParentFirstPatterns = alwaysParentFirstPatterns;
     }
 
+    //todo 加载class的核心类
     @Override
     protected Class<?> loadClassWithoutExceptionHandling(String name, boolean resolve)
             throws ClassNotFoundException {
 
         // First, check if the class has already been loaded
+        //todo 调用findLoadedClass()方法检查全限定名name对应的类是否已经加载过，若没有加载过，再继续往下执行。
         Class<?> c = findLoadedClass(name);
 
         if (c == null) {
             // check whether the class should go parent-first
+            //todo alwaysParentFirstPatterns 要求是必须用 parent-first 来加载
             for (String alwaysParentFirstPattern : alwaysParentFirstPatterns) {
                 if (name.startsWith(alwaysParentFirstPattern)) {
+                    //todo 由 parent-first 来加载
                     return super.loadClassWithoutExceptionHandling(name, resolve);
                 }
             }
 
             try {
                 // check the URLs
+                //todo 自己加载
                 c = findClass(name);
             } catch (ClassNotFoundException e) {
                 // let URLClassLoader do it, which will eventually call the parent
+                //todo 如果自己无法加载，交由 parent-first 来加载
                 c = super.loadClassWithoutExceptionHandling(name, resolve);
             }
         } else if (resolve) {
