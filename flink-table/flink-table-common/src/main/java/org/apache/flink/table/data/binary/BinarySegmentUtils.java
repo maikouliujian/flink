@@ -1015,6 +1015,7 @@ public final class BinarySegmentUtils {
      * @param offsetAndNanos the offset of milli-seconds part and nanoseconds
      * @return an instance of {@link TimestampData}
      */
+
     public static TimestampData readTimestampData(
             MemorySegment[] segments, int baseOffset, long offsetAndNanos) {
         final int nanoOfMillisecond = (int) offsetAndNanos;

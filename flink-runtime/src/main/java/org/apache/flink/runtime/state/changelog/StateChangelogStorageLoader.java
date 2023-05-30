@@ -54,7 +54,7 @@ public class StateChangelogStorageLoader {
         // Guarantee to trigger once.
         initialize(null);
     }
-
+    //todo 初始化StateChangelogStorageFactory
     public static void initialize(PluginManager pluginManager) {
         STATE_CHANGELOG_STORAGE_FACTORIES.clear();
         Iterator<StateChangelogStorageFactory> iterator =
@@ -91,7 +91,7 @@ public class StateChangelogStorageLoader {
                 configuration
                         .getString(StateChangelogOptions.STATE_CHANGE_LOG_STORAGE)
                         .toLowerCase();
-
+        //todo 根据配置获取 StateChangelogStorageFactory
         StateChangelogStorageFactory factory = STATE_CHANGELOG_STORAGE_FACTORIES.get(identifier);
         if (factory == null) {
             LOG.warn("Cannot find a factory for changelog storage with name '{}'.", identifier);

@@ -1109,6 +1109,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 
                         if (noUnfinishedInputGates) {
                             result.complete(
+                                    //todo ckp
                                     triggerCheckpointAsyncInMailbox(
                                             checkpointMetaData, checkpointOptions));
                         } else {
@@ -1150,6 +1151,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
                     checkpointMetaData.getCheckpointId(), checkpointOptions);
 
             boolean success =
+                    //todo 执行ckp
                     performCheckpoint(checkpointMetaData, checkpointOptions, checkpointMetrics);
             if (!success) {
                 declineCheckpoint(checkpointMetaData.getCheckpointId());
@@ -1276,7 +1278,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
                                 && this.finalCheckpointMinId == null) {
                             this.finalCheckpointMinId = checkpointMetaData.getCheckpointId();
                         }
-
+                        //todo 执行checkpoint
                         subtaskCheckpointCoordinator.checkpointState(
                                 checkpointMetaData,
                                 checkpointOptions,

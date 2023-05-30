@@ -65,7 +65,8 @@ public abstract class AbstractChangelogStateBackend
     private static final long serialVersionUID = 1000L;
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractChangelogStateBackend.class);
-
+    //todo delegated 授(权); 把(工作、权力等)委托(给下级); 选派(某人做某事)
+    //todo rocksdbbackend
     protected final StateBackend delegatedStateBackend;
 
     /**

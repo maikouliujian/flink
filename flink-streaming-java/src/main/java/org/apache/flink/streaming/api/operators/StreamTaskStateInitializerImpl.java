@@ -161,6 +161,7 @@ public class StreamTaskStateInitializerImpl implements StreamTaskStateInitialize
         try {
 
             // -------------- Keyed State Backend --------------
+            //todo 初始化StatedBackend
             keyedStatedBackend =
                     keyedStatedBackend(
                             keySerializer,
@@ -327,6 +328,7 @@ public class StreamTaskStateInitializerImpl implements StreamTaskStateInitialize
                 backendRestorer =
                         new BackendRestorerProcedure<>(
                                 (stateHandles) ->
+                                        //todo 加载StateBackend
                                         loadStateBackendFromKeyedStateHandles(
                                                         stateBackend,
                                                         environment

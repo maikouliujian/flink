@@ -107,7 +107,7 @@ public class FsStateChangelogStorage extends FsStateChangelogStorageForRecovery
         this.changelogRegistry = changelogRegistry;
         this.uploader = uploader;
     }
-
+    //todo 创建FsStateChangelogWriter
     @Override
     public FsStateChangelogWriter createWriter(
             String operatorID, KeyGroupRange keyGroupRange, MailboxExecutor mailboxExecutor) {

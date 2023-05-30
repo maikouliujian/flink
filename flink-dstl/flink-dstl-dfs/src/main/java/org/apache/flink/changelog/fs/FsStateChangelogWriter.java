@@ -252,6 +252,7 @@ class FsStateChangelogWriter implements StateChangelogWriter<ChangelogStateHandl
                                         closeAllQuietly(
                                                 () -> r.getStreamStateHandle().discardState()));
                     } else {
+                        //todo 上传成功监听回调
                         uploadCompletionListeners.removeIf(listener -> listener.onSuccess(results));
                         for (UploadResult result : results) {
                             SequenceNumber resultSqn = result.sequenceNumber;
@@ -288,6 +289,7 @@ class FsStateChangelogWriter implements StateChangelogWriter<ChangelogStateHandl
         notUploaded.headMap(lowestSequenceNumber, false).clear();
 
         Map<SequenceNumber, UploadResult> toDiscard = uploaded.headMap(to);
+        //todo 删除changelog
         notifyStateNotUsed(toDiscard);
         toDiscard.clear();
     }
@@ -439,6 +441,7 @@ class FsStateChangelogWriter implements StateChangelogWriter<ChangelogStateHandl
     private void notifyStateNotUsed(Map<SequenceNumber, UploadResult> notUsedState) {
         LOG.trace("Uploaded state to discard: {}", notUsedState);
         for (UploadResult result : notUsedState.values()) {
+            //todo 删除
             changelogRegistry.notUsed(result.streamStateHandle, logId);
         }
     }

@@ -353,6 +353,7 @@ public final class BinaryRowData extends BinarySection
 
         int fieldOffset = getFieldOffset(pos);
         final long offsetAndNanoOfMilli = segments[0].getLong(fieldOffset);
+        //todo
         return BinarySegmentUtils.readTimestampData(segments, offset, offsetAndNanoOfMilli);
     }
 

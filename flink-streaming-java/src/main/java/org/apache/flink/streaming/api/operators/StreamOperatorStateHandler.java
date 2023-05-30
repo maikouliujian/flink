@@ -148,7 +148,7 @@ public class StreamOperatorStateHandler {
             }
         }
     }
-
+    //todo ckp
     public OperatorSnapshotFutures snapshotState(
             CheckpointedStreamOperator streamOperator,
             Optional<InternalTimeServiceManager<?>> timeServiceManager,
@@ -169,7 +169,7 @@ public class StreamOperatorStateHandler {
         StateSnapshotContextSynchronousImpl snapshotContext =
                 new StateSnapshotContextSynchronousImpl(
                         checkpointId, timestamp, factory, keyGroupRange, closeableRegistry);
-
+        //todo ckp
         snapshotState(
                 streamOperator,
                 timeServiceManager,
@@ -184,7 +184,7 @@ public class StreamOperatorStateHandler {
 
         return snapshotInProgress;
     }
-
+    //todo 触发ckp
     @VisibleForTesting
     void snapshotState(
             CheckpointedStreamOperator streamOperator,
@@ -227,6 +227,7 @@ public class StreamOperatorStateHandler {
 
             if (null != operatorStateBackend) {
                 snapshotInProgress.setOperatorStateManagedFuture(
+                        //todo 触发operatorStateBackend状态后端的snapshot
                         operatorStateBackend.snapshot(
                                 checkpointId, timestamp, factory, checkpointOptions));
             }
@@ -243,6 +244,7 @@ public class StreamOperatorStateHandler {
 
                 } else {
                     snapshotInProgress.setKeyedStateManagedFuture(
+                            //todo 触发keyedStateBackend状态后端的snapshot
                             keyedStateBackend.snapshot(
                                     checkpointId, timestamp, factory, checkpointOptions));
                 }

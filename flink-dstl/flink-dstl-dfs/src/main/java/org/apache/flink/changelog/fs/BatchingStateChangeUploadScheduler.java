@@ -153,7 +153,7 @@ class BatchingStateChangeUploadScheduler implements StateChangeUploadScheduler {
                     }
                 });
     }
-
+     //todo 上传changelog
     @Override
     public void upload(UploadTask uploadTask) throws IOException {
         Throwable error = getErrorSafe();
@@ -303,6 +303,7 @@ class BatchingStateChangeUploadScheduler implements StateChangeUploadScheduler {
         return new RetryingExecutor.RetriableAction<UploadTasksResult>() {
             @Override
             public UploadTasksResult tryExecute() throws Exception {
+                //todo 真正上传changelog的逻辑
                 return delegate.upload(tasks);
             }
 

@@ -102,6 +102,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  *
  * @param <K> The key by which state is keyed.
  */
+//todo ChangelogKeyedStateBackend【核心类】
 @Internal
 public class ChangelogKeyedStateBackend<K>
         implements CheckpointableKeyedStateBackend<K>,
@@ -132,7 +133,7 @@ public class ChangelogKeyedStateBackend<K>
     private final ExecutionConfig executionConfig;
 
     private final TtlTimeProvider ttlTimeProvider;
-
+    //todo stateChangelogWriter
     private final StateChangelogWriter<? extends ChangelogStateHandle> stateChangelogWriter;
 
     private final Closer closer = Closer.create();
@@ -182,6 +183,7 @@ public class ChangelogKeyedStateBackend<K>
     private short lastCreatedStateId = -1;
 
     /** Checkpoint ID mapped to Materialization ID - used to notify nested backend of completion. */
+    //todo <ckpid,Materialization ID>
     private final NavigableMap<Long, Long> materializationIdByCheckpointId = new TreeMap<>();
 
     private long lastConfirmedMaterializationId = -1L;
@@ -364,6 +366,7 @@ public class ChangelogKeyedStateBackend<K>
         return state;
     }
 
+    //todo 触发ckp
     @Nonnull
     @Override
     public RunnableFuture<SnapshotResult<KeyedStateHandle>> snapshot(
@@ -395,6 +398,7 @@ public class ChangelogKeyedStateBackend<K>
 
         return toRunnableFuture(
                 stateChangelogWriter
+                        //todo 持久化changelog
                         .persist(lastUploadedFrom)
                         .thenApply(
                                 delta ->
@@ -489,6 +493,7 @@ public class ChangelogKeyedStateBackend<K>
     }
 
     // -------------------- CheckpointListener --------------------------------
+    //todo ckp完成
     @Override
     public void notifyCheckpointComplete(long checkpointId) throws Exception {
         if (lastCheckpointId == checkpointId) {
@@ -502,10 +507,12 @@ public class ChangelogKeyedStateBackend<K>
         Long materializationID = materializationIdByCheckpointId.remove(checkpointId);
         if (materializationID != null) {
             if (materializationID > lastConfirmedMaterializationId) {
+                //todo rocksdb 触发ckp完成
                 keyedStateBackend.notifyCheckpointComplete(materializationID);
                 lastConfirmedMaterializationId = materializationID;
             }
         }
+        //todo 将小于等于checkpointId的Materializationid全部清除
         materializationIdByCheckpointId.headMap(checkpointId, true).clear();
     }
 
@@ -636,6 +643,7 @@ public class ChangelogKeyedStateBackend<K>
      * @return a tuple of - future snapshot result from the underlying state backend - a {@link
      *     SequenceNumber} identifying the latest change in the changelog
      */
+    //todo 初始化物化
     public Optional<MaterializationRunnable> initMaterialization() throws Exception {
         SequenceNumber upTo = stateChangelogWriter.nextSequenceNumber();
         SequenceNumber lastMaterializedTo = changelogSnapshotState.lastMaterializedTo();
@@ -655,6 +663,7 @@ public class ChangelogKeyedStateBackend<K>
 
             MaterializationRunnable materializationRunnable =
                     new MaterializationRunnable(
+                            //todo
                             keyedStateBackend.snapshot(
                                     materializationID,
                                     System.currentTimeMillis(),
@@ -698,6 +707,7 @@ public class ChangelogKeyedStateBackend<K>
                         Collections.emptyList(),
                         upTo,
                         materializationID);
+        //todo 物化
         changelogTruncateHelper.materialized(upTo);
     }
 

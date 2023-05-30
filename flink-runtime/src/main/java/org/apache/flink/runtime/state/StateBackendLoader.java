@@ -52,6 +52,7 @@ public class StateBackendLoader {
     private static final Logger LOG = LoggerFactory.getLogger(StateBackendLoader.class);
 
     /** Used for Loading ChangelogStateBackend. */
+    //todo ChangelogStateBackend
     private static final String CHANGELOG_STATE_BACKEND =
             "org.apache.flink.state.changelog.ChangelogStateBackend";
 
@@ -290,6 +291,7 @@ public class StateBackendLoader {
      * @throws IOException May be thrown by the StateBackendFactory when instantiating the state
      *     backend
      */
+    //todo 加载StateBackend
     public static StateBackend fromApplicationOrConfigOrDefault(
             @Nullable StateBackend fromApplication,
             TernaryBoolean isChangelogStateBackendEnableFromApplication,
@@ -311,6 +313,7 @@ public class StateBackendLoader {
 
         StateBackend backend;
         if (enableChangeLog) {
+            //todo 加载ChangelogStateBackend
             backend = wrapStateBackend(rootBackend, classLoader, CHANGELOG_STATE_BACKEND);
             LOG.info(
                     "State backend loader loads {} to delegate {}",
@@ -388,6 +391,7 @@ public class StateBackendLoader {
             return wrapStateBackend(
                     originalStateBackend, classLoader, DEACTIVATED_CHANGELOG_STATE_BACKEND);
         }
+        //todo originalStateBackend就是changelogbackend
         return originalStateBackend;
     }
 

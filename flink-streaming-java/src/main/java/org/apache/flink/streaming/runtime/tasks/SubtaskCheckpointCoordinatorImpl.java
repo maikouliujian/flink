@@ -360,8 +360,10 @@ class SubtaskCheckpointCoordinatorImpl implements SubtaskCheckpointCoordinator {
         Map<OperatorID, OperatorSnapshotFutures> snapshotFutures =
                 new HashMap<>(operatorChain.getNumberOfOperators());
         try {
+            //todo 异步执行ckp
             if (takeSnapshotSync(
                     snapshotFutures, metadata, metrics, options, operatorChain, isRunning)) {
+                //todo 异步上报ckp结果
                 finishAndReportAsync(
                         snapshotFutures,
                         metadata,
@@ -723,6 +725,7 @@ class SubtaskCheckpointCoordinatorImpl implements SubtaskCheckpointCoordinator {
                         checkpointId, checkpointOptions.getTargetLocation());
 
         try {
+            //todo ckp
             operatorChain.snapshotState(
                     operatorSnapshotsInProgress,
                     checkpointMetaData,

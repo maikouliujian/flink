@@ -190,6 +190,7 @@ public class RegularOperatorChain<OUT, OP extends StreamOperator<OUT>>
             if (!operatorWrapper.isClosed()) {
                 operatorSnapshotsInProgress.put(
                         operatorWrapper.getStreamOperator().getOperatorID(),
+                        //todo ckp
                         buildOperatorSnapshotFutures(
                                 checkpointMetaData,
                                 checkpointOptions,
@@ -210,6 +211,7 @@ public class RegularOperatorChain<OUT, OP extends StreamOperator<OUT>>
             CheckpointStreamFactory storage)
             throws Exception {
         OperatorSnapshotFutures snapshotInProgress =
+                //todo
                 checkpointStreamOperator(
                         op, checkpointMetaData, checkpointOptions, storage, isRunning);
         snapshotChannelStates(op, channelStateWriteResult, snapshotInProgress);
@@ -225,6 +227,7 @@ public class RegularOperatorChain<OUT, OP extends StreamOperator<OUT>>
             Supplier<Boolean> isRunning)
             throws Exception {
         try {
+            //todo 每一个算子触发ckp
             return op.snapshotState(
                     checkpointMetaData.getCheckpointId(),
                     checkpointMetaData.getTimestamp(),

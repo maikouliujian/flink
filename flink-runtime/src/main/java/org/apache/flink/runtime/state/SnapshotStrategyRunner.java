@@ -88,6 +88,7 @@ public final class SnapshotStrategyRunner<T extends StateObject, SR extends Snap
                 new AsyncSnapshotCallable<SnapshotResult<T>>() {
                     @Override
                     protected SnapshotResult<T> callInternal() throws Exception {
+                        //todo 获取ckp的句柄
                         return asyncSnapshot.get(snapshotCloseableRegistry);
                     }
 

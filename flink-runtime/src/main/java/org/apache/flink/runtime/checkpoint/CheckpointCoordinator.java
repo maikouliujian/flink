@@ -514,6 +514,7 @@ public class CheckpointCoordinator {
 
         CheckpointTriggerRequest request =
                 new CheckpointTriggerRequest(props, externalSavepointLocation, isPeriodic);
+        //todo startTriggeringCheckpoint
         chooseRequestToExecute(request).ifPresent(this::startTriggeringCheckpoint);
         return request.onCompletionPromise;
     }
@@ -652,6 +653,7 @@ public class CheckpointCoordinator {
                                                 onTriggerFailure(checkpoint, throwable);
                                             }
                                         } else {
+                                            //todo 发起ckp请求
                                             triggerCheckpointRequest(
                                                     request, timestamp, checkpoint);
                                         }
@@ -685,6 +687,7 @@ public class CheckpointCoordinator {
                             CheckpointFailureReason.TRIGGER_CHECKPOINT_FAILURE,
                             checkpoint.getFailureCause()));
         } else {
+            //todo
             triggerTasks(request, timestamp, checkpoint)
                     .exceptionally(
                             failure -> {
@@ -752,6 +755,7 @@ public class CheckpointCoordinator {
                         execution.triggerSynchronousSavepoint(
                                 checkpointId, timestamp, checkpointOptions));
             } else {
+                //todo triggerCheckpoint
                 acks.add(execution.triggerCheckpoint(checkpointId, timestamp, checkpointOptions));
             }
         }
@@ -1907,6 +1911,7 @@ public class CheckpointCoordinator {
             stopCheckpointScheduler();
 
             periodicScheduling = true;
+            //todo 触发checkpoint的入口
             currentPeriodicTrigger = scheduleTriggerWithDelay(getRandomInitDelay());
         }
     }
@@ -2028,6 +2033,7 @@ public class CheckpointCoordinator {
         @Override
         public void run() {
             try {
+                //todo 定期执行ckp
                 triggerCheckpoint(true);
             } catch (Exception e) {
                 LOG.error("Exception while triggering checkpoint for job {}.", job, e);

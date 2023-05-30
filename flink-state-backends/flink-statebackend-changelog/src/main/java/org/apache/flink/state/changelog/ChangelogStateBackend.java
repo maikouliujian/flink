@@ -59,6 +59,7 @@ public class ChangelogStateBackend extends AbstractChangelogStateBackend
             throws IllegalConfigurationException {
 
         if (delegatedStateBackend instanceof ConfigurableStateBackend) {
+            //todo 创建ChangelogStateBackend
             return new ChangelogStateBackend(
                     ((ConfigurableStateBackend) delegatedStateBackend)
                             .configure(config, classLoader));
@@ -111,6 +112,7 @@ public class ChangelogStateBackend extends AbstractChangelogStateBackend
 
         ChangelogKeyedStateBackend<K> changelogKeyedStateBackend =
                 (ChangelogKeyedStateBackend<K>) keyedStateBackend;
+        //todo 周期性物化管理
         PeriodicMaterializationManager periodicMaterializationManager =
                 new PeriodicMaterializationManager(
                         checkNotNull(env.getMainMailboxExecutor()),
@@ -129,7 +131,7 @@ public class ChangelogStateBackend extends AbstractChangelogStateBackend
         // However PeriodicMaterializationManager can not be part of keyedStateBackend
         // because of cyclic reference
         changelogKeyedStateBackend.registerCloseable(periodicMaterializationManager);
-
+        //todo 启动
         periodicMaterializationManager.start();
 
         return keyedStateBackend;

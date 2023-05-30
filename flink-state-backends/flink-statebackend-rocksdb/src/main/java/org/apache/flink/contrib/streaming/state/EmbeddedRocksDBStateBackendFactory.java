@@ -30,6 +30,7 @@ public class EmbeddedRocksDBStateBackendFactory
     @Override
     public EmbeddedRocksDBStateBackend createFromConfig(
             ReadableConfig config, ClassLoader classLoader) throws IllegalConfigurationException {
+        //todo EmbeddedRocksDBStateBackend
         return new EmbeddedRocksDBStateBackend().configure(config, classLoader);
     }
 }

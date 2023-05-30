@@ -44,6 +44,7 @@ public class FsStateChangelogStorageFactory implements StateChangelogStorageFact
         return IDENTIFIER;
     }
 
+    //todo 获取FsStateChangelogStorage
     @Override
     public StateChangelogStorage<?> createStorage(
             Configuration configuration, TaskManagerJobMetricGroup metricGroup) throws IOException {
@@ -61,6 +62,7 @@ public class FsStateChangelogStorageFactory implements StateChangelogStorageFact
             Duration uploadTimeout,
             int maxUploadAttempts) {
         configuration.setString(STATE_CHANGE_LOG_STORAGE, IDENTIFIER);
+        //todo changelog存储路径
         configuration.setString(BASE_PATH, newFolder.getAbsolutePath());
         configuration.set(UPLOAD_TIMEOUT, uploadTimeout);
         configuration.set(RETRY_MAX_ATTEMPTS, maxUploadAttempts);

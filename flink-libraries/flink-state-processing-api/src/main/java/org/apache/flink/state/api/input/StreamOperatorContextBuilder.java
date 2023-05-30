@@ -103,6 +103,7 @@ class StreamOperatorContextBuilder {
 
         StateBackend stateBackend;
         try {
+            //todo 加载StateBackend
             stateBackend =
                     StateBackendLoader.fromApplicationOrConfigOrDefault(
                             applicationStateBackend,
@@ -113,7 +114,7 @@ class StreamOperatorContextBuilder {
         } catch (DynamicCodeLoadingException e) {
             throw new IOException("Failed to load state backend", e);
         }
-
+        //todo StreamTaskStateInitializer
         StreamTaskStateInitializer initializer =
                 new StreamTaskStateInitializerImpl(environment, stateBackend);
 

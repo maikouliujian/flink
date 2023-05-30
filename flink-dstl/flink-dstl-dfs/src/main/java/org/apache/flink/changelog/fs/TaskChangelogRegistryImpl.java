@@ -73,6 +73,7 @@ class TaskChangelogRegistryImpl implements TaskChangelogRegistry {
         backends.remove(backendId);
         if (backends.isEmpty() && entries.remove(key) != null) {
             LOG.debug("state is not used by any backend, schedule discard: {}/{}", key, handle);
+            //todo 根据句柄删除changelog
             scheduleDiscard(handle);
         }
     }
@@ -82,6 +83,7 @@ class TaskChangelogRegistryImpl implements TaskChangelogRegistry {
                 () -> {
                     try {
                         LOG.trace("discard uploaded but unused state changes: {}", handle);
+                        //todo 根据句柄删除changelog
                         handle.discardState();
                     } catch (Exception e) {
                         LOG.warn("unable to discard uploaded but unused state changes", e);

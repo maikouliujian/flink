@@ -148,7 +148,7 @@ class PeriodicMaterializationManager implements Closeable {
                     if (materializationRunnableOptional.isPresent()) {
                         MaterializationRunnable runnable = materializationRunnableOptional.get();
                         asyncOperationsThreadPool.execute(
-                                () ->
+                                () ->   //todo 异步物化
                                         asyncMaterializationPhase(
                                                 runnable.getMaterializationRunnable(),
                                                 runnable.getMaterializationID(),
@@ -182,6 +182,7 @@ class PeriodicMaterializationManager implements Closeable {
                                 mailboxExecutor.execute(
                                         () -> {
                                             try {
+                                                //todo 更新快照
                                                 keyedStateBackend.updateChangelogSnapshotState(
                                                         snapshotResult, materializationID, upTo);
                                                 metrics.reportCompletedMaterialization();
@@ -192,7 +193,7 @@ class PeriodicMaterializationManager implements Closeable {
                                         "Task {} update materializedSnapshot up to changelog sequence number: {}",
                                         subtaskName,
                                         upTo);
-
+                                //todo 下一次物化调度
                                 scheduleNextMaterialization();
                             } else if (throwable instanceof CancellationException) {
                                 // can happen e.g. due to task cancellation

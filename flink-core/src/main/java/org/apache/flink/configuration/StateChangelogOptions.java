@@ -28,6 +28,7 @@ import java.time.Duration;
 public class StateChangelogOptions {
 
     @Documentation.Section(Documentation.Sections.STATE_BACKEND_CHANGELOG)
+    //todo 周期性物化间隔【10min】
     public static final ConfigOption<Duration> PERIODIC_MATERIALIZATION_INTERVAL =
             ConfigOptions.key("state.backend.changelog.periodic-materialize.interval")
                     .durationType()

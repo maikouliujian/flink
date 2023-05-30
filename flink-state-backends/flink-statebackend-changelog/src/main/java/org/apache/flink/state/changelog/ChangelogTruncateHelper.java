@@ -92,6 +92,7 @@ class ChangelogTruncateHelper {
                     to,
                     subsumedUpTo,
                     materializedUpTo);
+            //todo 删除changelog
             stateChangelogWriter.truncate(to);
         }
     }
