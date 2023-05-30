@@ -175,6 +175,7 @@ class BatchingStateChangeUploadScheduler implements StateChangeUploadScheduler {
                 }
                 scheduledBytesCounter += size;
                 scheduled.add(wrapWithSizeUpdate(uploadTask, size));
+                //todo
                 scheduleUploadIfNeeded();
             }
         } catch (InterruptedException e) {
@@ -211,6 +212,7 @@ class BatchingStateChangeUploadScheduler implements StateChangeUploadScheduler {
             }
             drainAndSave();
         } else if (scheduledFuture == null) {
+            //todo drainAndSave
             scheduledFuture = scheduler.schedule(this::drainAndSave, scheduleDelayMs, MILLISECONDS);
         }
     }
@@ -230,6 +232,7 @@ class BatchingStateChangeUploadScheduler implements StateChangeUploadScheduler {
                 return;
             }
             uploadBatchSizes.update(tasks.size());
+            //todo asRetriableAction
             retryingExecutor.execute(retryPolicy, asRetriableAction(tasks));
         } catch (Throwable t) {
             tasks.forEach(task -> task.fail(t));

@@ -107,6 +107,7 @@ public class StateChangeFsUploader implements StateChangeUploader {
         Path path = new Path(basePath, fileName);
 
         try {
+            //todo 上传
             return uploadWithMetrics(path, tasks);
         } catch (IOException e) {
             metrics.getUploadFailuresCounter().inc();
@@ -126,6 +127,7 @@ public class StateChangeFsUploader implements StateChangeUploader {
             throws IOException {
         metrics.getUploadsCounter().inc();
         long start = clock.relativeTimeNanos();
+        //todo 上传tasks
         UploadTasksResult result = upload(path, tasks);
         metrics.getUploadLatenciesNanos().update(clock.relativeTimeNanos() - start);
         metrics.getUploadSizes().update(result.getStateSize());
@@ -134,14 +136,17 @@ public class StateChangeFsUploader implements StateChangeUploader {
 
     private UploadTasksResult upload(Path path, Collection<UploadTask> tasks) throws IOException {
         boolean wrappedStreamClosed = false;
+        //todo 上传到dfs上
         FSDataOutputStream fsStream = fileSystem.create(path, NO_OVERWRITE);
         try {
             fsStream.write(compression ? 1 : 0);
             try (OutputStreamWithPos stream = wrap(fsStream)) {
                 final Map<UploadTask, Map<StateChangeSet, Long>> tasksOffsets = new HashMap<>();
                 for (UploadTask task : tasks) {
+                    //todo 真正write数据
                     tasksOffsets.put(task, format.write(stream, task.changeSets));
                 }
+                //todo 句柄
                 StreamStateHandle handle = handleFactory.apply(path, stream.getPos());
                 changelogRegistry.startTracking(
                         handle,

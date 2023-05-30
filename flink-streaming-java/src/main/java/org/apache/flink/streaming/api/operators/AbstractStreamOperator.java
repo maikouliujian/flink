@@ -253,6 +253,7 @@ public abstract class AbstractStreamOperator<OUT>
         return metrics;
     }
 
+    //todo 从ckp恢复
     @Override
     public final void initializeState(StreamTaskStateInitializer streamTaskStateManager)
             throws Exception {
@@ -263,7 +264,7 @@ public abstract class AbstractStreamOperator<OUT>
         final StreamTask<?, ?> containingTask = Preconditions.checkNotNull(getContainingTask());
         final CloseableRegistry streamTaskCloseableRegistry =
                 Preconditions.checkNotNull(containingTask.getCancelables());
-
+        //todo  恢复keyedState的逻辑在StreamOperatorStateContext中
         final StreamOperatorStateContext context =
                 streamTaskStateManager.streamOperatorStateContext(
                         getOperatorID(),
@@ -278,12 +279,14 @@ public abstract class AbstractStreamOperator<OUT>
                                 runtimeContext.getTaskManagerRuntimeInfo().getConfiguration(),
                                 runtimeContext.getUserCodeClassLoader()),
                         isUsingCustomRawKeyedState());
-
+        //todo
         stateHandler =
                 new StreamOperatorStateHandler(
                         context, getExecutionConfig(), streamTaskCloseableRegistry);
         timeServiceManager = context.internalTimerServiceManager();
+        //todo 恢复OperatorState
         stateHandler.initializeOperatorState(this);
+        //todo 恢复keyedState
         runtimeContext.setKeyedStateStore(stateHandler.getKeyedStateStore().orElse(null));
     }
 

@@ -161,7 +161,7 @@ public class StreamTaskStateInitializerImpl implements StreamTaskStateInitialize
         try {
 
             // -------------- Keyed State Backend --------------
-            //todo 初始化StatedBackend
+            //todo 初始化恢复StatedBackend
             keyedStatedBackend =
                     keyedStatedBackend(
                             keySerializer,
@@ -353,6 +353,7 @@ public class StreamTaskStateInitializerImpl implements StreamTaskStateInitialize
 
         try {
             return backendRestorer.createAndRestore(
+                    //todo 获取恢复句柄
                     prioritizedOperatorSubtaskStates.getPrioritizedManagedKeyedState());
         } finally {
             if (backendCloseableRegistry.unregisterCloseable(cancelStreamRegistryForRestore)) {

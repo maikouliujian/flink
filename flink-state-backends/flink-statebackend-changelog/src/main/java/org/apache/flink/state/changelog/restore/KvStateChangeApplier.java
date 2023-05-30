@@ -43,6 +43,7 @@ abstract class KvStateChangeApplier<K, N> implements StateChangeApplier {
         keyContext.setCurrentKeyGroupIndex(
                 KeyGroupRangeAssignment.assignToKeyGroup(key, keyContext.getNumberOfKeyGroups()));
         getState().setCurrentNamespace(getState().getNamespaceSerializer().deserialize(in));
+        //todo
         applyInternal(operation, in);
     }
 

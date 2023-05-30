@@ -124,7 +124,7 @@ public abstract class AbstractChangelogStateBackend
                                         baseHandles,
                                         cancelStreamRegistry));
     }
-
+    //todo 从ckp恢复
     @Override
     public <K> CheckpointableKeyedStateBackend<K> createKeyedStateBackend(
             Environment env,
@@ -140,12 +140,14 @@ public abstract class AbstractChangelogStateBackend
             CloseableRegistry cancelStreamRegistry,
             double managedMemoryFraction)
             throws Exception {
+        //todo 从ckp恢复
         return restore(
                 env,
                 operatorIdentifier,
                 keyGroupRange,
                 ttlTimeProvider,
                 metricGroup,
+                //todo KeyedStateHandle->ChangelogStateBackendHandle
                 castHandles(stateHandles),
                 baseHandles ->
                         (AbstractKeyedStateBackend<K>)

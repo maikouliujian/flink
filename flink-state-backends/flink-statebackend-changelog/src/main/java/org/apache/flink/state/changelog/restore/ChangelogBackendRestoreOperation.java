@@ -65,13 +65,16 @@ public class ChangelogBackendRestoreOperation {
             BaseBackendBuilder<K> baseBackendBuilder,
             ChangelogRestoreTargetBuilder<K> changelogRestoreTargetBuilder)
             throws Exception {
+        //todo 通过ChangelogStateBackendHandle获取KeyedStateHandle
         Collection<KeyedStateHandle> baseState = extractBaseState(stateHandles);
+        //todo 这里返回EmbeddedRocksDBStateBackend
         AbstractKeyedStateBackend<K> baseBackend = baseBackendBuilder.apply(baseState);
         ChangelogRestoreTarget<K> changelogRestoreTarget =
                 changelogRestoreTargetBuilder.apply(baseBackend, stateHandles);
 
         for (ChangelogStateBackendHandle handle : stateHandles) {
             if (handle != null) { // null is empty state (no change)
+                //todo 从stateHandles中回放StateBackend【重点！！！】
                 readBackendHandle(changelogRestoreTarget, handle, classLoader);
             }
         }
@@ -85,8 +88,10 @@ public class ChangelogBackendRestoreOperation {
             ClassLoader classLoader)
             throws Exception {
         Map<Short, StateID> stateIds = new HashMap<>();
+        //todo 重放ChangelogState
         for (ChangelogStateHandle changelogHandle :
                 backendHandle.getNonMaterializedStateHandles()) {
+            //todo 构建迭代器reader
             StateChangelogHandleReader<T> changelogHandleReader =
                     (StateChangelogHandleReader<T>)
                             StateChangelogStorageLoader.loadFromStateHandle(changelogHandle)

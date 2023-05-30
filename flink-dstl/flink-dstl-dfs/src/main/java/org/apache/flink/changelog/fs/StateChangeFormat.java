@@ -63,6 +63,7 @@ public class StateChangeFormat
         Map<StateChangeSet, Long> pendingResults = new HashMap<>();
         for (StateChangeSet changeSet : sorted) {
             pendingResults.put(changeSet, os.getPos());
+            //todo write
             writeChangeSet(dataOutput, changeSet.getChanges());
         }
         return pendingResults;
@@ -77,10 +78,14 @@ public class StateChangeFormat
         Map<Integer, List<StateChange>> sorted = new TreeMap<>(byKeyGroup);
         output.writeInt(sorted.size());
         for (Map.Entry<Integer, List<StateChange>> entry : sorted.entrySet()) {
+            //todo 写大小
             output.writeInt(entry.getValue().size());
+            //todo 写数据
             output.writeInt(entry.getKey());
             for (StateChange stateChange : entry.getValue()) {
+                //todo 写大小
                 output.writeInt(stateChange.getChange().length);
+                //todo 写数据
                 output.write(stateChange.getChange());
             }
         }

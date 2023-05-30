@@ -392,8 +392,9 @@ public class StreamOperatorStateHandler {
 
     /** Custom state handling hooks to be invoked by {@link StreamOperatorStateHandler}. */
     public interface CheckpointedStreamOperator {
+        //todo 从ckp进行恢复
         void initializeState(StateInitializationContext context) throws Exception;
-
+        //todo 触发ckp
         void snapshotState(StateSnapshotContext context) throws Exception;
     }
 }

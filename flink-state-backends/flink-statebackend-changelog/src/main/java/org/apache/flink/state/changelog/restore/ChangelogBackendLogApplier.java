@@ -71,6 +71,7 @@ class ChangelogBackendLogApplier {
             throws Exception {
         DataInputViewStreamWrapper in =
                 new DataInputViewStreamWrapper(new ByteArrayInputStream(stateChange.getChange()));
+        //todo
         applyOperation(
                 StateChangeOperation.byCode(in.readByte()),
                 stateChange.getKeyGroup(),
@@ -223,7 +224,9 @@ class ChangelogBackendLogApplier {
         ChangelogState state = changelogRestoreTarget.getExistingState(id.stateName, id.stateType);
         Preconditions.checkState(
                 state != null, String.format("%s state %s not found", id.stateType, id.stateName));
+        //todo 获取对应的StateChangeApplier
         StateChangeApplier changeApplier = state.getChangeApplier(factory);
+        //todo 将changelog恢复到不同类型的state中
         changeApplier.apply(operation, in);
     }
 

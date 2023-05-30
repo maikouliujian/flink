@@ -67,7 +67,7 @@ public class ChangelogStateBackend extends AbstractChangelogStateBackend
 
         return this;
     }
-
+    //todo 从ckp恢复
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected <K> CheckpointableKeyedStateBackend<K> restore(
@@ -90,6 +90,7 @@ public class ChangelogStateBackend extends AbstractChangelogStateBackend
 
         ChangelogStateFactory changelogStateFactory = new ChangelogStateFactory();
         CheckpointableKeyedStateBackend<K> keyedStateBackend =
+                //todo ckp恢复重放的方法【重点】
                 ChangelogBackendRestoreOperation.restore(
                         env.getUserCodeClassLoader().asClassLoader(),
                         stateBackendHandles,

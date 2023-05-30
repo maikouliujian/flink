@@ -49,8 +49,9 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 @Internal
 public interface ChangelogStateBackendHandle
         extends KeyedStateHandle, CheckpointBoundKeyedStateHandle {
+    //todo KeyedState的句柄
     List<KeyedStateHandle> getMaterializedStateHandles();
-
+    //todo ChangelogState的句柄
     List<ChangelogStateHandle> getNonMaterializedStateHandles();
 
     long getMaterializationID();
@@ -60,8 +61,9 @@ public interface ChangelogStateBackendHandle
 
     class ChangelogStateBackendHandleImpl implements ChangelogStateBackendHandle {
         private static final long serialVersionUID = 1L;
-
+        //todo KeyedState的句柄
         private final List<KeyedStateHandle> materialized;
+        //todo ChangelogState的句柄
         private final List<ChangelogStateHandle> nonMaterialized;
         private final KeyGroupRange keyGroupRange;
 
