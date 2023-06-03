@@ -208,7 +208,7 @@ public class KafkaSource<OUT>
     public SimpleVersionedSerializer<KafkaSourceEnumState> getEnumeratorCheckpointSerializer() {
         return new KafkaSourceEnumStateSerializer();
     }
-
+    //todo 获取TypeInformation
     @Override
     public TypeInformation<OUT> getProducedType() {
         return deserializationSchema.getProducedType();

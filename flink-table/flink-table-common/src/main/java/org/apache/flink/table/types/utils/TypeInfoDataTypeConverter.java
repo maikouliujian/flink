@@ -197,11 +197,13 @@ public final class TypeInfoDataTypeConverter {
                     ((MapTypeInfo) typeInfo).getKeyTypeInfo(),
                     ((MapTypeInfo) typeInfo).getValueTypeInfo());
         } else if (typeInfo instanceof CompositeType) {
+            //todo javabean是PojoTypeInfo,是CompositeType的子类
             return convertToStructuredType(
                     dataTypeFactory, (CompositeType) typeInfo, forceNullability);
         }
 
         // treat everything else as RAW type
+        //todo 如果匹配不到上面的类型,那么转化为RawDataType
         return dataTypeFactory.createRawDataType(typeInfo);
     }
 
@@ -263,6 +265,7 @@ public final class TypeInfoDataTypeConverter {
             DataTypeFactory dataTypeFactory,
             CompositeType<?> compositeType,
             boolean forceNullability) {
+        //todo 字段个数
         final int arity = compositeType.getArity();
         final String[] fieldNames = compositeType.getFieldNames();
         final Class<?> typeClass = compositeType.getTypeClass();
@@ -273,6 +276,7 @@ public final class TypeInfoDataTypeConverter {
                         pos ->
                                 fieldDataTypes.put(
                                         fieldNames[pos],
+                                        //todo 挨个转换字段类型
                                         toDataType(dataTypeFactory, compositeType.getTypeAt(pos))));
 
         final List<String> fieldNamesReordered;

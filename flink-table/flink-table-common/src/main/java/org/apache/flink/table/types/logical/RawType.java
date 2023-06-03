@@ -44,6 +44,7 @@ import java.util.Set;
  *
  * @param <T> originating class for this type
  */
+//todo RawType,如 java中map会转为RAW('java.util.Map', '...')
 @PublicEvolving
 public final class RawType<T> extends LogicalType {
     private static final long serialVersionUID = 1L;
@@ -81,7 +82,7 @@ public final class RawType<T> extends LogicalType {
     public LogicalType copy(boolean isNullable) {
         return new RawType<>(isNullable, clazz, serializer.duplicate());
     }
-
+    //todo 展示结果：RAW('java.util.Map', '...')
     @Override
     public String asSummaryString() {
         return withNullability(FORMAT, clazz.getName(), "...");
@@ -147,6 +148,7 @@ public final class RawType<T> extends LogicalType {
             ClassLoader classLoader, String className, String serializerString) {
         try {
             final Class<?> clazz = Class.forName(className, true, classLoader);
+            //todo base64
             final byte[] bytes = EncodingUtils.decodeBase64ToBytes(serializerString);
             final DataInputDeserializer inputDeserializer = new DataInputDeserializer(bytes);
             final TypeSerializerSnapshot<?> snapshot =
@@ -170,6 +172,7 @@ public final class RawType<T> extends LogicalType {
             try {
                 TypeSerializerSnapshot.writeVersionedSnapshot(
                         outputSerializer, serializer.snapshotConfiguration());
+                //todo base64
                 serializerString =
                         EncodingUtils.encodeBytesToBase64(outputSerializer.getCopyOfBuffer());
                 return serializerString;

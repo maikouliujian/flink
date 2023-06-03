@@ -29,7 +29,7 @@ import org.apache.flink.api.java.typeutils.runtime.GenericTypeComparator;
 import org.apache.flink.api.java.typeutils.runtime.kryo.KryoSerializer;
 
 import static org.apache.flink.util.Preconditions.checkNotNull;
-
+//todo GenericTypeInfo
 @Public
 public class GenericTypeInfo<T> extends TypeInformation<T> implements AtomicType<T> {
 

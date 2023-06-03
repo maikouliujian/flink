@@ -1898,6 +1898,7 @@ public class StreamExecutionEnvironment {
             Source<OUT, ?, ?> source,
             WatermarkStrategy<OUT> timestampsAndWatermarks,
             String sourceName) {
+        //todo kafka source入口
         return fromSource(source, timestampsAndWatermarks, sourceName, null);
     }
 
@@ -1925,7 +1926,7 @@ public class StreamExecutionEnvironment {
             WatermarkStrategy<OUT> timestampsAndWatermarks,
             String sourceName,
             TypeInformation<OUT> typeInfo) {
-
+        //todo 解析kafka source的TypeInformation
         final TypeInformation<OUT> resolvedTypeInfo =
                 getTypeInfo(source, sourceName, Source.class, typeInfo);
 
@@ -2503,6 +2504,7 @@ public class StreamExecutionEnvironment {
             TypeInformation<OUT> typeInfo) {
         TypeInformation<OUT> resolvedTypeInfo = typeInfo;
         if (resolvedTypeInfo == null && source instanceof ResultTypeQueryable) {
+            //todo 解析type的逻辑
             resolvedTypeInfo = ((ResultTypeQueryable<OUT>) source).getProducedType();
         }
         if (resolvedTypeInfo == null) {

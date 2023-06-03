@@ -196,12 +196,13 @@ public final class StreamTableEnvironmentImpl extends AbstractStreamTableEnviron
         return fromStreamInternal(dataStream, schema, null, changelogMode);
     }
 
+    //todo dataStream转化为temp view,不带schema
     @Override
     public <T> void createTemporaryView(String path, DataStream<T> dataStream) {
         createTemporaryView(
                 path, fromStreamInternal(dataStream, null, path, ChangelogMode.insertOnly()));
     }
-
+    //todo dataStream转化为temp view,带schema
     @Override
     public <T> void createTemporaryView(String path, DataStream<T> dataStream, Schema schema) {
         createTemporaryView(

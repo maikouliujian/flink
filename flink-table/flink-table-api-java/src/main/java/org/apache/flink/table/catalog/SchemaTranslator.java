@@ -194,6 +194,7 @@ public final class SchemaTranslator {
      *       {@param mergePhysicalSchema} is set to {@code true}).
      * </ul>
      */
+    //todo核心方法
     public static ConsumingResult createConsumingResult(
             DataTypeFactory dataTypeFactory,
             DataType inputDataType,
@@ -207,6 +208,7 @@ public final class SchemaTranslator {
 
         // no schema has been declared by the user,
         // the schema will be entirely derived from the input
+        //todo 如果没有定义schema，全部用解析的inputDataType
         if (declaredSchema == null) {
             final Schema.Builder builder = Schema.newBuilder();
             addPhysicalSourceDataTypeFields(builder, inputDataType, null);
@@ -231,6 +233,7 @@ public final class SchemaTranslator {
 
         // the declared schema enriches the physical data type and the derived schema,
         // it possibly projects the result
+        //todo 定义了schema走这里
         final DataType patchedDataType =
                 patchDataTypeFromDeclaredSchema(dataTypeFactory, inputDataType, declaredColumns);
         final Schema patchedSchema =

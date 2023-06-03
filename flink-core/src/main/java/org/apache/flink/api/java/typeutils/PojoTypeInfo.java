@@ -61,6 +61,7 @@ import static org.apache.flink.util.Preconditions.checkState;
  *
  * @param <T> The type represented by this type information.
  */
+//todo javabean的类型
 @Public
 public class PojoTypeInfo<T> extends CompositeType<T> {
 

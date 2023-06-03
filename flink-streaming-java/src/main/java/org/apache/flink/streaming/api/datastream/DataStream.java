@@ -126,7 +126,7 @@ import java.util.UUID;
 public class DataStream<T> {
 
     protected final StreamExecutionEnvironment environment;
-
+    //todo 每一个DataStream中持有一个Transformation
     protected final Transformation<T> transformation;
 
     /**
@@ -187,6 +187,7 @@ public class DataStream<T> {
      *
      * @return The type of the datastream.
      */
+    //todo 获取ds的输出类型
     public TypeInformation<T> getType() {
         return transformation.getOutputType();
     }

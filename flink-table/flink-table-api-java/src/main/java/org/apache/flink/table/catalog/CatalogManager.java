@@ -70,6 +70,7 @@ public final class CatalogManager {
 
     // Those tables take precedence over corresponding permanent tables, thus they shadow
     // tables coming from catalogs.
+    //todo CatalogManager 中存放<ObjectIdentifier,table>的地方
     private final Map<ObjectIdentifier, CatalogBaseTable> temporaryTables;
 
     // The name of the current catalog and database
@@ -675,6 +676,7 @@ public final class CatalogManager {
             CatalogBaseTable table, ObjectIdentifier objectIdentifier, boolean ignoreIfExists) {
         Optional<TemporaryOperationListener> listener =
                 getTemporaryOperationListener(objectIdentifier);
+        //todo 注册表table
         temporaryTables.compute(
                 objectIdentifier,
                 (k, v) -> {
@@ -687,6 +689,7 @@ public final class CatalogManager {
                         }
                         return v;
                     } else {
+                        //todo 第一次注册走这
                         ResolvedCatalogBaseTable<?> resolvedTable = resolveCatalogBaseTable(table);
                         ResolvedCatalogBaseTable<?> resolvedListenedTable =
                                 managedTableListener.notifyTableCreation(
@@ -701,6 +704,7 @@ public final class CatalogManager {
                                     .onCreateTemporaryTable(
                                             objectIdentifier.toObjectPath(), resolvedListenedTable);
                         }
+                        //todo new value
                         return resolvedListenedTable;
                     }
                 });

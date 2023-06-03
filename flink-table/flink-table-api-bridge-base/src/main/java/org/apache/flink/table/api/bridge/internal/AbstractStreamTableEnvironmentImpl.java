@@ -118,7 +118,7 @@ public abstract class AbstractStreamTableEnvironmentImpl extends TableEnvironmen
                             + "' doesn't implement StreamExecutorFactory.");
         }
     }
-
+    //todo ds转table
     protected <T> Table fromStreamInternal(
             DataStream<T> dataStream,
             @Nullable Schema schema,
@@ -135,9 +135,10 @@ public abstract class AbstractStreamTableEnvironmentImpl extends TableEnvironmen
 
         final CatalogManager catalogManager = getCatalogManager();
         final OperationTreeBuilder operationTreeBuilder = getOperationTreeBuilder();
-
+        //todo schema转化
         final SchemaTranslator.ConsumingResult schemaTranslationResult =
                 SchemaTranslator.createConsumingResult(
+                        //todo dataStream.getType() 就是PojoTypeInfo
                         catalogManager.getDataTypeFactory(), dataStream.getType(), schema);
 
         final ResolvedCatalogTable resolvedCatalogTable =
@@ -175,7 +176,7 @@ public abstract class AbstractStreamTableEnvironmentImpl extends TableEnvironmen
                                 .map(ApiExpressionUtils::unresolvedRef)
                                 .collect(Collectors.toList()),
                         scanOperation);
-
+        //todo
         return createTable(projectOperation);
     }
 

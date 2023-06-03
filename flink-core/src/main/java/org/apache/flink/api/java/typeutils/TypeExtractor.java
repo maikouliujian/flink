@@ -967,6 +967,7 @@ public class TypeExtractor {
         }
         // no tuple, no TypeVariable, no generic type
         else if (t instanceof Class) {
+            //todo 非上述类型走这里
             return privateGetForClass((Class<OUT>) t, typeHierarchy);
         }
 
@@ -1818,6 +1819,7 @@ public class TypeExtractor {
      * @param clazz a Class to create TypeInformation for
      * @return TypeInformation that describes the passed Class
      */
+    //todo 获取clazz的TypeInformation
     public static <X> TypeInformation<X> getForClass(Class<X> clazz) {
         final List<Type> typeHierarchy = new ArrayList<>();
         typeHierarchy.add(clazz);
@@ -1827,7 +1829,7 @@ public class TypeExtractor {
     private <X> TypeInformation<X> privateGetForClass(Class<X> clazz, List<Type> typeHierarchy) {
         return privateGetForClass(clazz, typeHierarchy, null, null, null);
     }
-
+    //todo 核心方法
     @SuppressWarnings({"unchecked", "rawtypes"})
     private <OUT, IN1, IN2> TypeInformation<OUT> privateGetForClass(
             Class<OUT> clazz,
@@ -1891,6 +1893,7 @@ public class TypeExtractor {
         }
 
         // check for basic types
+        //todo 处理基本类型
         TypeInformation<OUT> basicTypeInfo = BasicTypeInfo.getInfoFor(clazz);
         if (basicTypeInfo != null) {
             return basicTypeInfo;
@@ -1926,13 +1929,14 @@ public class TypeExtractor {
         if (hasSuperclass(clazz, AVRO_SPECIFIC_RECORD_BASE_CLASS)) {
             return AvroUtils.getAvroUtils().createAvroTypeInfo(clazz);
         }
-
+        //todo 接口类型，如map、list等
         if (Modifier.isInterface(clazz.getModifiers())) {
             // Interface has no members and is therefore not handled as POJO
             return new GenericTypeInfo<>(clazz);
         }
 
         try {
+            //todo javabean类型
             Type t = parameterizedType != null ? parameterizedType : clazz;
             TypeInformation<OUT> pojoType =
                     analyzePojo(t, new ArrayList<>(typeHierarchy), in1Type, in2Type);
@@ -2027,7 +2031,7 @@ public class TypeExtractor {
             }
         }
     }
-
+    //todo 分析Pojo的各字段类型
     @SuppressWarnings("unchecked")
     protected <OUT, IN1, IN2> TypeInformation<OUT> analyzePojo(
             Type type,
@@ -2048,7 +2052,7 @@ public class TypeExtractor {
 
         // add the hierarchy of the POJO
         getTypeHierarchy(typeHierarchy, type, Object.class);
-
+        //todo 通过反射获取所有成员变量
         List<Field> fields = getAllDeclaredFields(clazz, false);
         if (fields.size() == 0) {
             LOG.info(
@@ -2087,6 +2091,7 @@ public class TypeExtractor {
                                     fieldType);
                 } else {
                     fieldTypeHierarchy.add(fieldType);
+                    //todo 获取成员的typeInfo
                     typeInfo =
                             createTypeInfoWithTypeHierarchy(
                                     fieldTypeHierarchy, fieldType, in1Type, in2Type);
@@ -2101,7 +2106,7 @@ public class TypeExtractor {
                         new PojoField(field, new GenericTypeInfo<>((Class<OUT>) genericClass)));
             }
         }
-
+        //todo javabean的类型为PojoTypeInfo
         CompositeType<OUT> pojoType = new PojoTypeInfo<>(clazz, pojoFields);
 
         //

@@ -120,7 +120,7 @@ public abstract class Transformation<T> {
     protected String name;
 
     protected String description;
-
+    //todo 每一个Transformation都有一个输出类型TypeInformation
     protected TypeInformation<T> outputType;
     // This is used to handle MissingTypeInfo. As long as the outputType has not been queried
     // it can still be changed using setOutputType(). Afterwards an exception is thrown when

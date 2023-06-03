@@ -1846,6 +1846,7 @@ public class TableEnvironmentImpl implements TableEnvironmentInternal {
 
     @VisibleForTesting
     public TableImpl createTable(QueryOperation tableOperation) {
+        //todo 返回TableImpl
         return TableImpl.createTable(
                 this,
                 tableOperation,
