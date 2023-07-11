@@ -183,6 +183,7 @@ public abstract class CommonExecSink extends ExecNodeBase<Object>
         }
 
         if (needMaterialization) {
+            //todo UpsertMaterialize
             sinkTransform =
                     applyUpsertMaterialize(
                             sinkTransform, primaryKeys, sinkParallelism, config, physicalRowType);
@@ -443,6 +444,7 @@ public abstract class CommonExecSink extends ExecNodeBase<Object>
                             inputTransform, rowtimeFieldIndex, sinkParallelism, config);
             final DataStream<RowData> dataStream = new DataStream<>(env, sinkTransformation);
             final DataStreamSinkProvider provider = (DataStreamSinkProvider) runtimeProvider;
+            //todo 消费dataStream数据
             return provider.consumeDataStream(createProviderContext(config), dataStream)
                     .getTransformation();
         } else if (runtimeProvider instanceof TransformationSinkProvider) {

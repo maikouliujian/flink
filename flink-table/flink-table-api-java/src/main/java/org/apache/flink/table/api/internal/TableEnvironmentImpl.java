@@ -1643,6 +1643,7 @@ public class TableEnvironmentImpl implements TableEnvironmentInternal {
     }
 
     protected List<Transformation<?>> translate(List<ModifyOperation> modifyOperations) {
+        //todo 获取所有的Transformation
         return planner.translate(modifyOperations);
     }
 

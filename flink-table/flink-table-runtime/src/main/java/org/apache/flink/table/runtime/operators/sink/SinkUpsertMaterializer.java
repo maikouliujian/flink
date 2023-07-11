@@ -54,6 +54,7 @@ import static org.apache.flink.types.RowKind.UPDATE_AFTER;
  *       empty afterwards. A deletion to an already updated record is swallowed.
  * </ul>
  */
+//todo table.exec.sink.upsert-materialize对应的算子
 public class SinkUpsertMaterializer extends TableStreamOperator<RowData>
         implements OneInputStreamOperator<RowData, RowData> {
 
@@ -97,7 +98,7 @@ public class SinkUpsertMaterializer extends TableStreamOperator<RowData>
         this.state = getRuntimeContext().getState(descriptor);
         this.collector = new TimestampedCollector<>(output);
     }
-
+    //todo 不下发 UPDATE_BEFORE 日志，不是完整的changelog
     @Override
     public void processElement(StreamRecord<RowData> element) throws Exception {
         final RowData row = element.getValue();

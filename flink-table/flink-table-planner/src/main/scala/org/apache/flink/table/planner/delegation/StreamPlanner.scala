@@ -79,6 +79,7 @@ class StreamPlanner(
     beforeTranslation()
     val planner = createDummyPlanner()
     val transformations = execGraph.getRootNodes.map {
+          //todo 获取每一个StreamExecNode算子的Transformation
       case node: StreamExecNode[_] => node.translateToPlan(planner)
       case _ =>
         throw new TableException(

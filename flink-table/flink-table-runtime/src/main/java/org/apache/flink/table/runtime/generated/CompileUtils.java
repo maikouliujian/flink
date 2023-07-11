@@ -89,6 +89,7 @@ public final class CompileUtils {
             // to prevent class leaks we don't cache the class loader directly
             // but only its hash code
             final ClassKey classKey = new ClassKey(cl.hashCode(), code);
+            //todo codegen
             return (Class<T>) COMPILED_CLASS_CACHE.get(classKey, () -> doCompile(cl, name, code));
         } catch (Exception e) {
             throw new FlinkRuntimeException(e.getMessage(), e);

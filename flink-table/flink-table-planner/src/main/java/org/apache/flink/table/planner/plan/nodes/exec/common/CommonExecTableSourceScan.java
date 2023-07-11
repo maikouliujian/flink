@@ -102,6 +102,7 @@ public abstract class CommonExecTableSourceScan extends ExecNodeBase<RowData>
         final ScanTableSource tableSource =
                 tableSourceSpec.getScanTableSource(
                         planner.getFlinkContext(), ShortcutUtils.unwrapTypeFactory(planner));
+        //todo source入口
         ScanTableSource.ScanRuntimeProvider provider =
                 tableSource.getScanRuntimeProvider(ScanRuntimeProviderContext.INSTANCE);
         if (provider instanceof SourceFunctionProvider) {
@@ -136,6 +137,7 @@ public abstract class CommonExecTableSourceScan extends ExecNodeBase<RowData>
         } else if (provider instanceof DataStreamScanProvider) {
             Transformation<RowData> transformation =
                     ((DataStreamScanProvider) provider)
+                            //todo 产生source数据
                             .produceDataStream(createProviderContext(config), env)
                             .getTransformation();
             meta.fill(transformation);

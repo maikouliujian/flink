@@ -177,6 +177,7 @@ abstract class PlannerBase(
     val relNodes = modifyOperations.map(translateToRel)
     val optimizedRelNodes = optimize(relNodes)
     val execGraph = translateToExecNodeGraph(optimizedRelNodes)
+    //todo 获取所有的transformations
     val transformations = translateToPlan(execGraph)
     afterTranslation()
     transformations

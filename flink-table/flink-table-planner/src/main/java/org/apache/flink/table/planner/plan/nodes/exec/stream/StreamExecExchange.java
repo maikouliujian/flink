@@ -95,6 +95,7 @@ public class StreamExecExchange extends CommonExecExchange implements StreamExec
     @Override
     protected Transformation<RowData> translateToPlanInternal(
             PlannerBase planner, ExecNodeConfig config) {
+        //todo 获取inputTransform
         final Transformation<RowData> inputTransform =
                 (Transformation<RowData>) getInputEdges().get(0).translateToPlan(planner);
 

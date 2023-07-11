@@ -133,6 +133,7 @@ public class ExecutionConfigOptions {
                                     + "CHAR/VARCHAR/BINARY/VARBINARY column type.");
 
     @Documentation.TableOption(execMode = Documentation.ExecMode.STREAMING)
+    //todo table.exec.sink.upsert-materialize
     public static final ConfigOption<UpsertMaterialize> TABLE_EXEC_SINK_UPSERT_MATERIALIZE =
             key("table.exec.sink.upsert-materialize")
                     .enumType(UpsertMaterialize.class)
