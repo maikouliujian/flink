@@ -70,6 +70,7 @@ public class ForwardHashExchangeProcessor implements ExecNodeGraphProcessor {
         if (!context.getPlanner().getExecEnv().getConfig().isDynamicGraph()) {
             return execGraph;
         }
+        //todo 动态图
         ReadableConfig tableConfig = context.getPlanner().getTableConfig();
         ExecNodeVisitor visitor =
                 new AbstractExecNodeExactlyOnceVisitor() {

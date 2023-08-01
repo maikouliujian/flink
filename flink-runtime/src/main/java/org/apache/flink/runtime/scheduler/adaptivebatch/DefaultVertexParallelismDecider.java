@@ -86,9 +86,9 @@ public class DefaultVertexParallelismDecider implements VertexParallelismDecider
             return calculateParallelism(consumedResults);
         }
     }
-
+    //todo 计算并行度
     private int calculateParallelism(List<BlockingResultInfo> consumedResults) {
-
+        //todo 广播字节数
         long broadcastBytes =
                 consumedResults.stream()
                         .filter(BlockingResultInfo::isBroadcast)
@@ -97,7 +97,7 @@ public class DefaultVertexParallelismDecider implements VertexParallelismDecider
                                         consumedResult.getBlockingPartitionSizes().stream()
                                                 .reduce(0L, Long::sum))
                         .sum();
-
+        //todo 非广播字节数
         long nonBroadcastBytes =
                 consumedResults.stream()
                         .filter(consumedResult -> !consumedResult.isBroadcast())

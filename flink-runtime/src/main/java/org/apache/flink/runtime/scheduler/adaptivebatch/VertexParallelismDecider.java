@@ -24,6 +24,7 @@ import java.util.List;
  * {@link VertexParallelismDecider} is responsible for determining the parallelism of a job vertex,
  * based on the size of the consumed blocking results.
  */
+//todo 动态计算并行度：根据逻辑节点需要处理的数据量计算其并行度；
 public interface VertexParallelismDecider {
 
     /**

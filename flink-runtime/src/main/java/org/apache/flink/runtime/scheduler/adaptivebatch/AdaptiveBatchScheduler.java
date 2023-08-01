@@ -144,6 +144,7 @@ public class AdaptiveBatchScheduler extends DefaultScheduler implements Schedule
 
     @Override
     public void startSchedulingInternal() {
+        //todo 开始调度
         initializeVerticesIfPossible();
 
         super.startSchedulingInternal();
@@ -153,7 +154,7 @@ public class AdaptiveBatchScheduler extends DefaultScheduler implements Schedule
     protected void updateTaskExecutionStateInternal(
             final ExecutionVertexID executionVertexId,
             final TaskExecutionStateTransition taskExecutionState) {
-
+        //todo 更新subtask状态
         initializeVerticesIfPossible();
 
         super.updateTaskExecutionStateInternal(executionVertexId, taskExecutionState);
@@ -164,6 +165,7 @@ public class AdaptiveBatchScheduler extends DefaultScheduler implements Schedule
         try {
             final long createTimestamp = System.currentTimeMillis();
             for (ExecutionJobVertex jobVertex : getExecutionGraph().getVerticesTopologically()) {
+                //todo 设置并行度
                 maybeSetParallelism(jobVertex);
             }
             for (ExecutionJobVertex jobVertex : getExecutionGraph().getVerticesTopologically()) {
@@ -205,6 +207,7 @@ public class AdaptiveBatchScheduler extends DefaultScheduler implements Schedule
                     parallelism);
 
         } else {
+            //todo 根据数据量计算并行度
             parallelism =
                     vertexParallelismDecider.decideParallelismForVertex(consumedResultsInfo.get());
             if (forwardGroup != null) {
@@ -217,7 +220,7 @@ public class AdaptiveBatchScheduler extends DefaultScheduler implements Schedule
                     jobVertex.getJobVertexId(),
                     parallelism);
         }
-
+        //todo 改变节点并行度
         changeJobVertexParallelism(jobVertex, parallelism);
     }
 

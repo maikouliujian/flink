@@ -717,6 +717,7 @@ public abstract class SchedulerBase implements SchedulerNG, CheckpointScheduling
 
         if (updateSuccess) {
             if (isNotifiable(executionVertexId, taskExecutionState)) {
+                //todo 更新subtask状态
                 updateTaskExecutionStateInternal(executionVertexId, taskExecutionState);
             }
             return true;
