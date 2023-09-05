@@ -40,6 +40,7 @@ import static org.apache.flink.connector.file.table.FileSystemConnectorOptions.S
 import static org.apache.flink.connector.file.table.stream.PartitionCommitPredicate.PredicateContext;
 
 /** Writer for emitting {@link PartitionCommitInfo} to downstream. */
+//todo 写数据的代码！！！！！！
 @Internal
 public class StreamingFileWriter<IN> extends AbstractStreamingWriter<IN, PartitionCommitInfo> {
 
@@ -138,14 +139,14 @@ public class StreamingFileWriter<IN> extends AbstractStreamingWriter<IN, Partiti
     @Override
     protected void commitUpToCheckpoint(long checkpointId) throws Exception {
         super.commitUpToCheckpoint(checkpointId);
-
+        //todo 小于等于checkpointId的所有分区
         NavigableMap<Long, Set<String>> headPartitions =
                 this.newPartitions.headMap(checkpointId, true);
         Set<String> partitions = new HashSet<>(committablePartitions);
         committablePartitions.clear();
         headPartitions.values().forEach(partitions::addAll);
         headPartitions.clear();
-
+        //todo 发送所有的需要提交的分区！！！！！！
         output.collect(
                 new StreamRecord<>(
                         new PartitionCommitInfo(

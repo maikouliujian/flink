@@ -49,7 +49,7 @@ import static org.apache.flink.util.Preconditions.checkState;
 public class Bucket<IN, BucketID> {
 
     private static final Logger LOG = LoggerFactory.getLogger(Bucket.class);
-
+    //todo bucketId就是partition path
     private final BucketID bucketId;
 
     private final Path bucketPath;
@@ -220,6 +220,7 @@ public class Bucket<IN, BucketID> {
 
             inProgressPart = rollPartFile(currentTime);
         }
+        //todo 写数据
         inProgressPart.write(element, currentTime);
     }
 

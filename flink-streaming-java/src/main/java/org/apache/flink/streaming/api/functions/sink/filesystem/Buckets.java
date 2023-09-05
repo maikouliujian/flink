@@ -234,6 +234,7 @@ public class Buckets<IN, BucketID> {
                 // currently open.
                 // Therefore this bucket is currently inactive and we can remove it from our state.
                 activeBucketIt.remove();
+                //todo
                 notifyBucketInactive(bucket);
             }
         }
@@ -301,7 +302,9 @@ public class Buckets<IN, BucketID> {
         bucketerContext.update(elementTimestamp, currentWatermark, currentProcessingTime);
 
         final BucketID bucketId = bucketAssigner.getBucketId(value, bucketerContext);
+        //todo 获取或创建新的bucket
         final Bucket<IN, BucketID> bucket = getOrCreateBucketForBucketId(bucketId);
+        //todo 写数据！！！！！！
         bucket.write(value, currentProcessingTime);
 
         // we update the global max counter here because as buckets become inactive and
@@ -316,6 +319,7 @@ public class Buckets<IN, BucketID> {
             throws IOException {
         Bucket<IN, BucketID> bucket = activeBuckets.get(bucketId);
         if (bucket == null) {
+            //todo 分区path目录
             final Path bucketPath = assembleBucketPath(bucketId);
             bucket =
                     bucketFactory.getNewBucket(
@@ -362,12 +366,14 @@ public class Buckets<IN, BucketID> {
 
     private void notifyBucketCreate(Bucket<IN, BucketID> bucket) {
         if (bucketLifeCycleListener != null) {
+            //todo 创建分区
             bucketLifeCycleListener.bucketCreated(bucket);
         }
     }
 
     private void notifyBucketInactive(Bucket<IN, BucketID> bucket) {
         if (bucketLifeCycleListener != null) {
+            //todo 分区不活跃了
             bucketLifeCycleListener.bucketInactive(bucket);
         }
     }

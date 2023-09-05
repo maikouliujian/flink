@@ -475,6 +475,7 @@ public class StreamingFileSink<IN> extends RichSinkFunction<IN>
 
     @Override
     public void notifyCheckpointComplete(long checkpointId) throws Exception {
+        //todo checkpoint完成时！！！！！！！
         this.helper.commitUpToCheckpoint(checkpointId);
     }
 

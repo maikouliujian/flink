@@ -140,6 +140,7 @@ public class PartitionCommitter extends AbstractStreamOperator<Void>
         if (taskTracker == null) {
             taskTracker = new TaskTracker(message.getNumberOfTasks());
         }
+        //todo 判断是否需要提交！！！！！！
         boolean needCommit = taskTracker.add(message.getCheckpointId(), message.getTaskId());
         if (needCommit) {
             commitPartitions(message.getCheckpointId());
@@ -171,6 +172,7 @@ public class PartitionCommitter extends AbstractStreamOperator<Void>
                     if (policy instanceof MetastoreCommitPolicy) {
                         ((MetastoreCommitPolicy) policy).setMetastore(metaStore);
                     }
+                    //todo 提交分区！！！！！！
                     policy.commit(context);
                 }
             }

@@ -208,10 +208,12 @@ public class HiveTableSink implements DynamicTableSink, SupportsPartitioning, Su
             final int parallelism =
                     Optional.ofNullable(configuredParallelism).orElse(dataStream.getParallelism());
             if (isBounded) {
+                //todo 批任务
                 OutputFileConfig fileNaming = fileNamingBuilder.build();
                 return createBatchSink(
                         dataStream, converter, sd, writerFactory, fileNaming, parallelism);
             } else {
+                //todo 流任务
                 if (overwrite) {
                     throw new IllegalStateException("Streaming mode not support overwrite.");
                 }
@@ -280,7 +282,7 @@ public class HiveTableSink implements DynamicTableSink, SupportsPartitioning, Su
         org.apache.flink.configuration.Configuration conf =
                 new org.apache.flink.configuration.Configuration();
         catalogTable.getOptions().forEach(conf::setString);
-
+        //todo ！！！！！！
         String commitPolicies =
                 conf.getString(FileSystemConnectorOptions.SINK_PARTITION_COMMIT_POLICY_KIND);
         if (!getPartitionKeys().isEmpty() && StringUtils.isNullOrWhitespaceOnly(commitPolicies)) {

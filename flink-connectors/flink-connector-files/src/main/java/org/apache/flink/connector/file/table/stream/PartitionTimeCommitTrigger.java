@@ -90,7 +90,7 @@ public class PartitionTimeCommitTrigger implements PartitionCommitTrigger {
             this.pendingPartitions.add(partition);
         }
     }
-
+    //todo 提交分区
     @Override
     public List<String> committablePartitions(long checkpointId) {
         if (!watermarks.containsKey(checkpointId)) {
@@ -108,7 +108,9 @@ public class PartitionTimeCommitTrigger implements PartitionCommitTrigger {
         while (iter.hasNext()) {
             String partition = iter.next();
             PredicateContext predicateContext = createPredicateContext(partition, watermark);
+            //todo 判断分区是否可以提交！！！！！！
             if (partitionCommitPredicate.isPartitionCommittable(predicateContext)) {
+                //todo 添加需要提交的分区
                 needCommit.add(partition);
                 iter.remove();
             }

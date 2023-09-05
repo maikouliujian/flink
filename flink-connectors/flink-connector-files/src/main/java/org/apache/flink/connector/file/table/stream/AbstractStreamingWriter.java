@@ -137,6 +137,7 @@ public abstract class AbstractStreamingWriter<IN, OUT> extends AbstractStreamOpe
 
     @Override
     public void processElement(StreamRecord<IN> element) throws Exception {
+        //todo 处理数据
         helper.onElement(
                 element.getValue(),
                 getProcessingTimeService().getCurrentProcessingTime(),
@@ -147,6 +148,7 @@ public abstract class AbstractStreamingWriter<IN, OUT> extends AbstractStreamOpe
     @Override
     public void notifyCheckpointComplete(long checkpointId) throws Exception {
         super.notifyCheckpointComplete(checkpointId);
+        //todo checkpoint完成后！！！！！！
         commitUpToCheckpoint(checkpointId);
     }
 
