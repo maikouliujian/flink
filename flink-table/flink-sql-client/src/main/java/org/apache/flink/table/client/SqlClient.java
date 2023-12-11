@@ -82,6 +82,7 @@ public class SqlClient {
 
             DefaultContext defaultContext = LocalContextUtils.buildDefaultContext(options);
             final Executor executor = new LocalExecutor(defaultContext);
+            //todo ！！！！！！
             executor.start();
 
             // Open an new session
@@ -92,6 +93,7 @@ public class SqlClient {
                         .addShutdownHook(new EmbeddedShutdownThread(sessionId, executor));
 
                 // do the actual work
+                //todo
                 openCli(sessionId, executor);
             } finally {
                 executor.closeSession(sessionId);
@@ -131,7 +133,9 @@ public class SqlClient {
         }
 
         try (CliClient cli = new CliClient(terminalFactory, sessionId, executor, historyFilePath)) {
+            //todo 初始化文件 -i
             if (options.getInitFile() != null) {
+                //todo 初始化
                 boolean success = cli.executeInitialization(readFromURL(options.getInitFile()));
                 if (!success) {
                     System.out.println(
@@ -150,13 +154,14 @@ public class SqlClient {
             if (!hasSqlFile && !hasUpdateStatement) {
                 cli.executeInInteractiveMode();
             } else {
+                //todo
                 cli.executeInNonInteractiveMode(readExecutionContent());
             }
         }
     }
 
     // --------------------------------------------------------------------------------------------
-
+    //todo 入口
     public static void main(String[] args) {
         startClient(args, DEFAULT_TERMINAL_FACTORY);
     }
@@ -183,7 +188,9 @@ public class SqlClient {
                     CliOptionsParser.printHelpEmbeddedModeClient();
                 } else {
                     try {
+                        //todo
                         final SqlClient client = new SqlClient(true, options, terminalFactory);
+                        //todo 启动！！！！！！
                         client.start();
                     } catch (SqlClientException e) {
                         // make space in terminal

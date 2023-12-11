@@ -203,9 +203,11 @@ public class LocalExecutor implements Executor {
     public TableResultInternal executeOperation(String sessionId, Operation operation)
             throws SqlExecutionException {
         final ExecutionContext context = getExecutionContext(sessionId);
+        //todo 获取TableEnvironmentInternal
         final TableEnvironmentInternal tEnv =
                 (TableEnvironmentInternal) context.getTableEnvironment();
         try {
+            //todo 执行sql
             return context.wrapClassLoader(() -> tEnv.executeInternal(operation));
         } catch (Throwable t) {
             throw new SqlExecutionException(MESSAGE_SQL_EXECUTION_ERROR, t);

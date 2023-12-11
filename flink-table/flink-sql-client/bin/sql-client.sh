@@ -66,7 +66,7 @@ if [[ ! "$CC_CLASSPATH" =~ .*flink-python.*.jar ]]; then
         CC_CLASSPATH="$CC_CLASSPATH:$FLINK_PYTHON_JAR"
     fi
 fi
-
+###todo flinksql shell入口
 # check if SQL client is already in classpath and must not be shipped manually
 if [[ "$CC_CLASSPATH" =~ .*flink-sql-client.*.jar ]]; then
 

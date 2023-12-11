@@ -235,6 +235,7 @@ public class CliClient implements AutoCloseable {
     public void executeInNonInteractiveMode(String content) {
         try {
             terminal = terminalFactory.get();
+            //todo
             executeFile(content, terminal.output(), ExecutionMode.NON_INTERACTIVE_EXECUTION);
         } finally {
             closeTerminal();
@@ -327,6 +328,7 @@ public class CliClient implements AutoCloseable {
             }
 
             // execute the operation
+            //todo
             boolean success = executeOperation(parsedOperation.get(), mode);
             if (exitOnFailure && !success) {
                 return false;
@@ -351,6 +353,7 @@ public class CliClient implements AutoCloseable {
         Terminal dumbTerminal = TerminalUtils.createDumbTerminal(inputStream, outputStream);
         try {
             LineReader lineReader = createLineReader(dumbTerminal);
+            //todo
             return getAndExecuteStatements(lineReader, mode);
         } catch (Throwable e) {
             printExecutionException(e);
@@ -370,6 +373,7 @@ public class CliClient implements AutoCloseable {
             final Terminal.SignalHandler previousHandler =
                     terminal.handle(Terminal.Signal.INT, (signal) -> thread.interrupt());
             try {
+                //todo
                 callOperation(operation, executionMode);
             } finally {
                 terminal.handle(Terminal.Signal.INT, previousHandler);
@@ -440,6 +444,7 @@ public class CliClient implements AutoCloseable {
             callReset((ResetOperation) operation);
         } else if (operation instanceof SinkModifyOperation) {
             // INSERT INTO/OVERWRITE
+            // todo INSERT INTO/OVERWRITE
             callInsert((SinkModifyOperation) operation);
         } else if (operation instanceof QueryOperation) {
             // SELECT
@@ -473,6 +478,7 @@ public class CliClient implements AutoCloseable {
             callShowCreateView((ShowCreateViewOperation) operation);
         } else {
             // fallback to default implementation
+            //todo
             executeOperation(operation);
         }
     }
@@ -604,6 +610,7 @@ public class CliClient implements AutoCloseable {
             terminal.writer().println(CliStrings.messageInfo(MESSAGE_FINISH_STATEMENT).toAnsi());
         } else {
             terminal.writer().println(CliStrings.messageInfo(MESSAGE_STATEMENT_SUBMITTED).toAnsi());
+            //todo 打印jobid
             terminal.writer()
                     .println(
                             String.format(
@@ -655,6 +662,7 @@ public class CliClient implements AutoCloseable {
     }
 
     private void executeOperation(Operation operation) {
+        //todo
         TableResultInternal result = executor.executeOperation(sessionId, operation);
         if (TABLE_RESULT_OK == result) {
             // print more meaningful message than tableau OK result
