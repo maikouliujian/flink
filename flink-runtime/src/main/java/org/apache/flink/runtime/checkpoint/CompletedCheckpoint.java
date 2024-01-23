@@ -91,6 +91,7 @@ public class CompletedCheckpoint implements Serializable, Checkpoint {
     private final long completionTimestamp;
 
     /** States of the different operator groups belonging to this checkpoint. */
+    //todo 算子id->算子对应的ckp state
     private final Map<OperatorID, OperatorState> operatorStates;
 
     /** Properties for this checkpoint. */

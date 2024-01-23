@@ -123,6 +123,7 @@ public final class TaskDeploymentDescriptor implements Serializable {
     private final List<InputGateDeploymentDescriptor> inputGates;
 
     /** Information to restore the task. This can be null if there is no state to restore. */
+    //todo 从ckp恢复
     @Nullable private final JobManagerTaskRestore taskRestore;
 
     public TaskDeploymentDescriptor(

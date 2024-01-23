@@ -57,6 +57,7 @@ import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 /** Default implementation of {@link TaskSlotTable}. */
+//todo 维护所有task的核心类
 public class TaskSlotTableImpl<T extends TaskSlotPayload> implements TaskSlotTable<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(TaskSlotTableImpl.class);
@@ -84,6 +85,7 @@ public class TaskSlotTableImpl<T extends TaskSlotPayload> implements TaskSlotTab
     private final Map<AllocationID, TaskSlot<T>> allocatedSlots;
 
     /** Mapping from execution attempt id to task and task slot. */
+    //todo <ExecutionAttemptID,<task,taskSlot>> map关系！！！！！！
     private final Map<ExecutionAttemptID, TaskSlotMapping<T>> taskSlotMappings;
 
     /** Mapping from job id to allocated slots for a job. */

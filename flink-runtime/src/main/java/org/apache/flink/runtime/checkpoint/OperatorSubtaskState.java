@@ -55,6 +55,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  * collections can then store all the state handles that are relevant to build up the new subtask
  * state.
  */
+//TODO 一个subtask对应的状态对象
 public class OperatorSubtaskState implements CompositeStateHandle {
 
     private static final Logger LOG = LoggerFactory.getLogger(OperatorSubtaskState.class);
@@ -78,9 +79,9 @@ public class OperatorSubtaskState implements CompositeStateHandle {
      * org.apache.flink.runtime.state.KeyedStateCheckpointOutputStream}.
      */
     private final StateObjectCollection<KeyedStateHandle> rawKeyedState;
-
+    //todo 上游in-flight-data 状态
     private final StateObjectCollection<InputChannelStateHandle> inputChannelState;
-
+    //todo 下游in-flight-data 状态
     private final StateObjectCollection<ResultSubpartitionStateHandle> resultSubpartitionState;
 
     /**

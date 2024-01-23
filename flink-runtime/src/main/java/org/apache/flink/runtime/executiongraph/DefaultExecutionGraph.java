@@ -471,6 +471,7 @@ public class DefaultExecutionGraph implements ExecutionGraph, InternalExecutionG
                                 Thread.currentThread().getThreadGroup(), "Checkpoint Timer"));
 
         // create the coordinator that triggers and commits checkpoints and holds the state
+        //todo 初始化checkpointCoordinator
         checkpointCoordinator =
                 new CheckpointCoordinator(
                         jobInformation.getJobId(),

@@ -61,6 +61,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  * This class encapsulates the operation of assigning restored state when restoring from a
  * checkpoint.
  */
+//todo 从ckp恢复时，重分布状态的核心类
 @Internal
 public class StateAssignmentOperation {
 
@@ -93,7 +94,7 @@ public class StateAssignmentOperation {
         this.allowNonRestoredState = allowNonRestoredState;
         this.vertexAssignments = new HashMap<>(tasks.size());
     }
-
+    //todo 重分布状态！！！！！！
     public void assignStates() {
         checkStateMappingCompleteness(allowNonRestoredState, operatorStates, tasks);
 
@@ -101,6 +102,7 @@ public class StateAssignmentOperation {
 
         // find the states of all operators belonging to this task and compute additional
         // information in first pass
+        //todo 寻找属于这个任务的所有操作符的状态，并在第一次通过时计算额外信息。
         for (ExecutionJobVertex executionJobVertex : tasks) {
             List<OperatorIDPair> operatorIDPairs = executionJobVertex.getOperatorIDs();
             Map<OperatorID, OperatorState> operatorStates = new HashMap<>(operatorIDPairs.size());
@@ -135,25 +137,30 @@ public class StateAssignmentOperation {
         }
 
         // repartition state
+        // todo 重新分配状态
         for (TaskStateAssignment stateAssignment : vertexAssignments.values()) {
             if (stateAssignment.hasNonFinishedState) {
+                //todo
                 assignAttemptState(stateAssignment);
             }
         }
 
         // actually assign the state
+        // todo 实际分配状态
         for (TaskStateAssignment stateAssignment : vertexAssignments.values()) {
             if (stateAssignment.hasNonFinishedState || stateAssignment.isFullyFinished) {
+                //todo
                 assignTaskStateToExecutionJobVertices(stateAssignment);
             }
         }
     }
-
+    //todo 重分布state的核心方法！！！！！！
     private void assignAttemptState(TaskStateAssignment taskStateAssignment) {
 
         // 1. first compute the new parallelism
+        // todo 首先计算新的并行性
         checkParallelismPreconditions(taskStateAssignment);
-
+        //todo 根据并行度和最大并行度计算keyGroupPartitions的值
         List<KeyGroupRange> keyGroupPartitions =
                 createKeyGroupPartitions(
                         taskStateAssignment.executionJobVertex.getMaxParallelism(),
@@ -193,7 +200,7 @@ public class StateAssignmentOperation {
 
         reDistributeInputChannelStates(taskStateAssignment);
         reDistributeResultSubpartitionStates(taskStateAssignment);
-
+        //todo KeyedStates
         reDistributeKeyedStates(keyGroupPartitions, taskStateAssignment);
     }
 
@@ -220,6 +227,7 @@ public class StateAssignmentOperation {
             if (assignment.isFullyFinished) {
                 assignFinishedStateToTask(currentExecutionAttempt);
             } else {
+                //todo
                 assignNonFinishedStateToTask(
                         assignment, operatorIDs, subTaskIndex, currentExecutionAttempt);
             }
@@ -238,12 +246,13 @@ public class StateAssignmentOperation {
             List<OperatorIDPair> operatorIDs,
             int subTaskIndex,
             Execution currentExecutionAttempt) {
+        //todo currentExecutionAttempt对应的状态
         TaskStateSnapshot taskState = new TaskStateSnapshot(operatorIDs.size(), false);
 
         for (OperatorIDPair operatorID : operatorIDs) {
             OperatorInstanceID instanceID =
                     OperatorInstanceID.of(subTaskIndex, operatorID.getGeneratedOperatorID());
-
+            //todo 当前subtask+operatorID对应的状态【一个subtask可能是多个operator chain在一起的】
             OperatorSubtaskState operatorSubtaskState = assignment.getSubtaskState(instanceID);
 
             taskState.putSubtaskStateByOperatorID(
@@ -252,6 +261,7 @@ public class StateAssignmentOperation {
 
         JobManagerTaskRestore taskRestore =
                 new JobManagerTaskRestore(restoreCheckpointId, taskState);
+        //todo 给当前Execution 设置 恢复状态
         currentExecutionAttempt.setInitialState(taskRestore);
     }
 
@@ -271,6 +281,7 @@ public class StateAssignmentOperation {
                         OperatorInstanceID instanceID =
                                 OperatorInstanceID.of(subTaskIndex, operatorID);
                         Tuple2<List<KeyedStateHandle>, List<KeyedStateHandle>> subKeyedStates =
+                                //todo
                                 reAssignSubKeyedStates(
                                         operatorState,
                                         keyGroupPartitions,
@@ -626,6 +637,7 @@ public class StateAssignmentOperation {
      * @param parallelism Parallelism to generate the key group partitioning for
      * @return List of key group partitions
      */
+    //todo 分配新的keyGroupRange！！！！！！
     public static List<KeyGroupRange> createKeyGroupPartitions(
             int numberKeyGroups, int parallelism) {
         Preconditions.checkArgument(numberKeyGroups >= parallelism);

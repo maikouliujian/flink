@@ -123,6 +123,7 @@ public class Execution
     private final Executor executor;
 
     /** The execution vertex whose task this execution executes. */
+    //todo 一个execution对应一个ExecutionVertex
     private final ExecutionVertex vertex;
 
     /** The unique ID marking the specific execution instant of the task. */
@@ -152,7 +153,7 @@ public class Execution
     private final CompletableFuture<?> initializingOrRunningFuture;
 
     private volatile ExecutionState state = CREATED;
-
+    //todo 一个execution对应一个slot资源
     private LogicalSlot assignedResource;
 
     private Optional<ErrorInfo> failureCause =
@@ -161,6 +162,7 @@ public class Execution
     /**
      * Information to restore the task on recovery, such as checkpoint id and task state snapshot.
      */
+    //todo 当前Execution对应的恢复状态！！！！！！
     @Nullable private JobManagerTaskRestore taskRestore;
 
     /** This field holds the allocation id once it was assigned successfully. */
@@ -491,6 +493,7 @@ public class Execution
      *
      * @throws JobException if the execution cannot be deployed to the assigned resource
      */
+    //todo execution启动类！！！！！！
     public void deploy() throws JobException {
         assertRunningInJobMasterMainThread();
 
@@ -551,7 +554,7 @@ public class Execution
                     vertex.getID(),
                     getAssignedResourceLocation(),
                     slot.getAllocationId());
-
+            //todo 构建tdd
             final TaskDeploymentDescriptor deployment =
                     TaskDeploymentDescriptorFactory.fromExecutionVertex(vertex)
                             .createDeploymentDescriptor(
@@ -561,7 +564,7 @@ public class Execution
 
             // null taskRestore to let it be GC'ed
             taskRestore = null;
-
+            //todo 通过slot获取tm的gateway
             final TaskManagerGateway taskManagerGateway = slot.getTaskManagerGateway();
 
             final ComponentMainThreadExecutor jobMasterMainThreadExecutor =
@@ -572,6 +575,7 @@ public class Execution
             // does not block
             // the main thread and sync back to the main thread once submission is completed.
             CompletableFuture.supplyAsync(
+                            //todo 异步提交task
                             () -> taskManagerGateway.submitTask(deployment, rpcTimeout), executor)
                     .thenCompose(Function.identity())
                     .whenCompleteAsync(

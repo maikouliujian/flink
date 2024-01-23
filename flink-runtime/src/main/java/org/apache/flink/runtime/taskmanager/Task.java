@@ -134,6 +134,7 @@ import static org.apache.flink.util.Preconditions.checkState;
  *
  * <p>Each Task is run by one dedicated thread.
  */
+//todo flink subtask对应的类
 public class Task
         implements Runnable, TaskSlotPayload, TaskActions, PartitionProducerStateProvider {
 
@@ -544,6 +545,7 @@ public class Task
     }
 
     /** The core work method that bootstraps the task and executes its code. */
+    //todo！！！！！！
     @Override
     public void run() {
         try {
@@ -552,7 +554,7 @@ public class Task
             terminationFuture.complete(executionState);
         }
     }
-
+    //todo 任务运行！！！！！！
     private void doRun() {
         // ----------------------------
         //  Initial State transition
@@ -566,6 +568,7 @@ public class Task
                 }
             } else if (current == ExecutionState.FAILED) {
                 // we were immediately failed. tell the TaskManager that we reached our final state
+                //todo // 我们立即失败了。告诉任务管理器我们已经到达了我们的最终状态。
                 notifyFinalState();
                 if (metrics != null) {
                     metrics.close();
@@ -575,6 +578,7 @@ public class Task
                 if (transitionState(ExecutionState.CANCELING, ExecutionState.CANCELED)) {
                     // we were immediately canceled. tell the TaskManager that we reached our final
                     // state
+                    // todo state 我们立即被取消了。告诉任务管理器我们已经到达了我们的最终状态。
                     notifyFinalState();
                     if (metrics != null) {
                         metrics.close();
@@ -592,6 +596,7 @@ public class Task
 
         // all resource acquisitions and registrations from here on
         // need to be undone in the end
+        //todo 从现在开始，所有的资源获取和注册都需要在最后被撤销。
         Map<String, Future<Path>> distributedCacheEntries = new HashMap<>();
         TaskInvokable invokable = null;
 
@@ -608,7 +613,7 @@ public class Task
             // first of all, get a user-code classloader
             // this may involve downloading the job's JAR files and/or classes
             LOG.info("Loading JAR files for task {}.", this);
-
+            //todo 首先，获取用户代码类加载器，这可能涉及到下载任务的JAR文件和/或类。
             userCodeClassLoader = createUserCodeClassloader();
             final ExecutionConfig executionConfig =
                     serializedExecutionConfig.deserializeValue(userCodeClassLoader.asClassLoader());
@@ -633,9 +638,9 @@ public class Task
             // memory to run the necessary data exchanges
             // the registration must also strictly be undone
             // ----------------------------------------------------------------
-
+            //todo // 向网络堆栈注册任务，如果系统没有足够的内存来运行必要的数据交换，这个操作可能会失败。注册也必须严格地撤销。
             LOG.debug("Registering task at network: {}.", this);
-
+            //todo inputGates为上游，partitionWriters为下游
             setupPartitionsAndGates(partitionWriters, inputGates);
 
             for (ResultPartitionWriter partitionWriter : partitionWriters) {
@@ -643,6 +648,7 @@ public class Task
             }
 
             // next, kick off the background copying of files for the distributed cache
+            //todo // 接下来，启动分布式缓存文件的后台复制。
             try {
                 for (Map.Entry<String, DistributedCache.DistributedCacheEntry> entry :
                         DistributedCache.readFileInfoFromConfig(jobConfiguration)) {
@@ -667,10 +673,10 @@ public class Task
             // ----------------------------------------------------------------
             //  call the user code initialization methods
             // ----------------------------------------------------------------
-
+            //todo // 调用用户代码初始化方法。
             TaskKvStateRegistry kvStateRegistry =
                     kvStateService.createKvStateTaskRegistry(jobId, getJobVertexId());
-
+            //todo
             Environment env =
                     new RuntimeEnvironment(
                             jobId,
@@ -684,7 +690,7 @@ public class Task
                             memoryManager,
                             ioManager,
                             broadcastVariableManager,
-                            taskStateManager,
+                            taskStateManager,//todo 包含任务恢复的state
                             aggregateManager,
                             accumulatorRegistry,
                             kvStateRegistry,
@@ -710,6 +716,7 @@ public class Task
             FlinkSecurityManager.monitorUserSystemExitForCurrentThread();
             try {
                 // now load and instantiate the task's invokable code
+                //todo // 现在加载并实例化任务的可调用代码
                 invokable =
                         loadAndInstantiateInvokable(
                                 userCodeClassLoader.asClassLoader(), nameOfInvokableClass, env);
@@ -724,7 +731,7 @@ public class Task
             // we must make strictly sure that the invokable is accessible to the cancel() call
             // by the time we switched to running.
             this.invokable = invokable;
-
+            //todo 【核心】flink算子的恢复和执行逻辑！！！！！！
             restoreAndInvoke(invokable);
 
             // make sure, we enter the catch block if the task leaves the invoke() method due
@@ -738,6 +745,7 @@ public class Task
             // ----------------------------------------------------------------
 
             // finish the produced partitions. if this fails, we consider the execution failed.
+            //todo 完成生成的分区。如果此操作失败，我们将认为执行失败。
             for (ResultPartitionWriter partitionWriter : partitionWriters) {
                 if (partitionWriter != null) {
                     partitionWriter.finish();
@@ -814,21 +822,25 @@ public class Task
                 // clear the reference to the invokable. this helps guard against holding references
                 // to the invokable and its structures in cases where this Task object is still
                 // referenced
+                //todo 清除对可调用对象的引用。在这个任务对象仍然被引用的情况下，这有助于防止持有对可调用对象及其结构的引用。
                 this.invokable = null;
 
                 // free the network resources
                 releaseResources();
 
                 // free memory resources
+                //todo 释放网络资源
                 if (invokable != null) {
                     memoryManager.releaseAll(invokable);
                 }
 
                 // remove all of the tasks resources
+                //todo 移除所有任务资源
                 fileCache.releaseJob(jobId, executionId);
 
                 // close and de-activate safety net for task thread
                 LOG.debug("Ensuring all FileSystem streams are closed for task {}", this);
+                //todo 关闭并停用任务线程的安全网
                 FileSystemSafetyNet.closeSafetyNetAndGuardedResourcesForThread();
 
                 notifyFinalState();
@@ -886,7 +898,7 @@ public class Task
 
         return t;
     }
-
+    //todo 【核心方法：执行flink算子】
     private void restoreAndInvoke(TaskInvokable finalInvokable) throws Exception {
         try {
             // switch to the INITIALIZING state, if that fails, we have been canceled/failed in the
@@ -900,7 +912,7 @@ public class Task
 
             // make sure the user code classloader is accessible thread-locally
             executingThread.setContextClassLoader(userCodeClassLoader.asClassLoader());
-
+            //todo 执行restore方法
             runWithSystemExitMonitoring(finalInvokable::restore);
 
             if (!transitionState(ExecutionState.INITIALIZING, ExecutionState.RUNNING)) {
@@ -910,7 +922,7 @@ public class Task
             // notify everyone that we switched to running
             taskManagerActions.updateTaskExecutionState(
                     new TaskExecutionState(executionId, ExecutionState.RUNNING));
-
+             //todo 执行invoke方法
             runWithSystemExitMonitoring(finalInvokable::invoke);
         } catch (Throwable throwable) {
             try {

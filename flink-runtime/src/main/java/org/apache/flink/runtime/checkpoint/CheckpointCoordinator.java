@@ -1631,6 +1631,7 @@ public class CheckpointCoordinator {
      * <p>This method returns the restored checkpoint ID (as an optional) or an empty optional, if
      * no checkpoint was restored.
      */
+    //todo 从最新的ckp恢复的入口
     private OptionalLong restoreLatestCheckpointedStateInternal(
             final Set<ExecutionJobVertex> tasks,
             final OperatorCoordinatorRestoreBehavior operatorCoordinatorRestoreBehavior,
@@ -1661,6 +1662,7 @@ public class CheckpointCoordinator {
                         == OperatorCoordinatorRestoreBehavior.RESTORE_OR_RESET) {
                     // we let the JobManager-side components know that there was a recovery,
                     // even if there was no checkpoint to recover from, yet
+                    //todo // 我们让JobManager侧的组件知道即使没有检查点可以恢复，也发生了恢复事件。
                     LOG.info("Resetting the Operator Coordinators to an empty state.");
                     restoreStateToCoordinators(
                             OperatorCoordinator.NO_CHECKPOINT, Collections.emptyMap());
@@ -1674,6 +1676,7 @@ public class CheckpointCoordinator {
             this.forceFullSnapshot = latest.getProperties().isUnclaimed();
 
             // re-assign the task states
+            //todo 清除状态中in-flight-data数据
             final Map<OperatorID, OperatorState> operatorStates = extractOperatorStates(latest);
 
             if (checkForPartiallyFinishedOperators) {
@@ -1681,18 +1684,19 @@ public class CheckpointCoordinator {
                         vertexFinishedStateCheckerFactory.apply(tasks, operatorStates);
                 vertexFinishedStateChecker.validateOperatorsFinishedState();
             }
-
+            //todo 【重新分配任务状态！！！！！！】
             StateAssignmentOperation stateAssignmentOperation =
                     new StateAssignmentOperation(
                             latest.getCheckpointID(), tasks, operatorStates, allowNonRestoredState);
-
+            //todo 【重新分配任务状态！！！！！！】
             stateAssignmentOperation.assignStates();
 
             // call master hooks for restore. we currently call them also on "regional restore"
             // because
             // there is no other failure notification mechanism in the master hooks
             // ultimately these should get removed anyways in favor of the operator coordinators
-
+            //todo // 为恢复调用主控钩子。我们目前也在"区域恢复"上调用它们，因为在主控钩子中没有其他的故障通知机制。
+            //     // 最终，这些应该以操作协调员为优先考虑进行移除。
             MasterHooks.restoreMasterHooks(
                     masterHooks,
                     latest.getMasterHookStates(),
@@ -1734,6 +1738,7 @@ public class CheckpointCoordinator {
         for (OperatorState originalOperatorState : originalOperatorStates.values()) {
             newStates.put(
                     originalOperatorState.getOperatorID(),
+                    //todo 清除in-flight-data
                     originalOperatorState.copyAndDiscardInFlightData());
         }
 

@@ -169,6 +169,7 @@ public abstract class AbstractFsCheckpointStorageAccess implements CheckpointSto
         // generate the savepoint directory
 
         final FileSystem fs = savepointBasePath.getFileSystem();
+        //todo savepoint路径！！！！！！！
         final String prefix = "savepoint-" + jobId.toString().substring(0, 6) + '-';
 
         Exception latestException = null;

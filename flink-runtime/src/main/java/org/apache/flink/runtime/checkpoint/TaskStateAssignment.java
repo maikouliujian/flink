@@ -57,10 +57,12 @@ import static org.apache.flink.util.Preconditions.checkState;
  * Used by {@link StateAssignmentOperation} to store temporal information while creating {@link
  * OperatorSubtaskState}.
  */
+//todo 每一个subtask对应一个TaskStateAssignment
 class TaskStateAssignment {
     private static final Logger LOG = LoggerFactory.getLogger(TaskStateAssignment.class);
-
+    //todo 对应的subtask
     final ExecutionJobVertex executionJobVertex;
+    //todo 老数据！！！！！！
     final Map<OperatorID, OperatorState> oldState;
     final boolean hasNonFinishedState;
     final boolean isFullyFinished;
@@ -154,7 +156,7 @@ class TaskStateAssignment {
         }
         return upstreamAssignments;
     }
-
+    //todo 获取状态！！！！！！
     public OperatorSubtaskState getSubtaskState(OperatorInstanceID instanceID) {
         checkState(
                 subManagedKeyedState.containsKey(instanceID)

@@ -557,6 +557,7 @@ public abstract class ResourceManager<WorkerType extends ResourceIDRetrievable>
             InstanceID registrationId = registration.getInstanceID();
 
             if (Objects.equals(registrationId, instanceID)) {
+                //todo 释放slot
                 slotManager.freeSlot(slotId, allocationId);
             } else {
                 log.debug(

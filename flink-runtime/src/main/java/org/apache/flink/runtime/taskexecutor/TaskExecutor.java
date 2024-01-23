@@ -576,7 +576,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
     // ----------------------------------------------------------------------
     // Task lifecycle RPCs
     // ----------------------------------------------------------------------
-
+    //todo 提交task
     @Override
     public CompletableFuture<Acknowledge> submitTask(
             TaskDeploymentDescriptor tdd, JobMasterId jobMasterId, Time timeout) {
@@ -702,7 +702,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
             } catch (IOException e) {
                 throw new TaskSubmissionException(e);
             }
-
+            //todo 恢复中的state
             final JobManagerTaskRestore taskRestore = tdd.getTaskRestore();
 
             final TaskStateManager taskStateManager =
@@ -720,7 +720,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
             } catch (SlotNotFoundException e) {
                 throw new TaskSubmissionException("Could not submit task.", e);
             }
-
+            //todo 构建task
             Task task =
                     new Task(
                             jobInformation,
@@ -736,7 +736,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
                             taskExecutorServices.getBroadcastVariableManager(),
                             taskExecutorServices.getTaskEventDispatcher(),
                             externalResourceInfoProvider,
-                            taskStateManager,
+                            taskStateManager,//todo
                             taskManagerActions,
                             inputSplitProvider,
                             checkpointResponder,

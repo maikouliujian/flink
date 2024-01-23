@@ -39,11 +39,13 @@ import static org.apache.flink.util.Preconditions.checkState;
  * from all sub tasks of an operator and therefore represents the complete state of a logical
  * operator.
  */
+//todo 一个算子对应的状态
 public class OperatorState implements CompositeStateHandle {
 
     private static final long serialVersionUID = -4845578005863201810L;
 
     /** The id of the operator. */
+    //todo 算子id--->一个算子会有多个并行度！！！！！！
     private final OperatorID operatorID;
 
     /** The handles to states created by the parallel tasks: subtaskIndex -> subtaskstate. */
@@ -151,6 +153,7 @@ public class OperatorState implements CompositeStateHandle {
                     originalSubtaskStateEntry
                             .getValue()
                             .toBuilder()
+                            //todo 清除inflightdata
                             .setResultSubpartitionState(StateObjectCollection.empty())
                             .setInputChannelState(StateObjectCollection.empty())
                             .build());

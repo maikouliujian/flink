@@ -248,6 +248,7 @@ public class FileCache {
             jobRefCounter.remove(executionId);
             if (jobRefCounter.isEmpty()) {
                 executorService.schedule(
+                        //todo 在DeleteProcess中移除任务资源
                         new DeleteProcess(jobId), cleanupInterval, TimeUnit.MILLISECONDS);
             }
         }

@@ -67,6 +67,7 @@ public class TaskStateManagerImpl implements TaskStateManager {
      * The data given by the job manager to restore the job. This is null for a new job without
      * previous state.
      */
+    //todo 从ckp中恢复任务！！！！！！
     @Nullable private final JobManagerTaskRestore jobManagerTaskRestore;
 
     /** The local state store to which this manager reports local state snapshots. */

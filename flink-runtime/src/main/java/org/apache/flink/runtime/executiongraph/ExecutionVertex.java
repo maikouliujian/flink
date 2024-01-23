@@ -77,6 +77,7 @@ public class ExecutionVertex
     private final String taskNameWithSubtask;
 
     /** The current or latest execution attempt of this vertex's task. */
+    //todo 真正运行的类！！！！！！
     private Execution currentExecution; // this field must never be null
 
     private final ArrayList<InputSplit> inputSplits;
