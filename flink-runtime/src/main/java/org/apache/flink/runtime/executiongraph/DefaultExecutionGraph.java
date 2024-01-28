@@ -497,7 +497,7 @@ public class DefaultExecutionGraph implements ExecutionGraph, InternalExecutionG
                         hook.getIdentifier());
             }
         }
-
+        //todo 是否启动的checkpoint的配置！！！！！！
         if (checkpointCoordinator.isPeriodicCheckpointingConfigured()) {
             // the periodic checkpoint scheduler is activated and deactivated as a result of
             // job status changes (running -> on, all other states -> off)

@@ -131,6 +131,7 @@ public class SourceOperator<OUT, SplitT extends SourceSplit> extends AbstractStr
     // ---- lazily initialized fields (these fields are the "hot" fields) ----
 
     /** The source reader that does most of the work. */
+    //todo 真正处理数据的核心类！！！！！！
     private SourceReader<OUT, SplitT> sourceReader;
 
     private ReaderOutput<OUT> currentMainOutput;
@@ -293,6 +294,7 @@ public class SourceOperator<OUT, SplitT extends SourceSplit> extends AbstractStr
 
     @Override
     public void open() throws Exception {
+        //todo 创建source reader
         initReader();
 
         // in the future when we this one is migrated to the "eager initialization" operator
@@ -324,6 +326,7 @@ public class SourceOperator<OUT, SplitT extends SourceSplit> extends AbstractStr
 
         sourceMetricGroup.idlingStarted();
         // Start the reader after registration, sending messages in start is allowed.
+        //todo start source reader
         sourceReader.start();
 
         eventTimeLogic.startPeriodicWatermarkEmits();
@@ -373,7 +376,7 @@ public class SourceOperator<OUT, SplitT extends SourceSplit> extends AbstractStr
         }
         super.close();
     }
-
+    //todo sourceReader读取并发送数据
     @Override
     public DataInputStatus emitNext(DataOutput<OUT> output) throws Exception {
         // guarding an assumptions we currently make due to the fact that certain classes
@@ -386,6 +389,7 @@ public class SourceOperator<OUT, SplitT extends SourceSplit> extends AbstractStr
         // short circuit the hot path. Without this short circuit (READING handled in the
         // switch/case) InputBenchmark.mapSink was showing a performance regression.
         if (operatingMode == OperatingMode.READING) {
+            //todo 发送数据
             return convertToInternalStatus(sourceReader.pollNext(currentMainOutput));
         }
         return emitNextNotReading(output);

@@ -100,6 +100,7 @@ public class OneInputStreamTask<IN, OUT> extends StreamTask<OUT, OneInputStreamO
             CheckpointedInputGate inputGate = createCheckpointedInputGate();
             Counter numRecordsIn = setupNumRecordsInCounter(mainOperator);
             DataOutput<IN> output = createDataOutput(numRecordsIn);
+            //todo input
             StreamTaskInput<IN> input = createTaskInput(inputGate);
 
             StreamConfig.InputConfig[] inputConfigs =
@@ -230,6 +231,8 @@ public class OneInputStreamTask<IN, OUT> extends StreamTask<OUT, OneInputStreamO
         public void emitRecord(StreamRecord<IN> record) throws Exception {
             numRecordsIn.inc();
             operator.setKeyContextElement(record);
+            //todo 这一步到达用户自定义的算子中的processElement方法
+            //todo 如果是map算子，processElement应该在StreamMap.java调用
             operator.processElement(record);
         }
 

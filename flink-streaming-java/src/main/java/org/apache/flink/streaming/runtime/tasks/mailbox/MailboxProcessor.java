@@ -228,6 +228,7 @@ public class MailboxProcessor implements Closeable {
             // The blocking `processMail` call will not return until default action is available.
             processMail(localMailbox, false);
             if (isNextLoopPossible()) {
+                //todo 会回调到StreamTask::processInput 541
                 mailboxDefaultAction.runDefaultAction(
                         mailboxController); // lock is acquired inside default action as needed
             }

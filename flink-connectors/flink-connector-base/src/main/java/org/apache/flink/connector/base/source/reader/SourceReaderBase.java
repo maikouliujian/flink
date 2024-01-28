@@ -70,6 +70,7 @@ public abstract class SourceReaderBase<E, T, SplitT extends SourceSplit, SplitSt
     private static final Logger LOG = LoggerFactory.getLogger(SourceReaderBase.class);
 
     /** A queue to buffer the elements fetched by the fetcher thread. */
+    //todo 数据队列，已经包含数据！！！！！！
     private final FutureCompletingBlockingQueue<RecordsWithSplitIds<E>> elementsQueue;
 
     /** The state of the splits. */
@@ -77,6 +78,7 @@ public abstract class SourceReaderBase<E, T, SplitT extends SourceSplit, SplitSt
     private final Map<String, SplitContext<T, SplitStateT>> splitStates;
 
     /** The record emitter to handle the records read by the SplitReaders. */
+    //todo 各个子类实现的发射器是真正读取发送数据的类！！！！！！
     protected final RecordEmitter<E, T, SplitStateT> recordEmitter;
 
     /** The split fetcher manager to run split fetchers. */
@@ -123,11 +125,13 @@ public abstract class SourceReaderBase<E, T, SplitT extends SourceSplit, SplitSt
     @Override
     public void start() {}
 
+    //todo 读取并发送数据！！！！！！
     @Override
     public InputStatus pollNext(ReaderOutput<T> output) throws Exception {
         // make sure we have a fetch we are working on, or move to the next
         RecordsWithSplitIds<E> recordsWithSplitId = this.currentFetch;
         if (recordsWithSplitId == null) {
+            //todo 从队列中读取数据
             recordsWithSplitId = getNextFetch(output);
             if (recordsWithSplitId == null) {
                 return trace(finishedOrAvailableLater());
@@ -141,7 +145,7 @@ public abstract class SourceReaderBase<E, T, SplitT extends SourceSplit, SplitSt
             if (record != null) {
                 // emit the record.
                 numRecordsInCounter.inc(1);
-                //todo 发送数据，并更新state中的offset
+                //todo 通过发射器发送数据，并更新state中的offset
                 recordEmitter.emitRecord(record, currentSplitOutput, currentSplitContext.state);
                 LOG.trace("Emitted record: {}", record);
 

@@ -146,6 +146,7 @@ public class SplitFetcher<E, SplitT extends SourceSplit> implements Runnable {
             // before
             // the it starts running.
             LOG.debug("Prepare to run {}", runningTask);
+            //todo runningTask.run()启动task！！！！！！
             if (!wakeUp.get() && runningTask.run()) {
                 LOG.debug("Finished running task {}", runningTask);
                 // the task has finished running. Set it to null so it won't be enqueued.

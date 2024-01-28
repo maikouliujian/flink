@@ -210,6 +210,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
     private final StreamTaskActionExecutor actionExecutor;
 
     /** The input processor. Initialized in {@link #init()} method. */
+    //todo 不同的子类走不同StreamInputProcessor
     @Nullable protected StreamInputProcessor inputProcessor;
 
     /** the main operator that consumes the input streams of this task. */
@@ -393,6 +394,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
                     .registerMailboxSizeSupplier(() -> mailbox.size());
 
             this.mailboxProcessor =
+                    //todo 读取数据的定义！！！！！！
                     new MailboxProcessor(
                             this::processInput, mailbox, actionExecutor, mailboxMetricsControl);
 
@@ -537,7 +539,9 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
      *     stream task.
      * @throws Exception on any problems in the action.
      */
+    //todo 读取数据！！！！！！
     protected void processInput(MailboxDefaultAction.Controller controller) throws Exception {
+        //todo 处理input数据
         DataInputStatus status = inputProcessor.processInput();
         switch (status) {
             case MORE_AVAILABLE:
@@ -757,7 +761,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
             throw new CancelTaskException();
         }
     }
-
+    //todo 核心方法！！！！！！
     @Override
     public final void invoke() throws Exception {
         // Allow invoking method 'invoke' without having to call 'restore' before it.
@@ -772,6 +776,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
         scheduleBufferDebloater();
 
         // let the task do its work
+        //todo 运行任务
         runMailboxLoop();
 
         // if this left the run() method cleanly despite the fact that this was canceled,
@@ -827,6 +832,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
     }
 
     public void runMailboxLoop() throws Exception {
+        //todo
         mailboxProcessor.runMailboxLoop();
     }
 

@@ -40,6 +40,7 @@ public class CheckpointCoordinatorDeActivator implements JobStatusListener {
     public void jobStatusChanges(JobID jobId, JobStatus newJobStatus, long timestamp) {
         if (newJobStatus == JobStatus.RUNNING) {
             // start the checkpoint scheduler
+            //todo 触发checkpoint的入口！！！！！！
             coordinator.startCheckpointScheduler();
         } else {
             // anything else should stop the trigger for now

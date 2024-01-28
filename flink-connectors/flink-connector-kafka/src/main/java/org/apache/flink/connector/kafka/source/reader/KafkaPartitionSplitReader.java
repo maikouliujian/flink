@@ -59,6 +59,7 @@ import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 /** A {@link SplitReader} implementation that reads records from Kafka partitions. */
+//todo 读取kafka数据的核心类
 @Internal
 public class KafkaPartitionSplitReader
         implements SplitReader<ConsumerRecord<byte[], byte[]>, KafkaPartitionSplit> {

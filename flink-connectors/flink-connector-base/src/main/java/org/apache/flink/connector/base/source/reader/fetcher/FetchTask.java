@@ -31,6 +31,7 @@ import java.util.function.Consumer;
 /** The default fetch task that fetches the records into the element queue. */
 @Internal
 class FetchTask<E, SplitT extends SourceSplit> implements SplitFetcherTask {
+    //todo 真正读取数据的类！！！！！！
     private final SplitReader<E, SplitT> splitReader;
     private final FutureCompletingBlockingQueue<RecordsWithSplitIds<E>> elementsQueue;
     private final Consumer<Collection<String>> splitFinishedCallback;
@@ -62,6 +63,7 @@ class FetchTask<E, SplitT extends SourceSplit> implements SplitFetcherTask {
             if (!isWakenUp()) {
                 // The order matters here. We must first put the last records into the queue.
                 // This ensures the handling of the fetched records is atomic to wakeup.
+                //todo 将数据加入队列！！！！！！
                 if (elementsQueue.put(fetcherIndex, lastRecords)) {
                     if (!lastRecords.finishedSplits().isEmpty()) {
                         // The callback does not throw InterruptedException.

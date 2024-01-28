@@ -305,7 +305,7 @@ public class DefaultExecutionGraphBuilder {
             final CheckpointCoordinatorConfiguration chkConfig =
                     snapshotSettings.getCheckpointCoordinatorConfiguration();
             String changelogStorage = jobManagerConfig.getString(STATE_CHANGE_LOG_STORAGE);
-
+            //todo checkpoint的设置
             executionGraph.enableCheckpointing(
                     chkConfig,
                     hooks,

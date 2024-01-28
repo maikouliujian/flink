@@ -29,6 +29,7 @@ import org.apache.flink.connector.base.source.reader.splitreader.SplitReader;
  * @param <T> the type of records that are eventually emitted to the {@link SourceOutput}.
  * @param <SplitStateT> the mutable type of split state.
  */
+//todo 发送数据的抽象类
 @PublicEvolving
 public interface RecordEmitter<E, T, SplitStateT> {
 

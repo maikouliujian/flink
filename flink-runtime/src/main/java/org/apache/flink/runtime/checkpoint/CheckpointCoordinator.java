@@ -518,7 +518,7 @@ public class CheckpointCoordinator {
         chooseRequestToExecute(request).ifPresent(this::startTriggeringCheckpoint);
         return request.onCompletionPromise;
     }
-
+    //todo 【触发ckp!!!!!!】
     private void startTriggeringCheckpoint(CheckpointTriggerRequest request) {
         try {
             synchronized (lock) {
@@ -573,6 +573,7 @@ public class CheckpointCoordinator {
                                     pendingCheckpoint -> {
                                         try {
                                             CheckpointStorageLocation checkpointStorageLocation =
+                                                    //todo 初始化ckp路径
                                                     initializeCheckpointLocation(
                                                             pendingCheckpoint.getCheckpointID(),
                                                             request.props,
@@ -653,7 +654,7 @@ public class CheckpointCoordinator {
                                                 onTriggerFailure(checkpoint, throwable);
                                             }
                                         } else {
-                                            //todo 发起ckp请求
+                                            //todo 发起ckp请求！！！！！！
                                             triggerCheckpointRequest(
                                                     request, timestamp, checkpoint);
                                         }

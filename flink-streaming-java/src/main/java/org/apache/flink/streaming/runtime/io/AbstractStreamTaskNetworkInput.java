@@ -83,7 +83,7 @@ public abstract class AbstractStreamTaskNetworkInput<
         this.inputIndex = inputIndex;
         this.recordDeserializers = checkNotNull(recordDeserializers);
     }
-
+    //todo 读取数据！！！！！！
     @Override
     public DataInputStatus emitNext(DataOutput<T> output) throws Exception {
 
@@ -102,6 +102,7 @@ public abstract class AbstractStreamTaskNetworkInput<
                 }
 
                 if (result.isFullRecord()) {
+                    //todo 处理数据！！！！！！
                     processElement(deserializationDelegate.getInstance(), output);
                     return DataInputStatus.MORE_AVAILABLE;
                 }
@@ -128,9 +129,10 @@ public abstract class AbstractStreamTaskNetworkInput<
             }
         }
     }
-
+    //todo 处理数据的核心方法！！！！！！
     private void processElement(StreamElement recordOrMark, DataOutput<T> output) throws Exception {
         if (recordOrMark.isRecord()) {
+            //todo 发射数据
             output.emitRecord(recordOrMark.asRecord());
         } else if (recordOrMark.isWatermark()) {
             statusWatermarkValve.inputWatermark(

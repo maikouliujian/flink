@@ -61,6 +61,7 @@ public abstract class SplitFetcherManager<E, SplitT extends SourceSplit> {
     private final AtomicInteger fetcherIdGenerator;
 
     /** A supplier to provide split readers. */
+    //todo 真正读取数据的reader！！！！！！
     private final Supplier<SplitReader<E, SplitT>> splitReaderFactory;
 
     /** Uncaught exception in the split fetchers. */
@@ -157,6 +158,7 @@ public abstract class SplitFetcherManager<E, SplitT extends SourceSplit> {
         if (closed) {
             throw new IllegalStateException("The split fetcher manager has closed.");
         }
+        //todo 获取reader
         // Create SplitReader.
         SplitReader<E, SplitT> splitReader = splitReaderFactory.get();
 

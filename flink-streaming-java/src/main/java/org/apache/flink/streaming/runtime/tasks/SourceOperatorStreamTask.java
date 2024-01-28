@@ -56,6 +56,7 @@ import java.util.concurrent.Future;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /** A subclass of {@link StreamTask} for executing the {@link SourceOperator}. */
+//todo 针对source算子的task
 @Internal
 public class SourceOperatorStreamTask<T> extends StreamTask<T, SourceOperator<T, ?>> {
 
@@ -86,6 +87,7 @@ public class SourceOperatorStreamTask<T> extends StreamTask<T, SourceOperator<T,
 
     @Override
     public void init() throws Exception {
+        //todo SourceOperator
         final SourceOperator<T, ?> sourceOperator = this.mainOperator;
         // reader initialization, which cannot happen in the constructor due to the
         // lazy metric group initialization. We do this here now, rather than
@@ -109,6 +111,7 @@ public class SourceOperatorStreamTask<T> extends StreamTask<T, SourceOperator<T,
 
             input = externallyInducedSourceInput;
         } else {
+            //todo source的input
             input = new StreamTaskSourceInput<>(sourceOperator, 0, 0);
         }
 

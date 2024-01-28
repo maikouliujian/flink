@@ -43,6 +43,7 @@ public class SourceOperatorFactory<OUT> extends AbstractStreamOperatorFactory<OU
     private static final long serialVersionUID = 1L;
 
     /** The {@link Source} to create the {@link SourceOperator}. */
+    //todo source【可以是kafkasource、filesource等！！！！！！】
     private final Source<OUT, ?, ?> source;
 
     /** The event time setup (timestamp assigners, watermark generators, etc.). */
@@ -80,7 +81,7 @@ public class SourceOperatorFactory<OUT> extends AbstractStreamOperatorFactory<OU
     public Boundedness getBoundedness() {
         return source.getBoundedness();
     }
-
+    //todo 创建source 算子
     @Override
     public <T extends StreamOperator<OUT>> T createStreamOperator(
             StreamOperatorParameters<OUT> parameters) {
@@ -90,6 +91,7 @@ public class SourceOperatorFactory<OUT> extends AbstractStreamOperatorFactory<OU
         //todo 创建StreamOperator
         final SourceOperator<OUT, ?> sourceOperator =
                 instantiateSourceOperator(
+                        //todo 创建source reader
                         source::createReader,
                         gateway,
                         source.getSplitSerializer(),
@@ -171,7 +173,7 @@ public class SourceOperatorFactory<OUT> extends AbstractStreamOperatorFactory<OU
 
         final SimpleVersionedSerializer<SplitT> typedSplitSerializer =
                 (SimpleVersionedSerializer<SplitT>) splitSerializer;
-
+        //todo 读取数据的算子！！！！！！
         return new SourceOperator<>(
                 typedReaderFactory,
                 eventGateway,

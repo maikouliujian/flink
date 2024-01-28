@@ -50,6 +50,7 @@ public interface Source<T, SplitT extends SourceSplit, EnumChkT> extends Seriali
      * @throws Exception The implementor is free to forward all exceptions directly. Exceptions
      *     thrown from this method cause task failure/recovery.
      */
+    //todo 创建读取数据的reader
     SourceReader<T, SplitT> createReader(SourceReaderContext readerContext) throws Exception;
 
     /**

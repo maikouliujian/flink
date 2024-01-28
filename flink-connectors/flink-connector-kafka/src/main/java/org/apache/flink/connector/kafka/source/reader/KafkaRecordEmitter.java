@@ -50,6 +50,7 @@ public class KafkaRecordEmitter<T>
         try {
             sourceOutputWrapper.setSourceOutput(output);
             sourceOutputWrapper.setTimestamp(consumerRecord.timestamp());
+            //todo 最终会调用sourceOutputWrapper.collect()方法将数据发送走！！！！！！
             deserializationSchema.deserialize(consumerRecord, sourceOutputWrapper);
             //todo 更新state中的offset
             splitState.setCurrentOffset(consumerRecord.offset() + 1);
