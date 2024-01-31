@@ -40,6 +40,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /** {@link InternalTimerService} that stores timers on the Java heap. */
+//todo 定时器服务！！！！！！
 public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
 
     private final ProcessingTimeService processingTimeService;
@@ -76,13 +77,13 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
     private TypeSerializer<K> keySerializer;
 
     private TypeSerializer<N> namespaceSerializer;
-
+    //todo timer回调的算子
     private Triggerable<K, N> triggerTarget;
 
     private volatile boolean isInitialized;
-
+    //todo key
     private TypeSerializer<K> keyDeserializer;
-
+    //todo namespace
     private TypeSerializer<N> namespaceDeserializer;
 
     /** The restored timers snapshot, if any. */
@@ -123,6 +124,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
      * <p>This method can be called multiple times, as long as it is called with the same
      * serializers.
      */
+    //todo 启动timerservice
     public void startTimerService(
             TypeSerializer<K> keySerializer,
             TypeSerializer<N> namespaceSerializer,
@@ -185,6 +187,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
             this.triggerTarget = Preconditions.checkNotNull(triggerTarget);
 
             // re-register the restored timers (if any)
+            //todo 启动一次processingTimeService的注册
             final InternalTimer<K, N> headTimer = processingTimeTimersQueue.peek();
             if (headTimer != null) {
                 nextTimer =
@@ -211,7 +214,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
     public long currentWatermark() {
         return currentWatermark;
     }
-
+    //todo 注册processtime timer
     @Override
     public void registerProcessingTimeTimer(N namespace, long time) {
         InternalTimer<K, N> oldHead = processingTimeTimersQueue.peek();
@@ -227,7 +230,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
             }
         }
     }
-
+    //todo 注册eventtime timer
     @Override
     public void registerEventTimeTimer(N namespace, long time) {
         eventTimeTimersQueue.add(
@@ -270,7 +273,8 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
             }
         }
     }
-
+    //todo 【第一次由191行的逻辑触发，后续由294行的逻辑触发】
+    //todo 处理ProcessingTime timer
     private void onProcessingTime(long time) throws Exception {
         // null out the timer in case the Triggerable calls registerProcessingTimeTimer()
         // inside the callback.
@@ -281,6 +285,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
         while ((timer = processingTimeTimersQueue.peek()) != null && timer.getTimestamp() <= time) {
             keyContext.setCurrentKey(timer.getKey());
             processingTimeTimersQueue.poll();
+            //todo 回调到算子中触发onProcessingTime，如KeyedProcessOperator中的onProcessingTime方法
             triggerTarget.onProcessingTime(timer);
         }
 
@@ -290,7 +295,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
                             timer.getTimestamp(), this::onProcessingTime);
         }
     }
-
+    //todo 处理eventTime timer
     public void advanceWatermark(long time) throws Exception {
         currentWatermark = time;
 
@@ -299,6 +304,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
         while ((timer = eventTimeTimersQueue.peek()) != null && timer.getTimestamp() <= time) {
             keyContext.setCurrentKey(timer.getKey());
             eventTimeTimersQueue.poll();
+            //todo 回调到算子中触发onEventTime，如KeyedProcessOperator中的onEventTime方法
             triggerTarget.onEventTime(timer);
         }
     }

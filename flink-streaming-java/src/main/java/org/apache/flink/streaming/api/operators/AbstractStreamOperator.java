@@ -587,6 +587,7 @@ public abstract class AbstractStreamOperator<OUT>
      * @param triggerable The {@link Triggerable} that should be invoked when timers fire
      * @param <N> The type of the timer namespace.
      */
+    //todo getInternalTimerService
     public <K, N> InternalTimerService<N> getInternalTimerService(
             String name, TypeSerializer<N> namespaceSerializer, Triggerable<K, N> triggerable) {
         if (timeServiceManager == null) {
@@ -595,14 +596,17 @@ public abstract class AbstractStreamOperator<OUT>
         @SuppressWarnings("unchecked")
         InternalTimeServiceManager<K> keyedTimeServiceHandler =
                 (InternalTimeServiceManager<K>) timeServiceManager;
+        //todo 获取状态后端
         KeyedStateBackend<K> keyedStateBackend = getKeyedStateBackend();
         checkState(keyedStateBackend != null, "Timers can only be used on keyed operators.");
+        //todo
         return keyedTimeServiceHandler.getInternalTimerService(
                 name, keyedStateBackend.getKeySerializer(), namespaceSerializer, triggerable);
     }
 
     public void processWatermark(Watermark mark) throws Exception {
         if (timeServiceManager != null) {
+            //todo eventtime timer的触发！！！！！！！
             timeServiceManager.advanceWatermark(mark);
         }
         output.emitWatermark(mark);

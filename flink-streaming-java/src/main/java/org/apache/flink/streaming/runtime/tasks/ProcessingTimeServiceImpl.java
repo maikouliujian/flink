@@ -56,7 +56,7 @@ class ProcessingTimeServiceImpl implements ProcessingTimeService {
     public long getCurrentProcessingTime() {
         return timerService.getCurrentProcessingTime();
     }
-
+    //todo
     @Override
     public ScheduledFuture<?> registerTimer(long timestamp, ProcessingTimeCallback target) {
         if (isQuiesced()) {
@@ -64,7 +64,7 @@ class ProcessingTimeServiceImpl implements ProcessingTimeService {
                     ProcessingTimeServiceUtil.getProcessingTimeDelay(
                             timestamp, getCurrentProcessingTime()));
         }
-
+        //todo
         return timerService.registerTimer(
                 timestamp,
                 addQuiesceProcessingToCallback(processingTimeCallbackWrapper.apply(target)));

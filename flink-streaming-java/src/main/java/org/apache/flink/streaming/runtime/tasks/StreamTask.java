@@ -1680,6 +1680,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 
     private void invokeProcessingTimeCallback(ProcessingTimeCallback callback, long timestamp) {
         try {
+            //todo 回调！！！！！！
             callback.onProcessingTime(timestamp);
         } catch (Throwable t) {
             handleAsyncException("Caught exception while processing timer.", new TimerException(t));

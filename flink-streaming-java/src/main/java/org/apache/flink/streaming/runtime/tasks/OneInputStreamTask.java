@@ -239,6 +239,7 @@ public class OneInputStreamTask<IN, OUT> extends StreamTask<OUT, OneInputStreamO
         @Override
         public void emitWatermark(Watermark watermark) throws Exception {
             watermarkGauge.setCurrentWatermark(watermark.getTimestamp());
+            //todo 会触发eventtime的timer
             operator.processWatermark(watermark);
         }
 

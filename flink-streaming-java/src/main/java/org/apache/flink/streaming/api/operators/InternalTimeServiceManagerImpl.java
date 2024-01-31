@@ -119,7 +119,7 @@ public class InternalTimeServiceManagerImpl<K> implements InternalTimeServiceMan
 
         return timeServiceManager;
     }
-
+    //todo
     @Override
     public <N> InternalTimerService<N> getInternalTimerService(
             String name,
@@ -133,8 +133,9 @@ public class InternalTimeServiceManagerImpl<K> implements InternalTimeServiceMan
                 new TimerSerializer<>(keySerializer, namespaceSerializer);
 
         InternalTimerServiceImpl<K, N> timerService =
+                //todo 获取TimerService
                 registerOrGetTimerService(name, timerSerializer);
-
+        //todo 启动TimerService
         timerService.startTimerService(
                 timerSerializer.getKeySerializer(),
                 timerSerializer.getNamespaceSerializer(),
@@ -171,9 +172,10 @@ public class InternalTimeServiceManagerImpl<K> implements InternalTimeServiceMan
     private <N>
             KeyGroupedInternalPriorityQueue<TimerHeapInternalTimer<K, N>> createTimerPriorityQueue(
                     String name, TimerSerializer<K, N> timerSerializer) {
+        //todo 创建管理timer的优先队列
         return priorityQueueSetFactory.create(name, timerSerializer);
     }
-
+    //todo 触发eventtime timer
     @Override
     public void advanceWatermark(Watermark watermark) throws Exception {
         for (InternalTimerServiceImpl<?, ?> service : timerServices.values()) {

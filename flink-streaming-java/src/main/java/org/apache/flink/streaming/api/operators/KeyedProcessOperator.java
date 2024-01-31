@@ -54,25 +54,28 @@ public class KeyedProcessOperator<K, IN, OUT>
     public void open() throws Exception {
         super.open();
         collector = new TimestampedCollector<>(output);
-
+        //todo 获取TimerService
         InternalTimerService<VoidNamespace> internalTimerService =
                 getInternalTimerService("user-timers", VoidNamespaceSerializer.INSTANCE, this);
 
         TimerService timerService = new SimpleTimerService(internalTimerService);
-
+        //todo 上下文===>userFunction中processElement方法使用
         context = new ContextImpl(userFunction, timerService);
+        //todo timer上下文===>userFunction中onTimer方法使用
         onTimerContext = new OnTimerContextImpl(userFunction, timerService);
     }
-
+    //todo 定时器对eventTime的回调方法
     @Override
     public void onEventTime(InternalTimer<K, VoidNamespace> timer) throws Exception {
         collector.setAbsoluteTimestamp(timer.getTimestamp());
+        //todo 触发timer回调！！！！！！
         invokeUserFunction(TimeDomain.EVENT_TIME, timer);
     }
-
+    //todo 定时器对processingTime的回调方法
     @Override
     public void onProcessingTime(InternalTimer<K, VoidNamespace> timer) throws Exception {
         collector.eraseTimestamp();
+        //todo 触发timer回调！！！！！！
         invokeUserFunction(TimeDomain.PROCESSING_TIME, timer);
     }
 
@@ -80,6 +83,7 @@ public class KeyedProcessOperator<K, IN, OUT>
     public void processElement(StreamRecord<IN> element) throws Exception {
         collector.setTimestamp(element);
         context.element = element;
+        //todo userFunction调用processElement方法！！！！！！
         userFunction.processElement(element.getValue(), context, collector);
         context.element = null;
     }
@@ -87,7 +91,9 @@ public class KeyedProcessOperator<K, IN, OUT>
     private void invokeUserFunction(TimeDomain timeDomain, InternalTimer<K, VoidNamespace> timer)
             throws Exception {
         onTimerContext.timeDomain = timeDomain;
+        //todo 修改onTimerContext中的timer,timer是和key+namespace+timestamp绑定的！！！！！！
         onTimerContext.timer = timer;
+        //todo userFunction调用onTimer方法！！！！！！
         userFunction.onTimer(timer.getTimestamp(), onTimerContext, collector);
         onTimerContext.timeDomain = null;
         onTimerContext.timer = null;
@@ -154,7 +160,7 @@ public class KeyedProcessOperator<K, IN, OUT>
             checkState(timer != null);
             return timer.getTimestamp();
         }
-
+        //todo 从上下文获取timerService
         @Override
         public TimerService timerService() {
             return timerService;

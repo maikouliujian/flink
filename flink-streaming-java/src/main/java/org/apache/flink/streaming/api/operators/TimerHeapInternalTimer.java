@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
  * @param <K> Type of the keys to which timers are scoped.
  * @param <N> Type of the namespace to which timers are scoped.
  */
+//todo 每次注册都会新建一个该对象加入到优先队列中【一个三元组 currentkey + namespace + timestamp】
 @Internal
 public final class TimerHeapInternalTimer<K, N>
         implements InternalTimer<K, N>, HeapPriorityQueueElement {
