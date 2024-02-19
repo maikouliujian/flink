@@ -38,5 +38,6 @@ public interface ExecNodeTranslator<T> {
      *
      * @param planner The {@link Planner} of the translated Table.
      */
+    //todo 可将逻辑计划转为Transformation
     Transformation<T> translateToPlan(Planner planner);
 }

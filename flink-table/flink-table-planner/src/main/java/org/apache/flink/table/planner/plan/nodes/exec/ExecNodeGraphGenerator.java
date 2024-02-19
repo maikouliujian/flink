@@ -70,7 +70,7 @@ public class ExecNodeGraphGenerator {
         for (RelNode input : rel.getInputs()) {
             inputNodes.add(generate((FlinkPhysicalRel) input));
         }
-
+        //todo 物理节点转化为执行节点！！！！！！
         execNode = rel.translateToExecNode();
         // connects the input nodes
         List<ExecEdge> inputEdges = new ArrayList<>(inputNodes.size());
