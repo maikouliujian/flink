@@ -75,6 +75,7 @@ class ReducingUpsertSink<WriterState> implements StatefulSink<RowData, WriterSta
             InitContext context, Collection<WriterState> recoveredState) throws IOException {
         final StatefulSinkWriter<RowData, WriterState> wrapperWriter =
                 wrappedSink.restoreWriter(context, recoveredState);
+        //todo ReducingUpsertWriter
         return new ReducingUpsertWriter<>(
                 wrapperWriter,
                 physicalDataType,

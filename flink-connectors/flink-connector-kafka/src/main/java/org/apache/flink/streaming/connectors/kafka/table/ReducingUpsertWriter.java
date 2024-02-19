@@ -64,6 +64,7 @@ class ReducingUpsertWriter<WriterState>
         checkArgument(bufferFlushMode != null && bufferFlushMode.isEnabled());
         this.wrappedWriter = checkNotNull(wrappedWriter);
         this.timeService = checkNotNull(timeService);
+        //todo ～～～～～～
         this.batchMaxRowNums = bufferFlushMode.getBatchSize();
         this.batchIntervalMs = bufferFlushMode.getBatchIntervalMs();
         registerFlush();
@@ -112,7 +113,7 @@ class ReducingUpsertWriter<WriterState>
             flush();
         }
     }
-
+    //todo 注册flush
     private void registerFlush() {
         if (closed) {
             return;

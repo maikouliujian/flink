@@ -75,7 +75,7 @@ import static org.apache.flink.streaming.connectors.kafka.table.KafkaConnectorOp
 /** Upsert-Kafka factory. */
 public class UpsertKafkaDynamicTableFactory
         implements DynamicTableSourceFactory, DynamicTableSinkFactory {
-
+    //todo upsert-kafka
     public static final String IDENTIFIER = "upsert-kafka";
 
     @Override
@@ -194,6 +194,7 @@ public class UpsertKafkaDynamicTableFactory
                 properties,
                 null,
                 DeliveryGuarantee.AT_LEAST_ONCE,
+                //todo upsert模式
                 true,
                 flushMode,
                 parallelism,

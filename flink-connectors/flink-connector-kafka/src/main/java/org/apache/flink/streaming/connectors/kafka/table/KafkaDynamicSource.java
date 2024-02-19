@@ -482,7 +482,7 @@ public class KafkaDynamicSource
                                         keyProjection.length + valueProjection.length,
                                         adjustedPhysicalArity))
                         .toArray();
-
+        //todo 反序列化器
         return new DynamicKafkaDeserializationSchema(
                 adjustedPhysicalArity,
                 keyDeserialization,

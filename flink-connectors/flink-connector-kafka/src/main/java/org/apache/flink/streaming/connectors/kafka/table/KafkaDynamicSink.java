@@ -125,6 +125,7 @@ public class KafkaDynamicSink implements DynamicTableSink, SupportsWritingMetada
      * Flag to determine sink mode. In upsert mode sink transforms the delete/update-before message
      * to tombstone message.
      */
+    //todo 是否为upsert模式！！！！！！
     protected final boolean upsertMode;
 
     /** Sink buffer flush config which only supported in upsert mode now. */
@@ -222,6 +223,7 @@ public class KafkaDynamicSink implements DynamicTableSink, SupportsWritingMetada
                                         .getExecutionEnvironment()
                                         .getConfig()
                                         .isObjectReuseEnabled();
+                        //todo upsert模式
                         final ReducingUpsertSink<?> sink =
                                 new ReducingUpsertSink<>(
                                         kafkaSink,

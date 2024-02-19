@@ -217,7 +217,7 @@ class DynamicKafkaDeserializationSchema implements KafkaDeserializationSchema<Ro
         @Override
         public void collect(RowData physicalValueRow) {
             // no key defined
-            //todo 没有key 这不是 upsert kafka 的场景
+            //todo 没有key 这不是 upsert kafka 的场景(upsert kafka一定需要有key)
             if (keyProjection.length == 0) {
                 emitRow(null, (GenericRowData) physicalValueRow);
                 return;

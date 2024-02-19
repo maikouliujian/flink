@@ -138,6 +138,7 @@ public class StreamExecChangelogNormalize extends ExecNodeBase<RowData>
                         .generateRecordEqualiser("DeduplicateRowEqualiser");
 
         if (isMiniBatchEnabled) {
+            //todo 是否开启minibatch
             TypeSerializer<RowData> rowSerializer =
                     rowTypeInfo.createSerializer(planner.getExecEnv().getConfig());
             ProcTimeMiniBatchDeduplicateKeepLastRowFunction processFunction =
@@ -174,6 +175,7 @@ public class StreamExecChangelogNormalize extends ExecNodeBase<RowData>
 
         final RowDataKeySelector selector =
                 KeySelectorUtil.getRowDataSelector(uniqueKeys, rowTypeInfo);
+        //todo StateKeySelector
         transform.setStateKeySelector(selector);
         transform.setStateKeyType(selector.getProducedType());
 

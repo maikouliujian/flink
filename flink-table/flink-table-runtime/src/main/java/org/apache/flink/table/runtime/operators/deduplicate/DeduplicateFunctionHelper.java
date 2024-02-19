@@ -104,6 +104,7 @@ public class DeduplicateFunctionHelper {
             boolean isStateTtlEnabled,
             RecordEqualiser equaliser)
             throws Exception {
+        //todo 先前的数据，在状态中存储
         RowData preRow = state.value();
         RowKind currentKind = currentRow.getRowKind();
         if (currentKind == RowKind.INSERT || currentKind == RowKind.UPDATE_AFTER) {

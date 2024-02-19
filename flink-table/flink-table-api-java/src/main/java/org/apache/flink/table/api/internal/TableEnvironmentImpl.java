@@ -679,15 +679,16 @@ public class TableEnvironmentImpl implements TableEnvironmentInternal {
                             + "SELECT, UNION, INTERSECT, EXCEPT, VALUES, and ORDER_BY.");
         }
     }
-
+    //todo flinksql执行的入口
     @Override
     public TableResult executeSql(String statement) {
+        //todo sql解析为operations
         List<Operation> operations = getParser().parse(statement);
 
         if (operations.size() != 1) {
             throw new TableException(UNSUPPORTED_QUERY_IN_EXECUTE_SQL_MSG);
         }
-
+        //todo
         return executeInternal(operations.get(0));
     }
 
@@ -769,6 +770,7 @@ public class TableEnvironmentImpl implements TableEnvironmentInternal {
 
     @Override
     public TableResultInternal executeInternal(List<ModifyOperation> operations) {
+        //todo operations--->Transformation
         List<Transformation<?>> transformations = translate(operations);
         List<String> sinkIdentifierNames = extractSinkIdentifierNames(operations);
         TableResultInternal result = executeInternal(transformations, sinkIdentifierNames);
@@ -844,12 +846,13 @@ public class TableEnvironmentImpl implements TableEnvironmentInternal {
             throw new TableException("Failed to execute sql", e);
         }
     }
-
+    //todo 转化operation
     @Override
     public TableResultInternal executeInternal(Operation operation) {
         if (operation instanceof ModifyOperation) {
             return executeInternal(Collections.singletonList((ModifyOperation) operation));
         } else if (operation instanceof StatementSetOperation) {
+            //todo sql执行走这
             return executeInternal(((StatementSetOperation) operation).getOperations());
         } else if (operation instanceof CreateTableOperation) {
             CreateTableOperation createTableOperation = (CreateTableOperation) operation;

@@ -126,6 +126,7 @@ public interface RowData {
      *
      * @see RowKind
      */
+    //todo 数据类型
     RowKind getRowKind();
 
     /**
