@@ -166,16 +166,18 @@ abstract class PlannerBase(
     }
     parser
   }
-
+  //todo operations转化为Transformations！！！！！！
   override def translate(
       modifyOperations: util.List[ModifyOperation]): util.List[Transformation[_]] = {
     beforeTranslation()
     if (modifyOperations.isEmpty) {
       return List.empty[Transformation[_]]
     }
-
+    //todo operations转化为关系节点relNodes
     val relNodes = modifyOperations.map(translateToRel)
+    //todo 对关系节点进行优化(重点看这里！！！！！！)
     val optimizedRelNodes = optimize(relNodes)
+    //todo 将优化后的关系节点转化为执行图
     val execGraph = translateToExecNodeGraph(optimizedRelNodes)
     //todo 获取所有的transformations
     val transformations = translateToPlan(execGraph)
@@ -293,9 +295,10 @@ abstract class PlannerBase(
         throw new TableException(s"Unsupported ModifyOperation: $modifyOperation")
     }
   }
-
+  //todo 优化关系节点
   @VisibleForTesting
   private[flink] def optimize(relNodes: Seq[RelNode]): Seq[RelNode] = {
+    //todo 对算子进行优化
     val optimizedRelNodes = getOptimizer.optimize(relNodes)
     require(optimizedRelNodes.size == relNodes.size)
     optimizedRelNodes

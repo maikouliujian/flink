@@ -28,7 +28,7 @@ import org.apache.calcite.rel.rules._
 import org.apache.calcite.tools.{RuleSet, RuleSets}
 
 import scala.collection.JavaConverters._
-
+//todo flink流sql优化规则
 object FlinkStreamRuleSets {
 
   val SEMI_JOIN_RULES: RuleSet = RuleSets.ofList(
@@ -387,6 +387,7 @@ object FlinkStreamRuleSets {
     StreamPhysicalCalcRemoveRule.INSTANCE,
     // source
     StreamPhysicalDataStreamScanRule.INSTANCE,
+    //todo source优化规则
     StreamPhysicalTableSourceScanRule.INSTANCE,
     StreamPhysicalLegacyTableSourceScanRule.INSTANCE,
     StreamPhysicalIntermediateTableScanRule.INSTANCE,

@@ -33,6 +33,7 @@ import scala.collection.JavaConversions._
 abstract class FlinkRuleSetProgram[OC <: FlinkOptimizeContext] extends FlinkOptimizeProgram[OC] {
 
   /** All [[RelOptRule]]s for optimizing associated with this program. */
+    //todo 包含所有的规则！！！！！！
   protected val rules: util.List[RelOptRule] = new util.ArrayList[RelOptRule]()
 
   /** Adds specified rules to this program. */

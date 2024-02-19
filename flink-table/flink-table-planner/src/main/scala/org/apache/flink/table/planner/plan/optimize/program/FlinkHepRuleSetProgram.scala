@@ -39,6 +39,7 @@ import scala.collection.JavaConversions._
  * @tparam OC
  *   OptimizeContext
  */
+//todo 启发式规则优化
 class FlinkHepRuleSetProgram[OC <: FlinkOptimizeContext] extends FlinkRuleSetProgram[OC] {
 
   /**

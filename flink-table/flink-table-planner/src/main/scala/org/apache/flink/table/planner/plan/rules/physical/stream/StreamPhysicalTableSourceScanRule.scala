@@ -69,6 +69,7 @@ class StreamPhysicalTableSourceScanRule
     val resolvedSchema = table.contextResolvedTable.getResolvedSchema
 
     if (
+      //todo 如果是一个 upsert source
       isUpsertSource(resolvedSchema, table.tableSource) ||
       isSourceChangeEventsDuplicate(resolvedSchema, table.tableSource, tableConfig)
     ) {
@@ -84,7 +85,7 @@ class StreamPhysicalTableSourceScanRule
         .replace(requiredDistribution)
         .replace(FlinkConventions.STREAM_PHYSICAL)
       val newInput: RelNode = RelOptRule.convert(newScan, requiredTraitSet)
-
+      //todo 产生一个 StreamExecChangelogNormalize
       new StreamPhysicalChangelogNormalize(
         scan.getCluster,
         traitSet,

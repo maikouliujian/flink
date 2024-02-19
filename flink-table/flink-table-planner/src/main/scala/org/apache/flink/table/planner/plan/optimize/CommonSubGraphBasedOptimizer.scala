@@ -71,7 +71,9 @@ abstract class CommonSubGraphBasedOptimizer extends Optimizer {
    * @return
    *   a list of RelNode represents an optimized RelNode DAG.
    */
+    //todo 对关系节点进行优化
   override def optimize(roots: Seq[RelNode]): Seq[RelNode] = {
+      //todo 优化
     val sinkBlocks = doOptimize(roots)
     val optimizedPlan = sinkBlocks.map {
       block =>

@@ -39,7 +39,7 @@ object FlinkStreamProgram {
   val TIME_INDICATOR = "time_indicator"
   val PHYSICAL = "physical"
   val PHYSICAL_REWRITE = "physical_rewrite"
-
+  //todo 构建优化规则集合！！！！！！
   def buildProgram(tableConfig: ReadableConfig): FlinkChainedProgram[StreamOptimizeContext] = {
     val chainedProgram = new FlinkChainedProgram[StreamOptimizeContext]()
 
@@ -265,6 +265,7 @@ object FlinkStreamProgram {
     chainedProgram.addLast(
       PHYSICAL,
       FlinkVolcanoProgramBuilder.newBuilder
+        //todo 举一个例子
         .add(FlinkStreamRuleSets.PHYSICAL_OPT_RULES)
         .setRequiredOutputTraits(Array(FlinkConventions.STREAM_PHYSICAL))
         .build()

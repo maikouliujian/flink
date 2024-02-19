@@ -45,7 +45,7 @@ import scala.collection.JavaConversions._
 /** A [[CommonSubGraphBasedOptimizer]] for Stream. */
 class StreamCommonSubGraphBasedOptimizer(planner: StreamPlanner)
   extends CommonSubGraphBasedOptimizer {
-
+   //todo 优化！！！！！！
   override protected def doOptimize(roots: Seq[RelNode]): Seq[RelNodeBlock] = {
     val tableConfig = planner.getTableConfig
     // build RelNodeBlock plan
@@ -55,7 +55,7 @@ class StreamCommonSubGraphBasedOptimizer(planner: StreamPlanner)
       sinkBlock =>
         // don't require update before by default
         sinkBlock.setUpdateBeforeRequired(false)
-
+        //todo 是否开启minibatch
         val miniBatchInterval: MiniBatchInterval =
           if (tableConfig.get(ExecutionConfigOptions.TABLE_EXEC_MINIBATCH_ENABLED)) {
             val miniBatchLatency =
@@ -76,6 +76,7 @@ class StreamCommonSubGraphBasedOptimizer(planner: StreamPlanner)
       // (only one root), not a dag. So many operations (e.g. infer and propagate
       // requireUpdateBefore) can be omitted to save optimization time.
       val block = sinkBlocks.head
+      //todo 优化算子树
       val optimizedTree = optimizeTree(
         block.getPlan,
         block.isUpdateBeforeRequired,
@@ -116,6 +117,7 @@ class StreamCommonSubGraphBasedOptimizer(planner: StreamPlanner)
     blockLogicalPlan match {
       case _: LegacySink | _: Sink =>
         require(isSinkBlock)
+        //todo 优化算子树
         val optimizedTree = optimizeTree(
           blockLogicalPlan,
           updateBeforeRequired = block.isUpdateBeforeRequired,
@@ -124,6 +126,7 @@ class StreamCommonSubGraphBasedOptimizer(planner: StreamPlanner)
         block.setOptimizedPlan(optimizedTree)
 
       case o =>
+        //todo 优化算子树
         val optimizedPlan = optimizeTree(
           o,
           updateBeforeRequired = block.isUpdateBeforeRequired,
@@ -157,6 +160,7 @@ class StreamCommonSubGraphBasedOptimizer(planner: StreamPlanner)
    * @return
    *   The optimized [[RelNode]] tree
    */
+    //todo 优化relnode树！！！！！！【核心方法】
   private def optimizeTree(
       relNode: RelNode,
       updateBeforeRequired: Boolean,
@@ -166,11 +170,12 @@ class StreamCommonSubGraphBasedOptimizer(planner: StreamPlanner)
     val tableConfig = planner.getTableConfig
     val calciteConfig = TableConfigUtils.getCalciteConfig(tableConfig)
     val programs = calciteConfig.getStreamProgram
+      //todo 构建优化规则！！！！！！
       .getOrElse(FlinkStreamProgram.buildProgram(tableConfig))
     Preconditions.checkNotNull(programs)
 
     val context = unwrapContext(relNode)
-
+    //todo 调用optimize方法，如FlinkChainedProgram的optimize方法
     programs.optimize(
       relNode,
       new StreamOptimizeContext() {

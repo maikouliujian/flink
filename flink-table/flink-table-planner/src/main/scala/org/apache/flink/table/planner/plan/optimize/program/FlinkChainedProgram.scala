@@ -45,17 +45,21 @@ class FlinkChainedProgram[OC <: FlinkOptimizeContext]
   with Logging {
 
   // keep program as ordered
+  //todo 包含所有的规则程序名，如：SUBQUERY_REWRITE
   private val programNames = new util.ArrayList[String]()
   // map program name to program instance
+  //todo 包含所有规则名和规则程序的映射关系，如：<PHYSICAL,FlinkVolcanoProgram>
   private val programMap = new util.HashMap[String, FlinkOptimizeProgram[OC]]()
 
   /** Calling each program's optimize method in sequence. */
   def optimize(root: RelNode, context: OC): RelNode = {
     programNames.foldLeft(root) {
       (input, name) =>
+        //todo 获取优化程序
         val program = get(name).getOrElse(throw new TableException(s"This should not happen."))
 
         val start = System.currentTimeMillis()
+        //todo 通过优化程序对ast进行优化，如FlinkVolcanoProgram
         val result = program.optimize(input, context)
         val end = System.currentTimeMillis()
 

@@ -28,7 +28,7 @@ import org.apache.calcite.rel.rules._
 import org.apache.calcite.tools.{RuleSet, RuleSets}
 
 import scala.collection.JavaConverters._
-
+//todo flink批sql优化规则
 object FlinkBatchRuleSets {
 
   val SEMI_JOIN_RULES: RuleSet = RuleSets.ofList(

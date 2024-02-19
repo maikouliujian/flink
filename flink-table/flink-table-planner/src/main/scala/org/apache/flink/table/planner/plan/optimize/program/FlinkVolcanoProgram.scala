@@ -35,6 +35,7 @@ import org.apache.calcite.tools.{Programs, RuleSet}
  * @tparam OC
  *   OptimizeContext
  */
+//todo 火山规则优化
 class FlinkVolcanoProgram[OC <: FlinkOptimizeContext] extends FlinkRuleSetProgram[OC] {
 
   /** Required output traits, this must not be None when doing optimize. */
@@ -59,6 +60,7 @@ class FlinkVolcanoProgram[OC <: FlinkOptimizeContext] extends FlinkRuleSetProgra
 
     try {
       FlinkRelMdNonCumulativeCost.THREAD_PLANNER.set(planner)
+      //todo calcite的内容===>本质是遍历rules，挨个执行rule中的matches和convert方法！！！！！！
       optProgram.run(planner, root, targetTraits, ImmutableList.of(), ImmutableList.of())
     } catch {
       case e: CannotPlanException =>
