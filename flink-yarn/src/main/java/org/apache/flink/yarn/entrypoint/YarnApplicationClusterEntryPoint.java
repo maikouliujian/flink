@@ -88,6 +88,7 @@ public final class YarnApplicationClusterEntryPoint extends ApplicationClusterEn
                         args,
                         new DynamicParametersConfigurationParserFactory(),
                         YarnApplicationClusterEntryPoint.class);
+        //todo 获取获取flink-conf.yaml文件内容，启动flink集群时会用到！！！！！！
         final Configuration configuration =
                 YarnEntrypointUtils.loadConfiguration(workingDirectory, dynamicParameters, env);
 

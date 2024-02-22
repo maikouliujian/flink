@@ -52,6 +52,7 @@ public class YarnEntrypointUtils {
 
     public static Configuration loadConfiguration(
             String workingDirectory, Configuration dynamicParameters, Map<String, String> env) {
+        //todo 获取flink-conf.yaml文件的内容
         final Configuration configuration =
                 GlobalConfiguration.loadConfiguration(workingDirectory, dynamicParameters);
 

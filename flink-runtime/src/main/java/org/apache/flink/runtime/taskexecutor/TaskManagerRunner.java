@@ -496,6 +496,7 @@ public class TaskManagerRunner implements FatalErrorHandler {
         Configuration configuration = null;
 
         try {
+            //todo 获取flink-conf.yaml文件
             configuration = loadConfiguration(args);
         } catch (FlinkParseException fpe) {
             LOG.error("Could not load the configuration.", fpe);

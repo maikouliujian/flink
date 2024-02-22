@@ -40,7 +40,7 @@ import java.io.InputStreamReader;
 public final class GlobalConfiguration {
 
     private static final Logger LOG = LoggerFactory.getLogger(GlobalConfiguration.class);
-
+    //todo flink-conf.yaml
     public static final String FLINK_CONF_FILENAME = "flink-conf.yaml";
 
     // the keys whose values should be hidden
@@ -102,6 +102,7 @@ public final class GlobalConfiguration {
      * @param dynamicProperties configuration file containing the dynamic properties. Null if none.
      * @return The configuration loaded from the given configuration directory
      */
+    //todo 获取flink-conf.yaml文件中的内容
     public static Configuration loadConfiguration(
             final String configDir, @Nullable final Configuration dynamicProperties) {
 
@@ -121,6 +122,7 @@ public final class GlobalConfiguration {
         }
 
         // get Flink yaml configuration file
+        //todo 获取flink-conf.yaml文件
         final File yamlConfigFile = new File(confDirFile, FLINK_CONF_FILENAME);
 
         if (!yamlConfigFile.exists()) {
