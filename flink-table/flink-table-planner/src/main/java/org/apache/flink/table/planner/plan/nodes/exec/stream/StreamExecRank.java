@@ -80,6 +80,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
         producedTransformations = StreamExecRank.RANK_TRANSFORMATION,
         minPlanVersion = FlinkVersion.v1_15,
         minStateVersion = FlinkVersion.v1_15)
+//todo rank执行节点
 public class StreamExecRank extends ExecNodeBase<RowData>
         implements StreamExecNode<RowData>, SingleTransformationTranslator<RowData> {
 
@@ -172,6 +173,7 @@ public class StreamExecRank extends ExecNodeBase<RowData>
     @Override
     protected Transformation<RowData> translateToPlanInternal(
             PlannerBase planner, ExecNodeConfig config) {
+        //todo 只支持ROW_NUMBER
         switch (rankType) {
             case ROW_NUMBER:
                 break;
@@ -230,6 +232,7 @@ public class StreamExecRank extends ExecNodeBase<RowData>
                                 rankRange,
                                 generateUpdateBefore,
                                 outputRankNumber);
+                //todo top1
             } else if (RankUtil.isTop1(rankRange)) {
                 processFunction =
                         new FastTop1Function(

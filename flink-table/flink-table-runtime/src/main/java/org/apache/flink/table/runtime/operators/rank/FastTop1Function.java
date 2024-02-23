@@ -132,6 +132,7 @@ public class FastTop1Function extends AbstractTopNFunction implements Checkpoint
 
         // first row under current key.
         if (prevRow == null) {
+            //todo 缓存当前数据
             kvCache.put(currentKey, inputRowSer.copy(input));
             if (outputRankNumber) {
                 collectInsert(out, input, 1);
@@ -146,6 +147,7 @@ public class FastTop1Function extends AbstractTopNFunction implements Checkpoint
         int compare = sortKeyComparator.compare(curSortKey, oldSortKey);
         // current sort key is higher than old sort key
         if (compare < 0) {
+            //todo 缓存currentKey作为下一次的pre
             kvCache.put(currentKey, inputRowSer.copy(input));
             // Note: partition key is unique key if only top-1 is desired,
             //  thus emitting UB and UA here
@@ -153,7 +155,9 @@ public class FastTop1Function extends AbstractTopNFunction implements Checkpoint
                 collectUpdateBefore(out, prevRow, 1);
                 collectUpdateAfter(out, input, 1);
             } else {
+                //todo 回撤-u pre
                 collectUpdateBefore(out, prevRow);
+                //todo 更新+u cur
                 collectUpdateAfter(out, input);
             }
         }
@@ -171,7 +175,7 @@ public class FastTop1Function extends AbstractTopNFunction implements Checkpoint
     public void initializeState(FunctionInitializationContext context) throws Exception {
         // nothing to do
     }
-
+    //todo 缓存中放热数据
     private class CacheRemovalListener implements RemovalListener<RowData, RowData> {
         @Override
         public void onRemoval(RemovalNotification<RowData, RowData> notification) {
@@ -184,6 +188,7 @@ public class FastTop1Function extends AbstractTopNFunction implements Checkpoint
             RowData partitionKey = notification.getKey();
             keyContext.setCurrentKey(partitionKey);
             try {
+                //todo 如果缓存移除，需要更新到state中
                 dataState.update(notification.getValue());
             } catch (Throwable e) {
                 LOG.error("Fail to synchronize state!", e);

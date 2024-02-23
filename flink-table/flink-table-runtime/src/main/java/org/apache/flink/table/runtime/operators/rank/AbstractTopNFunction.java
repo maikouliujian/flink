@@ -45,6 +45,7 @@ import java.util.Comparator;
 import java.util.function.Function;
 
 /** Base class for TopN Function. */
+//todo topn 函数
 public abstract class AbstractTopNFunction extends KeyedProcessFunction<RowData, RowData, RowData> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractTopNFunction.class);

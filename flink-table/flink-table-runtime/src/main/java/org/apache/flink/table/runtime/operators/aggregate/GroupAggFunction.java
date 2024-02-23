@@ -45,6 +45,7 @@ public class GroupAggFunction extends KeyedProcessFunction<RowData, RowData, Row
     private static final long serialVersionUID = -4767158666069797704L;
 
     /** The code generated function used to handle aggregates. */
+    //todo 核心函数 codegen
     private final GeneratedAggsHandleFunction genAggsHandler;
 
     /** The code generated equaliser used to equal RowData. */
@@ -106,6 +107,7 @@ public class GroupAggFunction extends KeyedProcessFunction<RowData, RowData, Row
         super.open(parameters);
         // instantiate function
         StateTtlConfig ttlConfig = createTtlConfig(stateRetentionTime);
+        //todo 初始化处理函数
         function = genAggsHandler.newInstance(getRuntimeContext().getUserCodeClassLoader());
         function.open(new PerKeyStateDataViewStore(getRuntimeContext(), ttlConfig));
         // instantiate equaliser
@@ -131,6 +133,7 @@ public class GroupAggFunction extends KeyedProcessFunction<RowData, RowData, Row
             // Don't create a new accumulator for a retraction message. This
             // might happen if the retraction message is the first message for the
             // key or after a state clean up.
+            //todo 回撤数据直接返回
             if (isRetractMsg(input)) {
                 return;
             }
@@ -143,14 +146,18 @@ public class GroupAggFunction extends KeyedProcessFunction<RowData, RowData, Row
         // set accumulators to handler first
         function.setAccumulators(accumulators);
         // get previous aggregate result
+        //todo 获取原先聚合值
         RowData prevAggValue = function.getValue();
 
         // update aggregate result and set to the newRow
+        //todo 判断是否为回撤
         if (isAccumulateMsg(input)) {
             // accumulate input
+            //todo 回撤【本质就是在原先value的基础上加1 】
             function.accumulate(input);
         } else {
             // retract input
+            //todo 回撤【本质就是在原先value的基础上减1 】
             function.retract(input);
         }
         // get current aggregate result
@@ -163,10 +170,12 @@ public class GroupAggFunction extends KeyedProcessFunction<RowData, RowData, Row
             // we aggregated at least one record for this key
 
             // update the state
+            //todo 更新状态
             accState.update(accumulators);
 
             // if this was not the first row and we have to emit retractions
             if (!firstRow) {
+                //todo 相等没必要发送了
                 if (stateRetentionTime <= 0 && equaliser.equals(prevAggValue, newAggValue)) {
                     // newRow is the same as before and state cleaning is not enabled.
                     // We do not emit retraction and acc message.
@@ -177,12 +186,14 @@ public class GroupAggFunction extends KeyedProcessFunction<RowData, RowData, Row
                     // retract previous result
                     if (generateUpdateBefore) {
                         // prepare UPDATE_BEFORE message for previous row
+                        //todo 发送回撤
                         resultRow
                                 .replace(currentKey, prevAggValue)
                                 .setRowKind(RowKind.UPDATE_BEFORE);
                         out.collect(resultRow);
                     }
                     // prepare UPDATE_AFTER message for new row
+                    //todo 发送新值
                     resultRow.replace(currentKey, newAggValue).setRowKind(RowKind.UPDATE_AFTER);
                 }
             } else {
