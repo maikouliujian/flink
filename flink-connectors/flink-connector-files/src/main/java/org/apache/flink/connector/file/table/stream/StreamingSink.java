@@ -69,6 +69,7 @@ public class StreamingSink {
             int parallelism,
             List<String> partitionKeys,
             Configuration conf) {
+        //todo StreamingFileWriter
         StreamingFileWriter<T> fileWriter =
                 new StreamingFileWriter<>(bucketCheckInterval, bucketsBuilder, partitionKeys, conf);
         return inputStream
@@ -142,6 +143,7 @@ public class StreamingSink {
      * Create a sink from file writer. Decide whether to add the node to commit partitions according
      * to options.
      */
+    //todo 添加分区的核心逻辑！！！！！！
     public static DataStreamSink<?> sink(
             ProviderContext providerContext,
             DataStream<PartitionCommitInfo> writer,
@@ -153,6 +155,7 @@ public class StreamingSink {
             Configuration options) {
         DataStream<?> stream = writer;
         if (partitionKeys.size() > 0 && options.contains(SINK_PARTITION_COMMIT_POLICY_KIND)) {
+            //todo 添加分区的算子
             PartitionCommitter committer =
                     new PartitionCommitter(
                             locationPath, identifier, partitionKeys, msFactory, fsFactory, options);

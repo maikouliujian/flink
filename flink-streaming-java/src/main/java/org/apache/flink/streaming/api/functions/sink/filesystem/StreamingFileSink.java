@@ -420,7 +420,7 @@ public class StreamingFileSink<IN> extends RichSinkFunction<IN>
         public StreamingFileSink<IN> build() {
             return new StreamingFileSink<>(this, bucketCheckInterval);
         }
-
+        //todo 获取BucketWriter！！！！！！
         @Internal
         @Override
         public BucketWriter<IN, BucketID> createBucketWriter() throws IOException {
@@ -490,6 +490,7 @@ public class StreamingFileSink<IN> extends RichSinkFunction<IN>
 
     @Override
     public void invoke(IN value, SinkFunction.Context context) throws Exception {
+        //todo 写数据
         this.helper.onElement(
                 value,
                 context.currentProcessingTime(),

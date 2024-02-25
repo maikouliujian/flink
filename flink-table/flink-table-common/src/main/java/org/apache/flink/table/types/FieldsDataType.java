@@ -37,6 +37,7 @@ import static org.apache.flink.table.types.logical.utils.LogicalTypeUtils.toInte
  *
  * @see DataTypes for a list of supported data types
  */
+//todo 包含所有成员的DataType
 @PublicEvolving
 public final class FieldsDataType extends DataType {
 

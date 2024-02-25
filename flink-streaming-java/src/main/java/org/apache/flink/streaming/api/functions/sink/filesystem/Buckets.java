@@ -58,7 +58,7 @@ public class Buckets<IN, BucketID> {
     private final BucketFactory<IN, BucketID> bucketFactory;
 
     private final BucketAssigner<IN, BucketID> bucketAssigner;
-
+    //todo 写数据的类
     private final BucketWriter<IN, BucketID> bucketWriter;
 
     private final RollingPolicy<IN, BucketID> rollingPolicy;
@@ -68,7 +68,7 @@ public class Buckets<IN, BucketID> {
     private final int subtaskIndex;
 
     private final Buckets.BucketerContext bucketerContext;
-
+    //todo 记录<分区id，分区writer信息>
     private final Map<BucketID, Bucket<IN, BucketID>> activeBuckets;
 
     private long maxPartCounter;
@@ -258,7 +258,7 @@ public class Buckets<IN, BucketID> {
 
         bucketStatesContainer.clear();
         partCounterStateContainer.clear();
-
+        //todo 将分区信息加入state中
         snapshotActiveBuckets(checkpointId, bucketStatesContainer);
         partCounterStateContainer.add(maxPartCounter);
     }
@@ -300,9 +300,9 @@ public class Buckets<IN, BucketID> {
             throws Exception {
         // setting the values in the bucketer context
         bucketerContext.update(elementTimestamp, currentWatermark, currentProcessingTime);
-
+        //todo 获取分区，根据value值获取当前值对应的分区
         final BucketID bucketId = bucketAssigner.getBucketId(value, bucketerContext);
-        //todo 获取或创建新的bucket
+        //todo 获取已有的或者创建新的单分区的writer
         final Bucket<IN, BucketID> bucket = getOrCreateBucketForBucketId(bucketId);
         //todo 写数据！！！！！！
         bucket.write(value, currentProcessingTime);
@@ -319,7 +319,7 @@ public class Buckets<IN, BucketID> {
             throws IOException {
         Bucket<IN, BucketID> bucket = activeBuckets.get(bucketId);
         if (bucket == null) {
-            //todo 分区path目录
+            //todo 新的分区path目录
             final Path bucketPath = assembleBucketPath(bucketId);
             bucket =
                     bucketFactory.getNewBucket(
@@ -332,6 +332,7 @@ public class Buckets<IN, BucketID> {
                             fileLifeCycleListener,
                             outputFileConfig);
             activeBuckets.put(bucketId, bucket);
+            //todo 通过有新的分区的数据进来
             notifyBucketCreate(bucket);
         }
         return bucket;

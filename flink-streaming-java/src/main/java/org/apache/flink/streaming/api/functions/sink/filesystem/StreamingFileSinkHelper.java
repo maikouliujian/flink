@@ -100,7 +100,7 @@ public class StreamingFileSinkHelper<IN> implements ProcessingTimeCallback {
             @Nullable Long elementTimestamp,
             long currentWatermark)
             throws Exception {
-        //todo
+        //todo 写数据
         buckets.onElement(value, currentProcessingTime, elementTimestamp, currentWatermark);
     }
 

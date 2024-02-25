@@ -100,8 +100,10 @@ public class StreamingFileWriter<IN> extends AbstractStreamingWriter<IN, Partiti
 
     @Override
     public void snapshotState(StateSnapshotContext context) throws Exception {
+        //todo 如果分区可提交，则不再写入数据
         closePartFileForPartitions();
         super.snapshotState(context);
+        //todo 加入新分区
         newPartitions.put(context.getCheckpointId(), new HashSet<>(currentNewPartitions));
         currentNewPartitions.clear();
     }
@@ -127,6 +129,7 @@ public class StreamingFileWriter<IN> extends AbstractStreamingWriter<IN, Partiti
                                 creationTime,
                                 processingTimeService.getCurrentProcessingTime(),
                                 currentWatermark);
+                //todo 如果分区可提交，则不再写入数据
                 if (partitionCommitPredicate.isPartitionCommittable(predicateContext)) {
                     // if partition is committable, close in-progress part file in this partition
                     buckets.closePartFileForBucket(partition);

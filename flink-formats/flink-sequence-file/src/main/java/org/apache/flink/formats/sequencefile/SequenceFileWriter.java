@@ -35,6 +35,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  * @param <K> The type of key written.
  * @param <V> The type of value written.
  */
+//todo SequenceFileWriter
 @PublicEvolving
 public class SequenceFileWriter<K extends Writable, V extends Writable>
         implements BulkWriter<Tuple2<K, V>> {

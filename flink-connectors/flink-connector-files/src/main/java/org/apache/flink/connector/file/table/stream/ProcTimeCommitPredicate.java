@@ -32,6 +32,7 @@ public class ProcTimeCommitPredicate implements PartitionCommitPredicate {
     private final long commitDelay;
 
     public ProcTimeCommitPredicate(Configuration conf) {
+        //todo 何时提交分区
         this.commitDelay = conf.get(SINK_PARTITION_COMMIT_DELAY).toMillis();
     }
 

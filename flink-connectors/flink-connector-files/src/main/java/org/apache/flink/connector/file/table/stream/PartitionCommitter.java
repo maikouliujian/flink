@@ -76,7 +76,7 @@ public class PartitionCommitter extends AbstractStreamOperator<Void>
     private final TableMetaStoreFactory metaStoreFactory;
 
     private final FileSystemFactory fsFactory;
-
+    //todo 分区提交的核心类
     private transient PartitionCommitTrigger trigger;
 
     private transient TaskTracker taskTracker;
@@ -134,13 +134,14 @@ public class PartitionCommitter extends AbstractStreamOperator<Void>
     public void processElement(StreamRecord<PartitionCommitInfo> element) throws Exception {
         PartitionCommitInfo message = element.getValue();
         for (String partition : message.getPartitions()) {
+            //todo 向trigger中添加分区
             trigger.addPartition(partition);
         }
 
         if (taskTracker == null) {
             taskTracker = new TaskTracker(message.getNumberOfTasks());
         }
-        //todo 判断是否需要提交！！！！！！
+        //todo 判断是否需要提交！！！！！！所有subtask的数据都到达才能提交
         boolean needCommit = taskTracker.add(message.getCheckpointId(), message.getTaskId());
         if (needCommit) {
             commitPartitions(message.getCheckpointId());
@@ -148,6 +149,7 @@ public class PartitionCommitter extends AbstractStreamOperator<Void>
     }
 
     private void commitPartitions(long checkpointId) throws Exception {
+        //todo 判断可以提交的分区
         List<String> partitions =
                 checkpointId == Long.MAX_VALUE
                         ? trigger.endInput()
@@ -155,7 +157,7 @@ public class PartitionCommitter extends AbstractStreamOperator<Void>
         if (partitions.isEmpty()) {
             return;
         }
-
+        //todo hivemeta store
         try (TableMetaStoreFactory.TableMetaStore metaStore =
                 metaStoreFactory.createTableMetaStore()) {
             for (String partition : partitions) {
@@ -172,7 +174,7 @@ public class PartitionCommitter extends AbstractStreamOperator<Void>
                     if (policy instanceof MetastoreCommitPolicy) {
                         ((MetastoreCommitPolicy) policy).setMetastore(metaStore);
                     }
-                    //todo 提交分区！！！！！！
+                    //todo 提交分区/添加success标记
                     policy.commit(context);
                 }
             }

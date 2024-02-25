@@ -57,7 +57,7 @@ import static java.time.ZoneId.SHORT_IDS;
  */
 @Internal
 public class FileSystemTableFactory implements DynamicTableSourceFactory, DynamicTableSinkFactory {
-
+    //todo 写入文件系统，比如hdfs、s3、oss
     public static final String IDENTIFIER = "filesystem";
 
     @Override
@@ -82,17 +82,23 @@ public class FileSystemTableFactory implements DynamicTableSourceFactory, Dynami
     public DynamicTableSink createDynamicTableSink(Context context) {
         FactoryUtil.TableFactoryHelper helper = FactoryUtil.createTableFactoryHelper(this, context);
         validate(helper);
+        //todo sink
         return new FileSystemTableSink(
                 context.getObjectIdentifier(),
                 context.getPhysicalRowDataType(),
+                //todo 分区keys
                 context.getCatalogTable().getPartitionKeys(),
                 helper.getOptions(),
+                //todo 读取格式
                 discoverDecodingFormat(context, BulkReaderFormatFactory.class),
+                //todo 反序列化方式
                 discoverDecodingFormat(context, DeserializationFormatFactory.class),
+                //todo 写出格式
                 discoverEncodingFormat(context, BulkWriterFormatFactory.class),
+                //todo 序列化方式
                 discoverEncodingFormat(context, SerializationFormatFactory.class));
     }
-
+    //todo 必选
     @Override
     public Set<ConfigOption<?>> requiredOptions() {
         Set<ConfigOption<?>> options = new HashSet<>();
@@ -100,7 +106,7 @@ public class FileSystemTableFactory implements DynamicTableSourceFactory, Dynami
         options.add(FactoryUtil.FORMAT);
         return options;
     }
-
+    //todo 可选
     @Override
     public Set<ConfigOption<?>> optionalOptions() {
         Set<ConfigOption<?>> options = new HashSet<>();

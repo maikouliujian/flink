@@ -93,6 +93,7 @@ public abstract class AbstractStreamingWriter<IN, OUT> extends AbstractStreamOpe
     @Override
     public void initializeState(StateInitializationContext context) throws Exception {
         super.initializeState(context);
+        //todo buckets 写数据核心类
         buckets = bucketsBuilder.createBuckets(getRuntimeContext().getIndexOfThisSubtask());
 
         // Set listener before the initialization of Buckets.
@@ -101,17 +102,19 @@ public abstract class AbstractStreamingWriter<IN, OUT> extends AbstractStreamOpe
 
                     @Override
                     public void bucketCreated(Bucket<IN, String> bucket) {
+                        //todo 添加新分区
                         AbstractStreamingWriter.this.partitionCreated(bucket.getBucketId());
                     }
 
                     @Override
                     public void bucketInactive(Bucket<IN, String> bucket) {
+                        //todo 移除老分区
                         AbstractStreamingWriter.this.partitionInactive(bucket.getBucketId());
                     }
                 });
 
         buckets.setFileLifeCycleListener(AbstractStreamingWriter.this::onPartFileOpened);
-
+        //todo 写数据核心类
         helper =
                 new StreamingFileSinkHelper<>(
                         buckets,
@@ -126,6 +129,7 @@ public abstract class AbstractStreamingWriter<IN, OUT> extends AbstractStreamOpe
     @Override
     public void snapshotState(StateSnapshotContext context) throws Exception {
         super.snapshotState(context);
+        //todo 将一些中间信息记录到状态中，如分区writer
         helper.snapshotState(context.getCheckpointId());
     }
 
@@ -148,7 +152,7 @@ public abstract class AbstractStreamingWriter<IN, OUT> extends AbstractStreamOpe
     @Override
     public void notifyCheckpointComplete(long checkpointId) throws Exception {
         super.notifyCheckpointComplete(checkpointId);
-        //todo checkpoint完成后！！！！！！
+        //todo checkpoint完成后！！！！！！向下游发送添加分区信息
         commitUpToCheckpoint(checkpointId);
     }
 

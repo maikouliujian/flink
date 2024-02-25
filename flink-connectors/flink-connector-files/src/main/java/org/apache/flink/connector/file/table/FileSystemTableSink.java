@@ -91,6 +91,7 @@ import static org.apache.flink.connector.file.table.FileSystemConnectorOptions.S
 import static org.apache.flink.connector.file.table.stream.compact.CompactOperator.convertToUncompacted;
 
 /** File system {@link DynamicTableSink}. */
+//todo FileSystemTableSink
 @Internal
 public class FileSystemTableSink extends AbstractFileSystemTable
         implements DynamicTableSink, SupportsPartitioning, SupportsOverwrite {
@@ -133,9 +134,10 @@ public class FileSystemTableSink extends AbstractFileSystemTable
         this.configuredParallelism =
                 this.tableOptions.get(FileSystemConnectorOptions.SINK_PARALLELISM);
     }
-
+    //todo
     @Override
     public SinkRuntimeProvider getSinkRuntimeProvider(Context sinkContext) {
+        //todo 读取数据
         return (DataStreamSinkProvider)
                 (providerContext, dataStream) -> consume(providerContext, dataStream, sinkContext);
     }
@@ -144,7 +146,7 @@ public class FileSystemTableSink extends AbstractFileSystemTable
             ProviderContext providerContext, DataStream<RowData> dataStream, Context sinkContext) {
         final int inputParallelism = dataStream.getParallelism();
         final int parallelism = Optional.ofNullable(configuredParallelism).orElse(inputParallelism);
-
+        //todo 区分有界【批】和无界【流】
         if (sinkContext.isBounded()) {
             return createBatchSink(dataStream, sinkContext, parallelism);
         } else {
@@ -163,13 +165,14 @@ public class FileSystemTableSink extends AbstractFileSystemTable
                 DataType.getFieldDataTypes(physicalRowDataType).toArray(new DataType[0]),
                 partitionKeys.toArray(new String[0]));
     }
-
+    //todo 批量写
     private DataStreamSink<RowData> createBatchSink(
             DataStream<RowData> inputStream, Context sinkContext, final int parallelism) {
         FileSystemOutputFormat.Builder<RowData> builder = new FileSystemOutputFormat.Builder<>();
         builder.setPartitionComputer(partitionComputer());
         builder.setDynamicGrouped(dynamicGrouping);
         builder.setPartitionColumns(partitionKeys.toArray(new String[0]));
+        //todo
         builder.setFormatFactory(createOutputFormatFactory(sinkContext));
         builder.setMetaStoreFactory(new EmptyMetaStoreFactory(path));
         builder.setOverwrite(overwrite);
@@ -184,19 +187,23 @@ public class FileSystemTableSink extends AbstractFileSystemTable
                 .setParallelism(parallelism)
                 .name("Filesystem");
     }
-
+    //todo 实时写
     private DataStreamSink<?> createStreamingSink(
             ProviderContext providerContext,
             DataStream<RowData> dataStream,
             Context sinkContext,
             final int parallelism) {
         FileSystemFactory fsFactory = FileSystem::get;
+        //todo 计算分区
         RowDataPartitionComputer computer = partitionComputer();
-
+        //todo 是否自动合并小文件
         boolean autoCompaction = tableOptions.getBoolean(AUTO_COMPACTION);
+        //todo 真正写数据的writer
         Object writer = createWriter(sinkContext);
         boolean isEncoder = writer instanceof Encoder;
+        //todo 用来将数据写入不同的分区目录下，bucketid就是当前数据对应的分区
         TableBucketAssigner assigner = new TableBucketAssigner(computer);
+        //todo 文件滚动策略
         TableRollingPolicy rollingPolicy =
                 new TableRollingPolicy(
                         !isEncoder || autoCompaction,
@@ -215,6 +222,7 @@ public class FileSystemTableSink extends AbstractFileSystemTable
         BucketsBuilder<RowData, String, ? extends BucketsBuilder<RowData, ?, ?>> bucketsBuilder;
         if (isEncoder) {
             //noinspection unchecked
+            //todo
             bucketsBuilder =
                     StreamingFileSink.forRowFormat(
                                     path,
@@ -224,6 +232,7 @@ public class FileSystemTableSink extends AbstractFileSystemTable
                             .withRollingPolicy(rollingPolicy);
         } else {
             //noinspection unchecked
+            //todo
             bucketsBuilder =
                     StreamingFileSink.forBulkFormat(
                                     path,
@@ -264,6 +273,7 @@ public class FileSystemTableSink extends AbstractFileSystemTable
                             compactionSize,
                             parallelism);
         } else {
+            //todo 写数据
             writerStream =
                     StreamingSink.writer(
                             providerContext,
@@ -274,7 +284,7 @@ public class FileSystemTableSink extends AbstractFileSystemTable
                             partitionKeys,
                             tableOptions);
         }
-
+        //todo 添加分区
         return StreamingSink.sink(
                 providerContext,
                 writerStream,
@@ -372,10 +382,12 @@ public class FileSystemTableSink extends AbstractFileSystemTable
                 DataType.getFields(physicalRowDataType).stream()
                         .filter(field -> !partitionKeys.contains(field.getName()))
                         .collect(Collectors.collectingAndThen(Collectors.toList(), DataTypes::ROW));
+        //todo parquet、orc等
         if (bulkWriterFormat != null) {
             return bulkWriterFormat.createRuntimeEncoder(
                     sinkContext, physicalDataTypeWithoutPartitionColumns);
         } else if (serializationFormat != null) {
+            //todo json
             return new SerializationSchemaAdapter(
                     serializationFormat.createRuntimeEncoder(
                             sinkContext, physicalDataTypeWithoutPartitionColumns));
@@ -629,6 +641,7 @@ public class FileSystemTableSink extends AbstractFileSystemTable
 
                 @Override
                 public void addElement(RowData element) throws IOException {
+                    //todo 写数据
                     writer.addElement(computer.projectColumnsToWrite(element));
                 }
 

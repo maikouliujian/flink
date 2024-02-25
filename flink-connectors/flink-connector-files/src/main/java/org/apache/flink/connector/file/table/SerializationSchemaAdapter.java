@@ -48,6 +48,7 @@ public class SerializationSchemaAdapter implements Encoder<RowData> {
     @Override
     public void encode(RowData element, OutputStream stream) throws IOException {
         checkOpened();
+        //todo 先序列化，后写出
         stream.write(serializationSchema.serialize(element));
         stream.write(LINE_DELIMITER);
     }

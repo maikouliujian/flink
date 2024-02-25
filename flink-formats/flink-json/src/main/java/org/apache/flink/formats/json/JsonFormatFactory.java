@@ -55,6 +55,7 @@ import static org.apache.flink.formats.json.JsonFormatOptions.TIMESTAMP_FORMAT;
  * Table format factory for providing configured instances of JSON to RowData {@link
  * SerializationSchema} and {@link DeserializationSchema}.
  */
+//todo json序列化/反序列化器
 @Internal
 public class JsonFormatFactory implements DeserializationFormatFactory, SerializationFormatFactory {
 

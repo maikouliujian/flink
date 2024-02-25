@@ -71,6 +71,7 @@ public class ProcTimeCommitTrigger implements PartitionCommitTrigger {
     @Override
     public void addPartition(String partition) {
         if (!StringUtils.isNullOrWhitespaceOnly(partition)) {
+            //todo 添加分区
             this.pendingPartitions.putIfAbsent(
                     partition, procTimeService.getCurrentProcessingTime());
         }
@@ -85,6 +86,7 @@ public class ProcTimeCommitTrigger implements PartitionCommitTrigger {
             long creationTime = entry.getValue();
             PredicateContext predicateContext =
                     createPredicateContext(entry.getKey(), creationTime);
+            //todo 判断分区是否可以提交
             if (partitionCommitPredicate.isPartitionCommittable(predicateContext)) {
                 needCommit.add(entry.getKey());
                 iter.remove();

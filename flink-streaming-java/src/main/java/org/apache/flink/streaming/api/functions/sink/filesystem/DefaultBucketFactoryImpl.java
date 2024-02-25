@@ -30,7 +30,7 @@ import java.io.IOException;
 public class DefaultBucketFactoryImpl<IN, BucketID> implements BucketFactory<IN, BucketID> {
 
     private static final long serialVersionUID = 1L;
-
+    //todo 新建一个分区目录
     @Override
     public Bucket<IN, BucketID> getNewBucket(
             final int subtaskIndex,

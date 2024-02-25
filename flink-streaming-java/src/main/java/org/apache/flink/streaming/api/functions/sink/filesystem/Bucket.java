@@ -55,7 +55,7 @@ public class Bucket<IN, BucketID> {
     private final Path bucketPath;
 
     private final int subtaskIndex;
-
+    //todo 写数据的核心类
     private final BucketWriter<IN, BucketID> bucketWriter;
 
     private final RollingPolicy<IN, BucketID> rollingPolicy;
@@ -208,6 +208,7 @@ public class Bucket<IN, BucketID> {
     }
 
     void write(IN element, long currentTime) throws IOException {
+        //todo 老文件大小到一定时，写入新的文件
         if (inProgressPart == null || rollingPolicy.shouldRollOnEvent(inProgressPart, element)) {
 
             if (LOG.isDebugEnabled()) {
@@ -241,7 +242,7 @@ public class Bucket<IN, BucketID> {
                     partFilePath.getName(),
                     bucketId);
         }
-
+        //todo 写单个分区的writer【OutputStreamBasedBucketWriter】
         return bucketWriter.openNewInProgressFile(bucketId, partFilePath, currentTime);
     }
 

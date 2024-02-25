@@ -72,7 +72,7 @@ public class BulkBucketWriter<IN, BucketID>
 
         Preconditions.checkNotNull(stream);
         Preconditions.checkNotNull(path);
-
+        //todo 根据不同writerFactory选择不同格式的writer，如parquet、orc
         final BulkWriter<IN> writer = writerFactory.create(stream);
         return new BulkPartWriter<>(bucketId, path, stream, writer, creationTime);
     }

@@ -121,6 +121,7 @@ public abstract class OutputStreamBasedPartFileWriter<IN, BucketID>
         public InProgressFileWriter<IN, BucketID> openNewInProgressFile(
                 final BucketID bucketID, final Path path, final long creationTime)
                 throws IOException {
+            //todo
             return openNew(bucketID, recoverableWriter.open(path), path, creationTime);
         }
 
