@@ -184,6 +184,8 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
         this.userJarInclusion = getUserJarInclusionMode(flinkConfiguration);
 
         getLocalFlinkDistPath(flinkConfiguration).ifPresent(this::setLocalJarPath);
+        //todo 添加ShipFiles【作用是在Flink应用程序的YARN集群提交描述符中指定要随应用程序一起分发到集群的文件列表，
+        // 以确保在集群上启动任务时，所有必需的文件都可供任务访问，这些jars会上传到hdfs上，再分发到yarn集群中】
         decodeFilesToShipToCluster(flinkConfiguration, YarnConfigOptions.SHIP_FILES)
                 .ifPresent(this::addShipFiles);
         decodeFilesToShipToCluster(flinkConfiguration, YarnConfigOptions.SHIP_ARCHIVES)
