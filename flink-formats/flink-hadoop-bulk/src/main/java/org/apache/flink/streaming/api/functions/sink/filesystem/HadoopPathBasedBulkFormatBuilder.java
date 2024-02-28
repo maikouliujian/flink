@@ -39,7 +39,7 @@ public class HadoopPathBasedBulkFormatBuilder<
     private static final long serialVersionUID = 1L;
 
     private final Path basePath;
-
+    //todo writer
     private HadoopPathBasedBulkWriter.Factory<IN> writerFactory;
 
     private HadoopFileCommitterFactory fileCommitterFactory;

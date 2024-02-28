@@ -90,6 +90,7 @@ public class HiveDynamicTableFactory implements DynamicTableSourceFactory, Dynam
                 Configuration.fromMap(context.getCatalogTable().getOptions())
                         .get(FileSystemConnectorOptions.SINK_PARALLELISM);
         final JobConf jobConf = JobConfUtils.createJobConfWithCredentials(hiveConf);
+        //todo 入口
         return new HiveTableSink(
                 context.getConfiguration(),
                 jobConf,

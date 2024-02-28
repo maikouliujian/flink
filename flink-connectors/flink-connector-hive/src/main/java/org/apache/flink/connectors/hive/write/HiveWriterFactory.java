@@ -65,7 +65,7 @@ import java.util.function.Function;
 public class HiveWriterFactory implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    //todo hive建表语中的OutputFormat，通过该类去寻找不同格式的writer
     private final Class hiveOutputFormatClz;
 
     private final CachedSerializedValue<SerDeInfo> serDeInfo;
@@ -153,7 +153,7 @@ public class HiveWriterFactory implements Serializable {
                     SequenceFileOutputFormat.setOutputCompressionType(conf, style);
                 }
             }
-
+            //todo 根据hive表不同的OutputFormat去寻找不同格式的writer
             return hiveShim.getHiveRecordWriter(
                     conf,
                     hiveOutputFormatClz,
@@ -229,6 +229,7 @@ public class HiveWriterFactory implements Serializable {
 
     private Writable serialize(List<Object> fields) {
         try {
+            //todo 序列化！！！！！！
             return recordSerDe.serialize(fields, formatInspector);
         } catch (SerDeException e) {
             throw new FlinkHiveException(e);

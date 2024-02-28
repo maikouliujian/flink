@@ -167,23 +167,25 @@ public class HiveTableSink implements DynamicTableSink, SupportsPartitioning, Su
                 (providerContext, dataStream) ->
                         consume(providerContext, dataStream, context.isBounded(), converter);
     }
-
+    //todo 消费数据写入hive表
     private DataStreamSink<?> consume(
             ProviderContext providerContext,
             DataStream<RowData> dataStream,
             boolean isBounded,
             DataStructureConverter converter) {
         checkAcidTable(catalogTable.getOptions(), identifier.toObjectPath());
-
+        //todo 创建hivemetastore
         try (HiveMetastoreClientWrapper client =
                 HiveMetastoreClientFactory.create(HiveConfUtils.create(jobConf), hiveVersion)) {
             Table table = client.getTable(identifier.getDatabaseName(), identifier.getObjectName());
+            //todo 获取table的StorageDescriptor
             StorageDescriptor sd = table.getSd();
-
+            //todo 获取hive表的OutputFormat
             Class hiveOutputFormatClz =
                     hiveShim.getHiveOutputFormatClass(Class.forName(sd.getOutputFormat()));
             boolean isCompressed =
                     jobConf.getBoolean(HiveConf.ConfVars.COMPRESSRESULT.varname, false);
+            //todo HiveWriterFactory
             HiveWriterFactory writerFactory =
                     new HiveWriterFactory(
                             jobConf,
@@ -219,6 +221,7 @@ public class HiveTableSink implements DynamicTableSink, SupportsPartitioning, Su
                 }
 
                 Properties tableProps = HiveReflectionUtils.getTableMetadata(hiveShim, table);
+                //todo 写数据
                 return createStreamSink(
                         providerContext,
                         dataStream,
@@ -293,7 +296,7 @@ public class HiveTableSink implements DynamicTableSink, SupportsPartitioning, Su
                             identifier,
                             FileSystemConnectorOptions.SINK_PARTITION_COMMIT_POLICY_KIND.key()));
         }
-
+        //todo 计算分区
         HiveRowDataPartitionComputer partComputer =
                 new HiveRowDataPartitionComputer(
                         hiveShim,
@@ -301,23 +304,25 @@ public class HiveTableSink implements DynamicTableSink, SupportsPartitioning, Su
                         tableSchema.getFieldNames(),
                         tableSchema.getFieldDataTypes(),
                         getPartitionKeyArray());
+        //todo 写入不同的bucket（分区）
         TableBucketAssigner assigner = new TableBucketAssigner(partComputer);
         HiveRollingPolicy rollingPolicy =
                 new HiveRollingPolicy(
                         conf.get(SINK_ROLLING_POLICY_FILE_SIZE).getBytes(),
                         conf.get(SINK_ROLLING_POLICY_ROLLOVER_INTERVAL).toMillis(),
                         conf.get(SINK_ROLLING_POLICY_INACTIVITY_INTERVAL).toMillis());
-
+        //todo 是否自动合并小文件
         boolean autoCompaction = conf.getBoolean(FileSystemConnectorOptions.AUTO_COMPACTION);
         if (autoCompaction) {
             fileNamingBuilder.withPartPrefix(
                     convertToUncompacted(fileNamingBuilder.build().getPartPrefix()));
         }
         OutputFileConfig outputFileConfig = fileNamingBuilder.build();
-
+        //todo 获取表对应的数据目录
         org.apache.flink.core.fs.Path path = new org.apache.flink.core.fs.Path(sd.getLocation());
 
         BucketsBuilder<RowData, String, ? extends BucketsBuilder<RowData, ?, ?>> builder;
+        //todo 是否回退使用mapreduce api，默认为true
         if (fallbackMappedWriter) {
             builder =
                     bucketsBuilderForMRWriter(
@@ -326,6 +331,7 @@ public class HiveTableSink implements DynamicTableSink, SupportsPartitioning, Su
         } else {
             Optional<BulkWriter.Factory<RowData>> bulkFactory =
                     createBulkWriterFactory(getPartitionKeyArray(), sd);
+            //todo for parquet/orc
             if (bulkFactory.isPresent()) {
                 builder =
                         StreamingFileSink.forBulkFormat(
@@ -366,6 +372,7 @@ public class HiveTableSink implements DynamicTableSink, SupportsPartitioning, Su
                             compactionSize,
                             parallelism);
         } else {
+            //todo 写数据
             writerStream =
                     StreamingSink.writer(
                             providerContext,
@@ -376,7 +383,7 @@ public class HiveTableSink implements DynamicTableSink, SupportsPartitioning, Su
                             getPartitionKeys(),
                             conf);
         }
-
+        //todo 分区提交
         return StreamingSink.sink(
                 providerContext,
                 writerStream,
@@ -416,6 +423,7 @@ public class HiveTableSink implements DynamicTableSink, SupportsPartitioning, Su
                     TableBucketAssigner assigner,
                     HiveRollingPolicy rollingPolicy,
                     OutputFileConfig outputFileConfig) {
+        //todo HiveBulkWriterFactory
         HiveBulkWriterFactory hadoopBulkFactory = new HiveBulkWriterFactory(recordWriterFactory);
         return new HadoopPathBasedBulkFormatBuilder<>(
                         new Path(sd.getLocation()), hadoopBulkFactory, jobConf, assigner)

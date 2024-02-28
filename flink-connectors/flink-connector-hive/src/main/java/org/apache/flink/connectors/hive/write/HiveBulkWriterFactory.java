@@ -45,6 +45,7 @@ public class HiveBulkWriterFactory implements HadoopPathBasedBulkWriter.Factory<
     @Override
     public HadoopPathBasedBulkWriter<RowData> create(Path targetPath, Path inProgressPath)
             throws IOException {
+        //todo 根据不同的OutputFormat去寻找不同格式的writer
         FileSinkOperator.RecordWriter recordWriter = factory.createRecordWriter(inProgressPath);
         Function<RowData, Writable> rowConverter = factory.createRowDataConverter();
         FileSystem fs = FileSystem.get(inProgressPath.toUri(), factory.getJobConf());
@@ -68,6 +69,7 @@ public class HiveBulkWriterFactory implements HadoopPathBasedBulkWriter.Factory<
 
             @Override
             public void addElement(RowData element) throws IOException {
+                //todo 先序列化,后写数据！！！！！！！
                 recordWriter.write(rowConverter.apply(element));
             }
 

@@ -310,6 +310,7 @@ public class HadoopPathBasedPartFileWriter<IN, BucketID>
             HadoopFileCommitter fileCommitter = fileCommitterFactory.create(configuration, path);
 
             Path inProgressFilePath = fileCommitter.getTempFilePath();
+            //todo 创建writer
             HadoopPathBasedBulkWriter<IN> writer =
                     bulkWriterFactory.create(path, inProgressFilePath);
             return new HadoopPathBasedPartFileWriter<>(

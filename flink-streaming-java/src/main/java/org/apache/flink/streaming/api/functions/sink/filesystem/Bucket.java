@@ -242,7 +242,7 @@ public class Bucket<IN, BucketID> {
                     partFilePath.getName(),
                     bucketId);
         }
-        //todo 写单个分区的writer【OutputStreamBasedBucketWriter】
+        //todo 写单个分区的writer【HadoopPathBasedPartFileWriter】
         return bucketWriter.openNewInProgressFile(bucketId, partFilePath, currentTime);
     }
 

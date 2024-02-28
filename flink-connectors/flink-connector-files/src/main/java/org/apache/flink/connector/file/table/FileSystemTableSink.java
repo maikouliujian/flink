@@ -198,7 +198,7 @@ public class FileSystemTableSink extends AbstractFileSystemTable
         RowDataPartitionComputer computer = partitionComputer();
         //todo 是否自动合并小文件
         boolean autoCompaction = tableOptions.getBoolean(AUTO_COMPACTION);
-        //todo 真正写数据的writer
+        //todo 真正写数据的writer！！！！！！
         Object writer = createWriter(sinkContext);
         boolean isEncoder = writer instanceof Encoder;
         //todo 用来将数据写入不同的分区目录下，bucketid就是当前数据对应的分区
