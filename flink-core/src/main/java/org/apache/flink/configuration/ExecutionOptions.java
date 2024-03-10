@@ -38,6 +38,7 @@ public class ExecutionOptions {
     public static final long FLUSH_AFTER_EVERY_RECORD = 0L;
 
     public static final ConfigOption<RuntimeExecutionMode> RUNTIME_MODE =
+            //todo 根据execution.runtime-mode来去定是跑流还是批任务，默认流
             ConfigOptions.key("execution.runtime-mode")
                     .enumType(RuntimeExecutionMode.class)
                     .defaultValue(RuntimeExecutionMode.STREAMING)

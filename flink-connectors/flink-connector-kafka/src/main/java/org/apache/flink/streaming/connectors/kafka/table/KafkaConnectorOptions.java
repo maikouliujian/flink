@@ -267,6 +267,7 @@ public class KafkaConnectorOptions {
                 "group-offsets",
                 text(
                         "Start from committed offsets in ZooKeeper / Kafka brokers of a specific consumer group.")),
+        //todo 从指定timestamp消费数据
         TIMESTAMP("timestamp", text("Start from user-supplied timestamp for each partition.")),
         SPECIFIC_OFFSETS(
                 "specific-offsets",

@@ -30,6 +30,7 @@ import java.util.List;
 abstract class AbstractFileSystemTable {
 
     final ObjectIdentifier tableIdentifier;
+    //todo 建表语句中with中的配置
     final Configuration tableOptions;
     final DataType physicalRowDataType;
     final Path path;

@@ -250,6 +250,7 @@ public class HiveTableSink implements DynamicTableSink, SupportsPartitioning, Su
             OutputFileConfig fileNaming,
             final int parallelism)
             throws IOException {
+        //todo 批任务用到FileSystemOutputFormat
         FileSystemOutputFormat.Builder<Row> builder = new FileSystemOutputFormat.Builder<>();
         builder.setPartitionComputer(
                 new HiveRowPartitionComputer(
@@ -264,6 +265,7 @@ public class HiveTableSink implements DynamicTableSink, SupportsPartitioning, Su
         builder.setFormatFactory(new HiveOutputFormatFactory(recordWriterFactory));
         builder.setMetaStoreFactory(msFactory());
         builder.setOverwrite(overwrite);
+        //todo 分区和分区对应的值
         builder.setStaticPartitions(staticPartitionSpec);
         builder.setTempPath(
                 new org.apache.flink.core.fs.Path(toStagingDir(sd.getLocation(), jobConf)));
@@ -489,7 +491,7 @@ public class HiveTableSink implements DynamicTableSink, SupportsPartitioning, Su
     private String[] getPartitionKeyArray() {
         return getPartitionKeys().toArray(new String[0]);
     }
-
+    //todo 批任务时会用到！！！！！！静态分区和分区值
     @Override
     public void applyStaticPartition(Map<String, String> partition) {
         // make it a LinkedHashMap to maintain partition column order

@@ -52,10 +52,12 @@ public final class DefaultPlannerFactory implements PlannerFactory {
 
     @Override
     public Planner create(Context context) {
+        //todo 根据execution.runtime-mode来去定是跑流还是批任务，默认流
         final RuntimeExecutionMode runtimeExecutionMode =
                 context.getTableConfig().get(ExecutionOptions.RUNTIME_MODE);
         switch (runtimeExecutionMode) {
             case STREAMING:
+                //todo 流
                 return new StreamPlanner(
                         context.getExecutor(),
                         context.getTableConfig(),
@@ -63,6 +65,7 @@ public final class DefaultPlannerFactory implements PlannerFactory {
                         context.getFunctionCatalog(),
                         context.getCatalogManager());
             case BATCH:
+                //todo 批
                 return new BatchPlanner(
                         context.getExecutor(),
                         context.getTableConfig(),

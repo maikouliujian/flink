@@ -468,6 +468,7 @@ public abstract class CommonExecSink extends ExecNodeBase<Object>
                         }
                     });
         } else if (runtimeProvider instanceof SinkFunctionProvider) {
+            //todo sinkFunction使用的地方
             final SinkFunction<RowData> sinkFunction =
                     ((SinkFunctionProvider) runtimeProvider).createSinkFunction();
             return createSinkFunctionTransformation(
@@ -538,6 +539,7 @@ public abstract class CommonExecSink extends ExecNodeBase<Object>
             int rowtimeFieldIndex,
             TransformationMetadata transformationMetadata,
             int sinkParallelism) {
+        //todo 通过sinkFunction构建SinkOperator
         final SinkOperator operator = new SinkOperator(env.clean(sinkFunction), rowtimeFieldIndex);
 
         if (sinkFunction instanceof InputTypeConfigurable) {

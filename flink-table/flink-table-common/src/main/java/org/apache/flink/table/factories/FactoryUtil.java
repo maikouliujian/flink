@@ -883,7 +883,7 @@ public final class FactoryUtil {
     private static class FactoryHelper<F extends Factory> {
 
         protected final F factory;
-
+        //todo factory对应的所有的参数
         protected final Configuration allOptions;
 
         protected final Set<String> consumedOptionKeys;
@@ -893,6 +893,7 @@ public final class FactoryUtil {
         FactoryHelper(
                 F factory, Map<String, String> configuration, ConfigOption<?>... implicitOptions) {
             this.factory = factory;
+            //todo factory对应的所有的参数
             this.allOptions = Configuration.fromMap(configuration);
 
             final List<ConfigOption<?>> consumedOptions = new ArrayList<>();
@@ -913,6 +914,7 @@ public final class FactoryUtil {
         }
 
         /** Validates the options of the factory. It checks for unconsumed option keys. */
+        //todo 对factory中的配置进行校验！！！！！！
         public void validate() {
             validateFactoryOptions(factory, allOptions);
             validateUnconsumedKeys(
@@ -990,6 +992,7 @@ public final class FactoryUtil {
                 DynamicTableFactory tableFactory, DynamicTableFactory.Context context) {
             super(
                     tableFactory,
+                    //todo 从CatalogTable中取Options【建表语中with中的参数都会被解析到options中】
                     context.getCatalogTable().getOptions(),
                     PROPERTY_VERSION,
                     CONNECTOR);

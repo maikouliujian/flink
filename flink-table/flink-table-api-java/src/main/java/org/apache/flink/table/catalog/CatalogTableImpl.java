@@ -38,6 +38,26 @@ import static org.apache.flink.table.descriptors.Schema.SCHEMA;
  *     instead. Don't implement against this internal class. It can lead to unintended side effects
  *     if code checks against this class instead of the common interface.
  */
+/***
+ *   CREATE TEMPORARY TABLE pbtest (
+ *   log BYTES,
+ *   p_day STRING,
+ *   p_hour STRING,
+ *   p_region_or_default STRING,
+ *   p_type STRING
+ *   )
+ *   PARTITIONED BY (p_day,p_hour,p_region_or_default,p_type)
+ *   with (
+ *   'connector' = 'filesystem',
+ *   'path' = 's3://clotho-emr-data-prod/test_lihz.db/dwd_logmult2sgl_pb_test',
+ *   'format' = 'json',
+ *   'partition.time-extractor.timestamp-pattern'='$p_day $p_hour:00:00',
+ *   'sink.partition-commit.trigger'='partition-time',
+ *   'sink.partition-commit.delay'='1 min',
+ *   'sink.partition-commit.watermark-time-zone'='Asia/Shanghai',
+ *   'sink.partition-commit.policy.kind'='metastore,success-file'
+ *   );
+ */
 @Deprecated
 @Internal
 public class CatalogTableImpl extends AbstractCatalogTable {

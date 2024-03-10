@@ -88,6 +88,7 @@ public class FileSystemTableFactory implements DynamicTableSourceFactory, Dynami
                 context.getPhysicalRowDataType(),
                 //todo 分区keys
                 context.getCatalogTable().getPartitionKeys(),
+                //todo 获取所有的参数！！！！！！
                 helper.getOptions(),
                 //todo 读取格式
                 discoverDecodingFormat(context, BulkReaderFormatFactory.class),
@@ -98,7 +99,7 @@ public class FileSystemTableFactory implements DynamicTableSourceFactory, Dynami
                 //todo 序列化方式
                 discoverEncodingFormat(context, SerializationFormatFactory.class));
     }
-    //todo 必选
+    //todo 必选：做校验
     @Override
     public Set<ConfigOption<?>> requiredOptions() {
         Set<ConfigOption<?>> options = new HashSet<>();

@@ -101,6 +101,7 @@ public class FileSystemTableSink extends AbstractFileSystemTable
     @Nullable private final DecodingFormat<DeserializationSchema<RowData>> deserializationFormat;
 
     // For Writing
+    //todo 写数据！！！！！！
     @Nullable private final EncodingFormat<BulkWriter.Factory<RowData>> bulkWriterFormat;
     @Nullable private final EncodingFormat<SerializationSchema<RowData>> serializationFormat;
 
@@ -122,6 +123,7 @@ public class FileSystemTableSink extends AbstractFileSystemTable
         super(tableIdentifier, physicalRowDataType, partitionKeys, tableOptions);
         this.bulkReaderFormat = bulkReaderFormat;
         this.deserializationFormat = deserializationFormat;
+        //todo bulkWriterFormat和serializationFormat都为null，则报错！！！！！！
         if (Stream.of(bulkWriterFormat, serializationFormat).allMatch(Objects::isNull)) {
             String identifier = tableOptions.get(FactoryUtil.FORMAT);
             throw new ValidationException(

@@ -423,6 +423,7 @@ public class KafkaDynamicSource
                 kafkaSourceBuilder.setStartingOffsets(OffsetsInitializer.offsets(offsets));
                 break;
             case TIMESTAMP:
+                //todo 从某一个时间开始读取
                 kafkaSourceBuilder.setStartingOffsets(
                         OffsetsInitializer.timestamp(startupTimestampMillis));
                 break;

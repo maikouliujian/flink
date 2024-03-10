@@ -43,7 +43,7 @@ public abstract class AbstractStreamingWriter<IN, OUT> extends AbstractStreamOpe
     private static final long serialVersionUID = 1L;
 
     // ------------------------ configuration fields --------------------------
-
+    //todo 多久检查一次当前的bucket文件是否需要关闭！！！！！！
     private final long bucketCheckInterval;
 
     private final StreamingFileSink.BucketsBuilder<
@@ -55,6 +55,8 @@ public abstract class AbstractStreamingWriter<IN, OUT> extends AbstractStreamOpe
     protected transient Buckets<IN, String> buckets;
 
     private transient StreamingFileSinkHelper<IN> helper;
+
+
 
     protected transient long currentWatermark;
 

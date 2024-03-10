@@ -217,6 +217,7 @@ public class KafkaDynamicTableFactory
                 properties,
                 startupOptions.startupMode,
                 startupOptions.specificOffsets,
+                //todo 从某一个时间开始消费数据
                 startupOptions.startupTimestampMillis,
                 context.getObjectIdentifier().asSummaryString());
     }

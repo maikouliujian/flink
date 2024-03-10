@@ -27,6 +27,7 @@ import java.io.Serializable;
  * The policy based on which a {@code Bucket} in the {@code Filesystem Sink} rolls its currently
  * open part file and opens a new one.
  */
+//todo 定义了文件滚动策略：即什么情况下关闭老文件，生成新文件！！！！！！
 @PublicEvolving
 public interface RollingPolicy<IN, BucketID> extends Serializable {
 

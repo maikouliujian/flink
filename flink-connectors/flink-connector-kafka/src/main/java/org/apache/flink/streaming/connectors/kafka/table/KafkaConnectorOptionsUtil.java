@@ -236,6 +236,7 @@ class KafkaConnectorOptionsUtil {
         options.startupMode = startupMode;
         options.specificOffsets = specificOffsets;
         if (startupMode == StartupMode.TIMESTAMP) {
+            //todo 从某一个时间开始读取
             options.startupTimestampMillis = tableOptions.get(SCAN_STARTUP_TIMESTAMP_MILLIS);
         }
         return options;

@@ -27,6 +27,7 @@ import java.io.IOException;
 /** An abstract {@link RollingPolicy} which rolls on every checkpoint. */
 @PublicEvolving
 public abstract class CheckpointRollingPolicy<IN, BucketID> implements RollingPolicy<IN, BucketID> {
+    //todo 默认每一次ckp生成一个新文件
     public boolean shouldRollOnCheckpoint(PartFileInfo<BucketID> partFileState) {
         return true;
     }

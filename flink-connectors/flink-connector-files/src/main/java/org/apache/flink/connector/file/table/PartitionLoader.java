@@ -81,6 +81,7 @@ public class PartitionLoader implements Closeable {
     private void overwriteAndRenameFiles(List<Path> srcDirs, Path destDir) throws Exception {
         boolean dirSuccessExist = fs.exists(destDir) || fs.mkdirs(destDir);
         Preconditions.checkState(dirSuccessExist, "Failed to create dest path " + destDir);
+        //todo 如果destDir存在，则需要先删除！！！！！！
         overwrite(destDir);
         renameFiles(srcDirs, destDir);
     }
