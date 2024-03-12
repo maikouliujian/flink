@@ -50,6 +50,7 @@ public final class DefaultPlannerFactory implements PlannerFactory {
 
     @Override
     public Planner create(Context context) {
+        //todo sql任务运行模式的设置！！！！！！
         final RuntimeExecutionMode runtimeExecutionMode =
                 context.getTableConfig().getConfiguration().get(ExecutionOptions.RUNTIME_MODE);
         switch (runtimeExecutionMode) {
