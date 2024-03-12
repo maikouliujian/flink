@@ -371,12 +371,14 @@ public class KafkaSourceEnumerator
 
         // If periodically partition discovery is disabled and the initializing discovery has done,
         // signal NoMoreSplitsEvent to pending readers
+        //todo 对于有界消费kafka
         if (noMoreNewPartitionSplits && boundedness == Boundedness.BOUNDED) {
             LOG.debug(
                     "No more KafkaPartitionSplits to assign. Sending NoMoreSplitsEvent to reader {}"
                             + " in consumer group {}.",
                     pendingReaders,
                     consumerGroupId);
+            //todo 给每一个task发送无数据的信号
             pendingReaders.forEach(context::signalNoMoreSplits);
         }
     }

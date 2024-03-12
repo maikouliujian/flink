@@ -93,6 +93,7 @@ public interface DeserializationSchema<T> extends Serializable, ResultTypeQuerya
      * @param nextElement The element to test for the end-of-stream signal.
      * @return True, if the element signals end of stream, false otherwise.
      */
+    //todo
     boolean isEndOfStream(T nextElement);
 
     /**

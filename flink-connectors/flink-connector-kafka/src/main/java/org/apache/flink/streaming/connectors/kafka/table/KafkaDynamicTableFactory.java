@@ -185,7 +185,7 @@ public class KafkaDynamicTableFactory
                 context.getPrimaryKeyIndexes(),
                 context.getCatalogTable().getOptions(),
                 valueDecodingFormat);
-
+        //todo 建立StartupOptions
         final StartupOptions startupOptions = getStartupOptions(tableOptions);
 
         final Properties properties = getKafkaProperties(context.getCatalogTable().getOptions());

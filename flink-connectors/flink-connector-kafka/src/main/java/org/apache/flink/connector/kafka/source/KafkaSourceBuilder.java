@@ -298,6 +298,7 @@ public class KafkaSourceBuilder<OUT> {
      * @return this KafkaSourceBuilder.
      * @see #setUnbounded(OffsetsInitializer)
      */
+    //todo 设置kafka的结束offset
     public KafkaSourceBuilder<OUT> setBounded(OffsetsInitializer stoppingOffsetsInitializer) {
         this.boundedness = Boundedness.BOUNDED;
         this.stoppingOffsetsInitializer = stoppingOffsetsInitializer;

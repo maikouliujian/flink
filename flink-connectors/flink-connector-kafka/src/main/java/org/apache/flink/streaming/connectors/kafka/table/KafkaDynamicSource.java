@@ -426,6 +426,8 @@ public class KafkaDynamicSource
                 //todo 从某一个时间开始读取
                 kafkaSourceBuilder.setStartingOffsets(
                         OffsetsInitializer.timestamp(startupTimestampMillis));
+                //todo 是否可以开放endTimestampMillis？？？？？？
+                kafkaSourceBuilder.setBounded()
                 break;
         }
 

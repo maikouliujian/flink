@@ -86,6 +86,7 @@ public class FileSystemOutputFormat<T> implements OutputFormat<T>, FinalizeOnMas
             FileSystemCommitter committer =
                     new FileSystemCommitter(
                             fsFactory, msFactory, overwrite, tmpPath, partitionColumns.length);
+            //todo 写完提交分区，如果是overwrite，会删除老数据
             committer.commitPartitions();
         } catch (Exception e) {
             throw new TableException("Exception in finalizeGlobal", e);
@@ -109,6 +110,7 @@ public class FileSystemOutputFormat<T> implements OutputFormat<T>, FinalizeOnMas
                     new PartitionTempFileManager(fsFactory, tmpPath, taskNumber, outputFileConfig);
             PartitionWriter.Context<T> context =
                     new PartitionWriter.Context<>(parameters, formatFactory);
+            //todo 静态分区写到一个固定目录下，动态分区写多个目录
             writer =
                     PartitionWriterFactory.<T>get(
                                     partitionColumns.length - staticPartitions.size() > 0,
