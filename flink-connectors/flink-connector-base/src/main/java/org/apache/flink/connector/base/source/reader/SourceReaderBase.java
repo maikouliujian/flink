@@ -134,6 +134,7 @@ public abstract class SourceReaderBase<E, T, SplitT extends SourceSplit, SplitSt
             //todo 从队列中读取数据
             recordsWithSplitId = getNextFetch(output);
             if (recordsWithSplitId == null) {
+                //todo 是否结束读取数据
                 return trace(finishedOrAvailableLater());
             }
         }

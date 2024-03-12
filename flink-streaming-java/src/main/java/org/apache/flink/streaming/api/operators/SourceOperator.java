@@ -541,6 +541,7 @@ public class SourceOperator<OUT, SplitT extends SourceSplit> extends AbstractStr
         } else if (event instanceof SourceEventWrapper) {
             sourceReader.handleSourceEvents(((SourceEventWrapper) event).getSourceEvent());
         } else if (event instanceof NoMoreSplitsEvent) {
+            //todo sourceReader处理NoMoreSplitsEvent事件
             sourceReader.notifyNoMoreSplits();
         } else {
             throw new IllegalStateException("Received unexpected operator event " + event);

@@ -208,7 +208,7 @@ public class ExecutionJobVertex
                         "The intermediate result's partitions were not correctly assigned.");
             }
         }
-        //todo 处理算子的协调者
+        //todo 处理算子的协调者【每一个算子都有一个OperatorCoordinator】
         final List<SerializedValue<OperatorCoordinator.Provider>> coordinatorProviders =
                 getJobVertex().getOperatorCoordinators();
         if (coordinatorProviders.isEmpty()) {

@@ -241,6 +241,7 @@ public class SourceCoordinatorContext<SplitT extends SourceSplit>
                 () -> {
                     final OperatorCoordinator.SubtaskGateway gateway =
                             getGatewayAndCheckReady(subtask);
+                    //todo 给subtask发送NoMoreSplitsEvent
                     gateway.sendEvent(new NoMoreSplitsEvent());
                     return null; // void return value
                 },
