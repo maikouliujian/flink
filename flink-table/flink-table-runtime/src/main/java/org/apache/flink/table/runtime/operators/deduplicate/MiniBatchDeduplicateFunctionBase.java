@@ -41,8 +41,10 @@ abstract class MiniBatchDeduplicateFunctionBase<T, K, V, IN, OUT>
 
     private static final long serialVersionUID = 1L;
     protected final TypeInformation<T> stateType;
+    //todo ttl
     protected final long minRetentionTime;
     // state stores previous message under the key.
+    //todo state是一个ValueState，存储的是上一个消息
     protected ValueState<T> state;
 
     public MiniBatchDeduplicateFunctionBase(TypeInformation<T> stateType, long minRetentionTime) {

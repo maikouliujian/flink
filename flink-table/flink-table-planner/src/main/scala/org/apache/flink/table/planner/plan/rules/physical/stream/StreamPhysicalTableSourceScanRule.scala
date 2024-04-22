@@ -81,11 +81,12 @@ class StreamPhysicalTableSourceScanRule
       val inputFieldNames = newScan.getRowType.getFieldNames
       val primaryKeyIndices = ScanUtil.getPrimaryKeyIndices(inputFieldNames, keyFields)
       val requiredDistribution = FlinkRelDistribution.hash(primaryKeyIndices, requireStrict = true)
+      //todo 给source添加pk shuffle
       val requiredTraitSet = rel.getCluster.getPlanner.emptyTraitSet()
         .replace(requiredDistribution)
         .replace(FlinkConventions.STREAM_PHYSICAL)
       val newInput: RelNode = RelOptRule.convert(newScan, requiredTraitSet)
-
+      // todo 本质上就是按照 PK进行last row计算, 用于生成PK的changelog
       new StreamPhysicalChangelogNormalize(
         scan.getCluster,
         traitSet,

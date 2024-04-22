@@ -45,6 +45,7 @@ public class CountBundleTrigger<T> implements BundleTrigger<T> {
     @Override
     public void onElement(T element) throws Exception {
         count++;
+        //todo minibatch就是在内存中攒够一定数量的数据再处理
         if (count >= maxCount) {
             callback.finishBundle();
             reset();

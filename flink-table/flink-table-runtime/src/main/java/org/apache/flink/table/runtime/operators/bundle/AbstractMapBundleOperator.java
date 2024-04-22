@@ -54,11 +54,12 @@ public abstract class AbstractMapBundleOperator<K, V, IN, OUT> extends AbstractS
         implements OneInputStreamOperator<IN, OUT>, BundleTriggerCallback {
 
     private static final long serialVersionUID = 5081841938324118594L;
-
+    //todo
     /** The map in heap to store elements. */
     private transient Map<K, V> bundle;
 
     /** The trigger that determines how many elements should be put into a bundle. */
+    //todo
     private final BundleTrigger<IN> bundleTrigger;
 
     /** The function used to process when receiving element. */
