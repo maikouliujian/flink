@@ -495,7 +495,7 @@ public final class Utils {
 
         boolean hasLogback = new File(workingDirectory, "logback.xml").exists();
         boolean hasLog4j = new File(workingDirectory, "log4j.properties").exists();
-
+        //todo taskmanager启动脚本！！！！！！
         String launchCommand =
                 BootstrapTools.getTaskManagerShellCommand(
                         flinkConfig,

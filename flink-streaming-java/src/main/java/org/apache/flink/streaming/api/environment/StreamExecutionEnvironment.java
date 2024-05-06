@@ -1981,6 +1981,7 @@ public class StreamExecutionEnvironment {
      */
     @Internal
     public JobExecutionResult execute(StreamGraph streamGraph) throws Exception {
+        //todo 执行任务
         final JobClient jobClient = executeAsync(streamGraph);
 
         try {
@@ -2093,6 +2094,7 @@ public class StreamExecutionEnvironment {
         CompletableFuture<JobClient> jobClientFuture =
                 executorFactory
                         .getExecutor(configuration)
+                        //todo 提交flink作业[session或者per-job模式]
                         .execute(streamGraph, configuration, userClassloader);
 
         try {

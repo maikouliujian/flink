@@ -99,6 +99,7 @@ public abstract class RpcEndpoint implements RpcGateway, AutoCloseableAsync {
     private final String endpointId;
 
     /** Interface to access the underlying rpc server. */
+    //todo rpc ref
     protected final RpcServer rpcServer;
 
     /**
@@ -182,6 +183,7 @@ public abstract class RpcEndpoint implements RpcGateway, AutoCloseableAsync {
      * endpoint is ready to process remote procedure calls.
      */
     public final void start() {
+        //todo 最终回调用internalCallOnStart
         rpcServer.start();
     }
 
@@ -209,6 +211,7 @@ public abstract class RpcEndpoint implements RpcGateway, AutoCloseableAsync {
      * @throws Exception indicating that the rpc endpoint could not be started. If an exception
      *     occurs, then the rpc endpoint will automatically terminate.
      */
+    //todo actor启动后，第一步先调用onStart方法
     protected void onStart() throws Exception {}
 
     /**

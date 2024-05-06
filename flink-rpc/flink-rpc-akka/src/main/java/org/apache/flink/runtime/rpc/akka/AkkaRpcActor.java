@@ -182,6 +182,7 @@ class AkkaRpcActor<T extends RpcEndpoint & RpcGateway> extends AbstractActor {
         try {
             switch (controlMessage) {
                 case START:
+                    //todo start方法，进入到StoppedState.start中
                     state = state.start(this, flinkClassLoader);
                     break;
                 case STOP:
@@ -609,6 +610,7 @@ class AkkaRpcActor<T extends RpcEndpoint & RpcGateway> extends AbstractActor {
 
             try {
                 runWithContextClassLoader(
+                        //todo internalCallOnStart
                         () -> akkaRpcActor.rpcEndpoint.internalCallOnStart(), flinkClassLoader);
             } catch (Throwable throwable) {
                 akkaRpcActor.stop(

@@ -88,6 +88,7 @@ public class ZooKeeperLeaderRetrievalDriver implements LeaderRetrievalDriver {
         this.client = checkNotNull(client, "CuratorFramework client");
         this.connectionInformationPath = ZooKeeperUtils.generateConnectionInformationPath(path);
         this.cache =
+                //todo 开启监听
                 ZooKeeperUtils.createTreeCache(
                         client,
                         connectionInformationPath,
@@ -133,6 +134,7 @@ public class ZooKeeperLeaderRetrievalDriver implements LeaderRetrievalDriver {
 
                     final String leaderAddress = ois.readUTF();
                     final UUID leaderSessionID = (UUID) ois.readObject();
+                    //todo 监听到了新的leader信息，通知给leaderRetrievalEventHandler
                     leaderRetrievalEventHandler.notifyLeaderAddress(
                             LeaderInformation.known(leaderSessionID, leaderAddress));
                     return;

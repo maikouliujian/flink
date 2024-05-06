@@ -85,6 +85,7 @@ public class TaskExecutorToResourceManagerConnection
                     TaskExecutorRegistrationSuccess,
                     TaskExecutorRegistrationRejection>
             generateRegistration() {
+        //todo 构造一个 ResourceManagerRegistration 实例，用来完成注册！
         return new TaskExecutorToResourceManagerConnection.ResourceManagerRegistration(
                 log,
                 rpcService,
@@ -147,7 +148,7 @@ public class TaskExecutorToResourceManagerConnection
                     retryingRegistrationConfiguration);
             this.taskExecutorRegistration = taskExecutorRegistration;
         }
-
+        //todo 启动注册
         @Override
         protected CompletableFuture<RegistrationResponse> invokeRegistration(
                 ResourceManagerGateway resourceManager,
@@ -156,6 +157,7 @@ public class TaskExecutorToResourceManagerConnection
                 throws Exception {
 
             Time timeout = Time.milliseconds(timeoutMillis);
+            //todo taskExecutor向resourceManager注册
             return resourceManager.registerTaskExecutor(taskExecutorRegistration, timeout);
         }
     }

@@ -63,7 +63,7 @@ public class YarnTaskExecutorRunner {
         EnvironmentInformation.logEnvironmentInfo(LOG, "YARN TaskExecutor runner", args);
         SignalHandler.register(LOG);
         JvmShutdownSafeguard.installAsShutdownHook(LOG);
-
+        //todo
         runTaskManagerSecurely(args);
     }
 
@@ -82,14 +82,16 @@ public class YarnTaskExecutorRunner {
 
             final String currDir = ENV.get(Environment.PWD.key());
             LOG.info("Current working Directory: {}", currDir);
-
+            //todo 加载配置：解析 args 和 flink-conf.yaml 得到配置信息
             configuration = TaskManagerRunner.loadConfiguration(args);
             setupAndModifyConfiguration(configuration, currDir, ENV);
         } catch (Throwable t) {
             LOG.error("YARN TaskManager initialization failed.", t);
             System.exit(INIT_ERROR_EXIT_CODE);
         }
-
+        //todo 启动 TaskManager
+        // 在Flink 当中，所有的组件(跟资源有关)都有一个 ResourceID
+        // 后续还会见到很多的类似的ID的概念：AllocationID
         TaskManagerRunner.runTaskManagerProcessSecurely(Preconditions.checkNotNull(configuration));
     }
 

@@ -574,6 +574,7 @@ public class FlinkYarnSessionCli extends AbstractYarnCli {
 
         final ClusterClientFactory<ApplicationId> yarnClusterClientFactory =
                 clusterClientServiceLoader.getClusterClientFactory(effectiveConfiguration);
+        //todo yarn session
         effectiveConfiguration.set(
                 DeploymentOptions.TARGET, YarnDeploymentTarget.SESSION.getName());
 
@@ -590,18 +591,19 @@ public class FlinkYarnSessionCli extends AbstractYarnCli {
             } else {
                 final ClusterClientProvider<ApplicationId> clusterClientProvider;
                 final ApplicationId yarnApplicationId;
-
+                //todo 命令行中有applicationId
                 if (cmd.hasOption(applicationId.getOpt())) {
                     yarnApplicationId =
                             ConverterUtils.toApplicationId(
                                     cmd.getOptionValue(applicationId.getOpt()));
-
+                    //todo 重新检索集群
                     clusterClientProvider = yarnClusterDescriptor.retrieve(yarnApplicationId);
                 } else {
+                    //todo 命令行中没有applicationId
                     final ClusterSpecification clusterSpecification =
                             yarnClusterClientFactory.getClusterSpecification(
                                     effectiveConfiguration);
-
+                    //todo 启动集群
                     clusterClientProvider =
                             yarnClusterDescriptor.deploySessionCluster(clusterSpecification);
                     ClusterClient<ApplicationId> clusterClient =
@@ -613,7 +615,7 @@ public class FlinkYarnSessionCli extends AbstractYarnCli {
                     try {
                         System.out.println(
                                 "JobManager Web Interface: " + clusterClient.getWebInterfaceURL());
-
+                        //todo 将yarnApplicationId写入配置文件中
                         writeYarnPropertiesFile(yarnApplicationId, dynamicPropertiesEncoded);
                     } catch (Exception e) {
                         try {
@@ -654,6 +656,7 @@ public class FlinkYarnSessionCli extends AbstractYarnCli {
                                     getClass().getSimpleName(),
                                     LOG);
                     try {
+                        //todo
                         runInteractiveCli(yarnApplicationStatusMonitor, acceptInteractiveInput);
                     } finally {
                         shutdownCluster(
@@ -856,7 +859,7 @@ public class FlinkYarnSessionCli extends AbstractYarnCli {
                             ""); // no prefix for the YARN session
 
             SecurityUtils.install(new SecurityConfiguration(flinkConfiguration));
-
+            //todo session模式启动flink集群
             retCode = SecurityUtils.getInstalledContext().runSecured(() -> cli.run(args));
         } catch (CliArgsException e) {
             retCode = handleCliArgsException(e, LOG);

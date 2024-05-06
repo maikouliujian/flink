@@ -42,6 +42,7 @@ final class MethodlessRouter<T> {
     private static final Logger log = LoggerFactory.getLogger(MethodlessRouter.class);
 
     // A path pattern can only point to one target
+    //todo 这里的target就是不同的handler
     private final Map<PathPattern, T> routes = new LinkedHashMap<>();
 
     // --------------------------------------------------------------------------

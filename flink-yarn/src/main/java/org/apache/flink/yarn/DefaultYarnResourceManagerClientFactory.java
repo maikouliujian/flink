@@ -36,6 +36,7 @@ public class DefaultYarnResourceManagerClientFactory implements YarnResourceMana
     @Override
     public AMRMClientAsync<AMRMClient.ContainerRequest> createResourceManagerClient(
             int yarnHeartbeatIntervalMillis, AMRMClientAsync.CallbackHandler callbackHandler) {
+        //todo am和yarn rm通信
         return AMRMClientAsync.createAMRMClientAsync(yarnHeartbeatIntervalMillis, callbackHandler);
     }
 }

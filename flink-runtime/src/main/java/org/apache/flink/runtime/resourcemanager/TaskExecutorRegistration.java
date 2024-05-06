@@ -28,6 +28,7 @@ import java.io.Serializable;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /** Information provided by the TaskExecutor when it registers to the ResourceManager. */
+//todo TaskExecutor向ResourceManager注册时提供的信息
 public class TaskExecutorRegistration implements Serializable {
     private static final long serialVersionUID = -5727832919954047964L;
 

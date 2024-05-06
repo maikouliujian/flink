@@ -146,9 +146,11 @@ public abstract class ResourceManager<WorkerType extends ResourceIDRetrievable>
 
     private final CompletableFuture<Void> startedFuture;
     /** The heartbeat manager with task managers. */
+    //todo resourcemanager 与 taskmanager的心跳，taskmanager要向resourcemanager上报slot数
     private HeartbeatManager<TaskExecutorHeartbeatPayload, Void> taskManagerHeartbeatManager;
 
     /** The heartbeat manager with job managers. */
+    //todo resourcemanager 与 jobmanager的心跳
     private HeartbeatManager<Void, Void> jobManagerHeartbeatManager;
 
     private final DelegationTokenManager delegationTokenManager;
@@ -221,6 +223,7 @@ public abstract class ResourceManager<WorkerType extends ResourceIDRetrievable>
     public final void onStart() throws Exception {
         try {
             log.info("Starting the resource manager.");
+            //todo 启动ResourceManagerServices
             startResourceManagerServices();
             startedFuture.complete(null);
         } catch (Throwable t) {
@@ -235,12 +238,13 @@ public abstract class ResourceManager<WorkerType extends ResourceIDRetrievable>
 
     private void startResourceManagerServices() throws Exception {
         try {
+            //todo 启动 JobLeaderIdService
             jobLeaderIdService.start(new JobLeaderIdActionsImpl());
 
             registerMetrics();
-
+            //todo 启动两个心跳服务：维持 ResourceManager 与 TaskExecutor 和 JobMaster 之间的心跳
             startHeartbeatServices();
-
+            //todo 启动两个定时服务：检查 TaskExecutor 存活状态 和 SlotRequest 超时
             slotManager.start(
                     getFencingToken(), getMainThreadExecutor(), new ResourceActionsImpl());
 
@@ -448,6 +452,7 @@ public abstract class ResourceManager<WorkerType extends ResourceIDRetrievable>
                         if (throwable != null) {
                             return new RegistrationResponse.Failure(throwable);
                         } else {
+                            //todo 注册taskmanager！！！！！！
                             return registerTaskExecutorInternal(
                                     taskExecutorGateway, taskExecutorRegistration);
                         }
@@ -472,6 +477,7 @@ public abstract class ResourceManager<WorkerType extends ResourceIDRetrievable>
                 taskExecutors.get(taskManagerResourceId);
 
         if (workerTypeWorkerRegistration.getInstanceID().equals(taskManagerRegistrationId)) {
+            //todo 将taskmanager上报的slot信息交给slotManager处理
             if (slotManager.registerTaskManager(
                     workerTypeWorkerRegistration,
                     slotReport,
@@ -928,11 +934,12 @@ public abstract class ResourceManager<WorkerType extends ResourceIDRetrievable>
                     "Registering TaskManager with ResourceID {} ({}) at ResourceManager",
                     taskExecutorResourceId.getStringWithMetadata(),
                     taskExecutorAddress);
+            //todo 注册taskmanager
             taskExecutors.put(taskExecutorResourceId, registration);
-
+            //todo 维持心跳
             taskManagerHeartbeatManager.monitorTarget(
                     taskExecutorResourceId, new TaskExecutorHeartbeatSender(taskExecutorGateway));
-
+            //todo 返回注册成功的消息，当 TaskExecutor 收到注册成功的消息之后，就会进行 Slot 汇报
             return new TaskExecutorRegistrationSuccess(
                     registration.getInstanceID(), resourceId, clusterInformation);
         }

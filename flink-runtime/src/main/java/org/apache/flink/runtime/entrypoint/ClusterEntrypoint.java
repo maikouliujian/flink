@@ -107,6 +107,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * <p>Specialization of this class can be used for the session mode and the per-job mode
  */
+//todo flink集群 jobmanager对应的主类
 public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErrorHandler {
 
     public static final ConfigOption<String> INTERNAL_CLUSTER_EXECUTION_MODE =
@@ -229,6 +230,7 @@ public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErro
             securityContext.runSecured(
                     (Callable<Void>)
                             () -> {
+                                //todo 启动集群
                                 runCluster(configuration, pluginManager);
 
                                 return null;
@@ -279,16 +281,25 @@ public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErro
     private void runCluster(Configuration configuration, PluginManager pluginManager)
             throws Exception {
         synchronized (lock) {
+            //todo 第一步：初始化各种服务（8个基础服务）
+            // 比较重要的：HAService， RpcServices， HeatbeatServices，....
             initializeServices(configuration, pluginManager);
 
             // write host information into configuration
             configuration.setString(JobManagerOptions.ADDRESS, commonRpcService.getAddress());
             configuration.setInteger(JobManagerOptions.PORT, commonRpcService.getPort());
-
+            //todo 创建 DispatcherResourceManagerComponentFactory, 初始化各种组件的工厂实例
+            // 其实内部包含了三个重要的成员变量：
+            //   创建 ResourceManager 的工厂实例
+            //   创建 Dispatcher 的工厂实例
+            //   创建 WebMonitorEndpoint 的工厂实例
             final DispatcherResourceManagerComponentFactory
                     dispatcherResourceManagerComponentFactory =
                             createDispatcherResourceManagerComponentFactory(configuration);
-
+            //todo 创建 集群运行需要的一些组件：WebMonitorEndpoint，Dispatcher， ResourceManager 等！！！！！！
+            //   创建和启动 ResourceManager
+            //   创建和启动 Dispatcher
+            //   创建和启动 WebMonitorEndpoint
             clusterComponent =
                     dispatcherResourceManagerComponentFactory.create(
                             configuration,
@@ -359,7 +370,7 @@ public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErro
             LOG.info("Using working directory: {}.", workingDirectory);
 
             rpcSystem = RpcSystem.load(configuration);
-
+            //todo 初始化和启动 AkkaRpcService，内部其实包装了一个 ActorSystem
             commonRpcService =
                     RpcUtils.createRemoteRpcService(
                             rpcSystem,
@@ -368,18 +379,21 @@ public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErro
                             getRPCPortRange(configuration),
                             configuration.getString(JobManagerOptions.BIND_HOST),
                             configuration.getOptional(JobManagerOptions.RPC_BIND_PORT));
-
+             //todo 启动一个 JMXService，用于客户端链接 JobManager JVM 进行监控
             JMXService.startInstance(configuration.getString(JMXServerOptions.JMX_SERVER_PORT));
 
             // update the configuration used to create the high availability services
             configuration.setString(JobManagerOptions.ADDRESS, commonRpcService.getAddress());
             configuration.setInteger(JobManagerOptions.PORT, commonRpcService.getPort());
-
+             //todo 初始化一个负责 IO 的线程池, Flink 大量使用了 异步编程。
+            // todo 这个线程池的线程的数量，默认是：cpu core 个数 * 4
             ioExecutor =
                     Executors.newFixedThreadPool(
                             ClusterEntrypointUtils.getPoolSize(configuration),
                             new ExecutorThreadFactory("cluster-io"));
+            //todo 初始化 HA 服务组件，负责 HA 服务的是：ZooKeeperHaServices
             haServices = createHaServices(configuration, ioExecutor, rpcSystem);
+            //todo // 初始化 BlobServer 服务端
             blobServer =
                     BlobUtils.createBlobServer(
                             configuration,
@@ -387,6 +401,7 @@ public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErro
                             haServices.createBlobStore());
             blobServer.start();
             configuration.setString(BlobServerOptions.PORT, String.valueOf(blobServer.getPort()));
+            //todo // 初始化心跳服务组件, heartbeatServices = HeartbeatServices
             heartbeatServices = createHeartbeatServices(configuration);
             delegationTokenManager =
                     KerberosDelegationTokenManagerFactory.create(
@@ -395,7 +410,7 @@ public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErro
                             commonRpcService.getScheduledExecutor(),
                             ioExecutor);
             metricRegistry = createMetricRegistry(configuration, pluginManager, rpcSystem);
-
+            //todo // 启动 metrics（性能监控） 相关的服务，内部也是启动一个 ActorSystem
             final RpcService metricQueryServiceRpcService =
                     MetricUtils.startRemoteMetricsRpcService(
                             configuration,
@@ -412,7 +427,7 @@ public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErro
                             hostname,
                             ConfigurationUtils.getSystemResourceMetricsProbingInterval(
                                     configuration));
-
+            //todo // 初始化一个用来存储 ExecutionGraph 的 Store, 实现是：FileArchivedExecutionGraphStore
             executionGraphInfoStore =
                     createSerializableExecutionGraphStore(
                             configuration, commonRpcService.getScheduledExecutor());
@@ -715,7 +730,7 @@ public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErro
     // --------------------------------------------------
     // Helper methods
     // --------------------------------------------------
-
+    //todo 启动flink集群的jobmanager
     public static void runClusterEntrypoint(ClusterEntrypoint clusterEntrypoint) {
 
         final String clusterEntrypointName = clusterEntrypoint.getClass().getSimpleName();

@@ -55,7 +55,7 @@ public class SessionDispatcherLeaderProcess extends AbstractDispatcherLeaderProc
         implements JobGraphStore.JobGraphListener {
 
     private final DispatcherGatewayServiceFactory dispatcherGatewayServiceFactory;
-
+    //todo 维护jobGraphStore
     private final JobGraphStore jobGraphStore;
 
     private final JobResultStore jobResultStore;
@@ -78,7 +78,7 @@ public class SessionDispatcherLeaderProcess extends AbstractDispatcherLeaderProc
         this.jobResultStore = jobResultStore;
         this.ioExecutor = ioExecutor;
     }
-
+    //todo
     @Override
     protected void onStart() {
         startServices();

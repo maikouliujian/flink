@@ -68,13 +68,16 @@ public class AbstractSessionClusterExecutor<
 
         try (final ClusterDescriptor<ClusterID> clusterDescriptor =
                 clusterClientFactory.createClusterDescriptor(configuration)) {
+            //todo session模式提交任务要先获取集群id
             final ClusterID clusterID = clusterClientFactory.getClusterId(configuration);
             checkState(clusterID != null);
-
+            //todo session模式需要提前启动集群，那么提交作业时需要通过ClusterID获取ClusterClient
             final ClusterClientProvider<ClusterID> clusterClientProvider =
+                    //todo retrieve【检索】
                     clusterDescriptor.retrieve(clusterID);
             ClusterClient<ClusterID> clusterClient = clusterClientProvider.getClusterClient();
             return clusterClient
+                    //todo 提交作业，向webmonitor endpoint发送请求
                     .submitJob(jobGraph)
                     .thenApplyAsync(
                             FunctionUtils.uncheckedFunction(

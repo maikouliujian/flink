@@ -76,7 +76,7 @@ public class ActiveResourceManager<WorkerType extends ResourceIDRetrievable>
     protected final Configuration flinkConfig;
 
     private final Duration startWorkerRetryInterval;
-
+    //todo ActiveResourceManager中的核心类，真正管理资源的类
     private final ResourceManagerDriver<WorkerType> resourceManagerDriver;
 
     /** All workers maintained by {@link ActiveResourceManager}. */

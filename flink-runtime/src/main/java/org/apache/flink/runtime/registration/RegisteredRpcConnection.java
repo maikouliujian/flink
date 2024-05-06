@@ -101,10 +101,11 @@ public abstract class RegisteredRpcConnection<
         checkState(
                 !isConnected() && pendingRegistration == null,
                 "The RPC connection is already started");
-
+        //todo 创建一个新的注册对象
         final RetryingRegistration<F, G, S, R> newRegistration = createNewRegistration();
 
         if (REGISTRATION_UPDATER.compareAndSet(this, null, newRegistration)) {
+            //todo 开始注册
             newRegistration.startRegistration();
         } else {
             // concurrent start operation
@@ -240,11 +241,12 @@ public abstract class RegisteredRpcConnection<
     // ------------------------------------------------------------------------
 
     private RetryingRegistration<F, G, S, R> createNewRegistration() {
+        //todo 生成一个注册对象 ResourceManagerRegistration
         RetryingRegistration<F, G, S, R> newRegistration = checkNotNull(generateRegistration());
 
         CompletableFuture<RetryingRegistration.RetryingRegistrationResult<G, S, R>> future =
                 newRegistration.getFuture();
-
+        //todo 等待注册完成
         future.whenCompleteAsync(
                 (RetryingRegistration.RetryingRegistrationResult<G, S, R> result,
                         Throwable failure) -> {
@@ -263,9 +265,11 @@ public abstract class RegisteredRpcConnection<
                         }
                     } else {
                         if (result.isSuccess()) {
+                            //todo 注册成功
                             targetGateway = result.getGateway();
                             onRegistrationSuccess(result.getSuccess());
                         } else if (result.isRejection()) {
+                            //todo 注册失败
                             onRegistrationRejection(result.getRejection());
                         } else {
                             throw new IllegalArgumentException(

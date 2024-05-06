@@ -48,6 +48,7 @@ public class YarnClusterClientFactory
     public boolean isCompatibleWith(Configuration configuration) {
         checkNotNull(configuration);
         final String deploymentTarget = configuration.getString(DeploymentOptions.TARGET);
+        //todo target
         return YarnDeploymentTarget.isValidYarnTarget(deploymentTarget);
     }
 
@@ -60,7 +61,7 @@ public class YarnClusterClientFactory
 
         return getClusterDescriptor(configuration);
     }
-
+    //todo session模式下获取集群id(yarn.application.id)
     @Nullable
     @Override
     public ApplicationId getClusterId(Configuration configuration) {

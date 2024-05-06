@@ -421,7 +421,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
             throw new ClusterRetrieveException("Couldn't retrieve Yarn cluster", e);
         }
     }
-
+    //todo yarn-session启动集群,提交任务不在这里,由于yarn-session.sh触发
     @Override
     public ClusterClientProvider<ApplicationId> deploySessionCluster(
             ClusterSpecification clusterSpecification) throws ClusterDeploymentException {
@@ -436,7 +436,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
             throw new ClusterDeploymentException("Couldn't deploy Yarn session cluster", e);
         }
     }
-
+     //todo 通过Application模式提交任务
     @Override
     public ClusterClientProvider<ApplicationId> deployApplicationCluster(
             final ClusterSpecification clusterSpecification,
@@ -470,6 +470,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
         }
 
         try {
+            //todo
             return deployInternal(
                     clusterSpecification,
                     "Flink Application Cluster",
@@ -480,7 +481,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
             throw new ClusterDeploymentException("Couldn't deploy Yarn Application Cluster", e);
         }
     }
-
+    //todo per-job模式提交任务
     @Override
     public ClusterClientProvider<ApplicationId> deployJobCluster(
             ClusterSpecification clusterSpecification, JobGraph jobGraph, boolean detached)
@@ -532,7 +533,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
     private ClusterClientProvider<ApplicationId> deployInternal(
             ClusterSpecification clusterSpecification,
             String applicationName,
-            String yarnClusterEntrypoint,
+            String yarnClusterEntrypoint,//todo jobmanager的主类
             @Nullable JobGraph jobGraph,
             boolean detached)
             throws Exception {
@@ -601,6 +602,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
         }
 
         final ClusterSpecification validClusterSpecification;
+        //todo 资源校验
         try {
             validClusterSpecification =
                     validateClusterResources(
@@ -619,7 +621,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
 
         flinkConfiguration.setString(
                 ClusterEntrypoint.INTERNAL_CLUSTER_EXECUTION_MODE, executionMode.toString());
-        //todo 启动appmaster
+        //todo 启动appmaster,运行各自yarnClusterEntrypoint【ClusterEntrypoint的子类】的main方法
         ApplicationReport report =
                 startAppMaster(
                         flinkConfiguration,
@@ -1136,10 +1138,11 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
                         flinkConfiguration.getString(YarnConfigOptions.LOCALIZED_KEYTAB_PATH);
             }
         }
-
+        //todo 启动jobmanager的参数
         final JobManagerProcessSpec processSpec =
                 JobManagerProcessUtils.processSpecFromConfigWithNewOptionToInterpretLegacyHeap(
                         flinkConfiguration, JobManagerOptions.TOTAL_PROCESS_MEMORY);
+        //todo 构建启动jobmanager【yarnClusterEntrypoint】的shell脚本！！！！！！
         final ContainerLaunchContext amContainer =
                 setupApplicationMasterContainer(yarnClusterEntrypoint, hasKrb5, processSpec);
 
@@ -1227,6 +1230,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
                 new DeploymentFailureHook(yarnApplication, fileUploader.getApplicationDir());
         Runtime.getRuntime().addShutdownHook(deploymentFailureHook);
         LOG.info("Submitting application master " + appId);
+        //todo 启动appmaster，appmaster中会启动jobmanager
         yarnClient.submitApplication(appContext);
 
         LOG.info("Waiting for the cluster to be allocated");

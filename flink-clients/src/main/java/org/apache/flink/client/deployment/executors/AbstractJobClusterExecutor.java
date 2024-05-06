@@ -68,6 +68,7 @@ public class AbstractJobClusterExecutor<
             @Nonnull final Configuration configuration,
             @Nonnull final ClassLoader userCodeClassloader)
             throws Exception {
+        //todo 获取JobGraph
         final JobGraph jobGraph = PipelineExecutorUtils.getJobGraph(pipeline, configuration);
 
         try (final ClusterDescriptor<ClusterID> clusterDescriptor =
@@ -79,6 +80,7 @@ public class AbstractJobClusterExecutor<
                     clusterClientFactory.getClusterSpecification(configuration);
 
             final ClusterClientProvider<ClusterID> clusterClientProvider =
+                    //todo per-job提交
                     clusterDescriptor.deployJobCluster(
                             clusterSpecification, jobGraph, configAccessor.getDetachedMode());
             LOG.info("Job has been submitted with JobID " + jobGraph.getJobID());

@@ -99,7 +99,7 @@ public abstract class ResourceManagerFactory<T extends ResourceIDRetrievable> {
                         context.getHighAvailabilityServices(),
                         SlotManagerMetricGroup.create(
                                 context.getMetricRegistry(), context.getHostname()));
-
+        //todo
         return createResourceManager(
                 context.getRmConfig(),
                 context.getResourceId(),

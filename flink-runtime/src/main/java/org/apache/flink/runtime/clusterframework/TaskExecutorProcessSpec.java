@@ -88,6 +88,7 @@ import java.util.stream.Collectors;
  *               └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
  * </pre>
  */
+//todo TaskManager资源类
 public class TaskExecutorProcessSpec extends CommonProcessMemorySpec<TaskExecutorFlinkMemory> {
     private static final long serialVersionUID = 1L;
 

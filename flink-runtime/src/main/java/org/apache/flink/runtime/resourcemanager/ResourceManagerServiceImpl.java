@@ -105,7 +105,7 @@ public class ResourceManagerServiceImpl implements ResourceManagerService, Leade
     // ------------------------------------------------------------------------
     //  ResourceManagerService
     // ------------------------------------------------------------------------
-
+    //todo 启动resourcemanager服务
     @Override
     public void start() throws Exception {
         synchronized (lock) {
@@ -117,7 +117,7 @@ public class ResourceManagerServiceImpl implements ResourceManagerService, Leade
         }
 
         LOG.info("Starting resource manager service.");
-
+        //todo 启动leader
         leaderElectionService.start(this);
     }
 
@@ -201,6 +201,7 @@ public class ResourceManagerServiceImpl implements ResourceManagerService, Leade
                                 newLeaderSessionID);
 
                         try {
+                            //todo 选举成功后，启动ResourceManager
                             startNewLeaderResourceManager(newLeaderSessionID);
                         } catch (Throwable t) {
                             fatalErrorHandler.onFatalError(
@@ -251,6 +252,7 @@ public class ResourceManagerServiceImpl implements ResourceManagerService, Leade
         stopLeaderResourceManager();
 
         this.leaderSessionID = newLeaderSessionID;
+        //todo 启动ResourceManager
         this.leaderResourceManager =
                 resourceManagerFactory.createResourceManager(rmProcessContext, newLeaderSessionID);
 

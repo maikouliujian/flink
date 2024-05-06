@@ -99,7 +99,7 @@ public class DefaultDispatcherResourceManagerComponentFactory
         this.resourceManagerFactory = resourceManagerFactory;
         this.restEndpointFactory = restEndpointFactory;
     }
-
+    //todo
     @Override
     public DispatcherResourceManagerComponent create(
             Configuration configuration,
@@ -161,7 +161,7 @@ public class DefaultDispatcherResourceManagerComponentFactory
                                     metricQueryServiceRetriever,
                                     dispatcherGatewayRetriever,
                                     executor);
-
+            //todo 一、创建webMonitorEndpoint
             webMonitorEndpoint =
                     restEndpointFactory.createRestEndpoint(
                             configuration,
@@ -174,10 +174,11 @@ public class DefaultDispatcherResourceManagerComponentFactory
                             fatalErrorHandler);
 
             log.debug("Starting Dispatcher REST endpoint.");
+            //todo 一、启动webMonitorEndpoint
             webMonitorEndpoint.start();
 
             final String hostname = RpcUtils.getHostname(rpcService);
-
+            //todo 二、resourceManagerService
             resourceManagerService =
                     ResourceManagerServiceImpl.create(
                             resourceManagerFactory,
@@ -220,6 +221,7 @@ public class DefaultDispatcherResourceManagerComponentFactory
                             dispatcherOperationCaches);
 
             log.debug("Starting Dispatcher.");
+            // todo 三、初始化 并启动 DispatcherRunner
             dispatcherRunner =
                     dispatcherRunnerFactory.createDispatcherRunner(
                             highAvailabilityServices.getDispatcherLeaderElectionService(),
@@ -230,6 +232,7 @@ public class DefaultDispatcherResourceManagerComponentFactory
                             partialDispatcherServices);
 
             log.debug("Starting ResourceManagerService.");
+            //todo 二、启动resourceManagerService
             resourceManagerService.start();
 
             resourceManagerRetrievalService.start(resourceManagerGatewayRetriever);

@@ -47,7 +47,7 @@ public class ApplicationClusterDeployer implements ApplicationDeployer {
     public ApplicationClusterDeployer(final ClusterClientServiceLoader clientServiceLoader) {
         this.clientServiceLoader = checkNotNull(clientServiceLoader);
     }
-    //todo 通过flink命令提交作业
+    //todo 通过flink application模式提交作业
     public <ClusterID> void run(
             final Configuration configuration,
             final ApplicationConfiguration applicationConfiguration)
@@ -61,6 +61,7 @@ public class ApplicationClusterDeployer implements ApplicationDeployer {
                 clientServiceLoader.getClusterClientFactory(configuration);
         try (final ClusterDescriptor<ClusterID> clusterDescriptor =
                 clientFactory.createClusterDescriptor(configuration)) {
+            //todo 获取集群启动资源参数
             final ClusterSpecification clusterSpecification =
                     clientFactory.getClusterSpecification(configuration);
             //todo 通过YarnClusterDescriptor向yarn提交flink作业

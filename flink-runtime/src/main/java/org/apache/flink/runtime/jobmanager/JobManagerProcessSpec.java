@@ -60,6 +60,7 @@ import org.apache.flink.runtime.util.config.memory.jobmanager.JobManagerFlinkMem
  *               └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
  * </pre>
  */
+//todo JobManager资源类
 public class JobManagerProcessSpec extends CommonProcessMemorySpec<JobManagerFlinkMemory> {
     private static final long serialVersionUID = 1L;
 

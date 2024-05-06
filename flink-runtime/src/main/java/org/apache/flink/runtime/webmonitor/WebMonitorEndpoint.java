@@ -255,7 +255,7 @@ public class WebMonitorEndpoint<T extends RestfulGateway> extends RestServerEndp
                         clusterConfiguration.getInteger(RestOptions.FLAMEGRAPH_STACK_TRACE_DEPTH))
                 .build();
     }
-
+    //todo 初始化handlers
     @Override
     protected List<Tuple2<RestHandlerSpecification, ChannelInboundHandler>> initializeHandlers(
             final CompletableFuture<String> localAddressFuture) {
@@ -948,7 +948,9 @@ public class WebMonitorEndpoint<T extends RestfulGateway> extends RestServerEndp
 
     @Override
     public void startInternal() throws Exception {
+        //todo // 启动选举(因为毕竟启动的 WebmonitorEndpoint 只有一个，所以其实就是注册自己的信息到 ZK 中)
         leaderElectionService.start(this);
+        //todo // ExecutionGraph 缓存的定时清理任务
         startExecutionGraphCacheCleanupTask();
 
         if (hasWebUI) {

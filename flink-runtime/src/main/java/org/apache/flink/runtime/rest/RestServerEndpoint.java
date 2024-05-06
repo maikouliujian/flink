@@ -172,10 +172,10 @@ public abstract class RestServerEndpoint implements RestService {
                     state == State.CREATED, "The RestServerEndpoint cannot be restarted.");
 
             log.info("Starting rest endpoint.");
-
+            //todo 启动一个路由器：然后注册各种 Handler
             final Router router = new Router();
             final CompletableFuture<String> restAddressFuture = new CompletableFuture<>();
-
+            //todo 路由handlers
             handlers = initializeHandlers(restAddressFuture);
 
             /* sort the handlers such that they are ordered the following:
@@ -188,6 +188,7 @@ public abstract class RestServerEndpoint implements RestService {
             Collections.sort(handlers, RestHandlerUrlComparator.INSTANCE);
 
             checkAllEndpointsAndHandlersAreUnique(handlers);
+            //todo 注册handler
             handlers.forEach(handler -> registerHandler(router, handler, log));
 
             ChannelInitializer<SocketChannel> initializer =
@@ -195,6 +196,7 @@ public abstract class RestServerEndpoint implements RestService {
 
                         @Override
                         protected void initChannel(SocketChannel ch) throws ConfigurationException {
+                            //todo 1、路由器，根据不同的请求，路由到不同的handler上
                             RouterHandler handler = new RouterHandler(router, responseHeaders);
 
                             // SSL should be the first handler in the pipeline
@@ -226,6 +228,7 @@ public abstract class RestServerEndpoint implements RestService {
 
                             ch.pipeline()
                                     .addLast(new ChunkedWriteHandler())
+                                    //todo 添加路由器
                                     .addLast(handler.getName(), handler)
                                     .addLast(new PipelineErrorHandler(log, responseHeaders));
                         }
@@ -237,7 +240,7 @@ public abstract class RestServerEndpoint implements RestService {
             NioEventLoopGroup workerGroup =
                     new NioEventLoopGroup(
                             0, new ExecutorThreadFactory("flink-rest-server-netty-worker"));
-
+            //todo // 启动一个 Netty 服务端，绑定一个可用端口
             bootstrap = new ServerBootstrap();
             bootstrap
                     .group(bossGroup, workerGroup)
@@ -301,7 +304,7 @@ public abstract class RestServerEndpoint implements RestService {
             restAddressFuture.complete(restBaseUrl);
 
             state = State.RUNNING;
-
+            //todo 启动
             startInternal();
         }
     }

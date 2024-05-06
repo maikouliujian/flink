@@ -50,7 +50,7 @@ public enum JobRestEndpointFactory implements RestEndpointFactory<RestfulGateway
             throws Exception {
         final RestHandlerConfiguration restHandlerConfiguration =
                 RestHandlerConfiguration.fromConfiguration(configuration);
-
+        //todo
         return new MiniDispatcherRestEndpoint(
                 dispatcherGatewayRetriever,
                 configuration,

@@ -277,13 +277,14 @@ public class TaskManagerServices {
 
         // pre-start checks
         checkTempDirs(taskManagerServicesConfiguration.getTmpDirPaths());
-
+        //todo 初始化 TaskEventDispatcher
         final TaskEventDispatcher taskEventDispatcher = new TaskEventDispatcher();
 
         // start the I/O manager, it will create some temp directories.
+        //todo 初始化 IOManagerASync
         final IOManager ioManager =
                 new IOManagerAsync(taskManagerServicesConfiguration.getTmpDirPaths());
-
+        //todo 初始化 NettyShuffleEnvironment
         final ShuffleEnvironment<?, ?> shuffleEnvironment =
                 createShuffleEnvironment(
                         taskManagerServicesConfiguration,
@@ -291,7 +292,7 @@ public class TaskManagerServices {
                         taskManagerMetricGroup,
                         ioExecutor);
         final int listeningDataPort = shuffleEnvironment.start();
-
+        //todo 初始化 KVStageService
         final KvStateService kvStateService =
                 KvStateService.fromConfiguration(taskManagerServicesConfiguration);
         kvStateService.start();
@@ -305,9 +306,9 @@ public class TaskManagerServices {
                         taskManagerServicesConfiguration.getExternalDataPort() > 0
                                 ? taskManagerServicesConfiguration.getExternalDataPort()
                                 : listeningDataPort);
-
+        //todo 初始化 BroadCastVariableManager
         final BroadcastVariableManager broadcastVariableManager = new BroadcastVariableManager();
-
+        // todo 初始化 TaskSlotTable！！！！！！
         final TaskSlotTable<Task> taskSlotTable =
                 createTaskSlotTable(
                         taskManagerServicesConfiguration.getNumberOfSlots(),
@@ -315,14 +316,14 @@ public class TaskManagerServices {
                         taskManagerServicesConfiguration.getTimerServiceShutdownTimeout(),
                         taskManagerServicesConfiguration.getPageSize(),
                         ioExecutor);
-
+        //todo 初始化 DefaultJobTable
         final JobTable jobTable = DefaultJobTable.create();
-
+        //todo 初始化 JobLeaderService
         final JobLeaderService jobLeaderService =
                 new DefaultJobLeaderService(
                         unresolvedTaskManagerLocation,
                         taskManagerServicesConfiguration.getRetryingRegistrationConfiguration());
-
+        //todo 初始化 TaskStateManager
         final TaskExecutorLocalStateStoresManager taskStateManager =
                 new TaskExecutorLocalStateStoresManager(
                         taskManagerServicesConfiguration.isLocalRecoveryEnabled(),
@@ -340,6 +341,7 @@ public class TaskManagerServices {
                 taskManagerServicesConfiguration
                         .getConfiguration()
                         .getBoolean(CoreOptions.CHECK_LEAKED_CLASSLOADER);
+        //todo 初始化 LibraryCacheManager
         final LibraryCacheManager libraryCacheManager =
                 new BlobLibraryCacheManager(
                         permanentBlobService,

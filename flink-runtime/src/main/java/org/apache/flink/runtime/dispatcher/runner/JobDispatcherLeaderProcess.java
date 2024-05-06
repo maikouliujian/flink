@@ -54,7 +54,7 @@ public class JobDispatcherLeaderProcess extends AbstractDispatcherLeaderProcess 
         this.recoveredDirtyJobResult = recoveredDirtyJobResult;
         this.jobResultStore = Preconditions.checkNotNull(jobResultStore);
     }
-
+    //todo
     @Override
     protected void onStart() {
         final DispatcherGatewayService dispatcherService =

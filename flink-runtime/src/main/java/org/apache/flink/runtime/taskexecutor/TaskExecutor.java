@@ -397,10 +397,11 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
     // ------------------------------------------------------------------------
     //  Life cycle
     // ------------------------------------------------------------------------
-
+    //todo
     @Override
     public void onStart() throws Exception {
         try {
+            //todo 第一步：开启相关服务
             startTaskExecutorServices();
         } catch (Throwable t) {
             final TaskManagerException exception =
@@ -409,22 +410,26 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
             onFatalError(exception);
             throw exception;
         }
-
+        // todo 第二步：开始注册超时检查： 5min
         startRegistrationTimeout();
     }
 
     private void startTaskExecutorServices() throws Exception {
         try {
             // start by connecting to the ResourceManager
+            //todo 第一件事：监控 ResourceManager，完成：注册，心跳，资源汇报
+            //todo 监听和获取 ResourceManager 的地址
             resourceManagerLeaderRetriever.start(new ResourceManagerLeaderListener());
 
             // tell the task slot table who's responsible for the task slot actions
+            //todo 第二件事：启动 TaskSlotTable 服务
             taskSlotTable.start(new SlotActionsImpl(), getMainThreadExecutor());
 
             // start the job leader service
+            //todo 第三件事：监控 JobMaster
             jobLeaderService.start(
                     getAddress(), getRpcService(), haServices, new JobLeaderListenerImpl());
-
+            //todo 第四件事：启动 FileCache 服务
             fileCache =
                     new FileCache(
                             taskManagerConfiguration.getTmpDirectories(),
@@ -1301,6 +1306,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
             String newLeaderAddress, ResourceManagerId newResourceManagerId) {
         resourceManagerAddress =
                 createResourceManagerAddress(newLeaderAddress, newResourceManagerId);
+        //todo taskmanager连接ResourceManager
         reconnectToResourceManager(
                 new FlinkException(
                         String.format(
@@ -1322,6 +1328,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
     private void reconnectToResourceManager(Exception cause) {
         closeResourceManagerConnection(cause);
         startRegistrationTimeout();
+        //todo 连接rm
         tryConnectToResourceManager();
     }
 
@@ -1330,14 +1337,14 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
             connectToResourceManager();
         }
     }
-
+    //todo TaskExecutor向ResourceManager注册！！！！！！
     private void connectToResourceManager() {
         assert (resourceManagerAddress != null);
         assert (establishedResourceManagerConnection == null);
         assert (resourceManagerConnection == null);
 
         log.info("Connecting to ResourceManager {}.", resourceManagerAddress);
-
+        // todo 生成 TaskExecutor 注册对象，该对象向resourcemanager注册！！！！！！！
         final TaskExecutorRegistration taskExecutorRegistration =
                 new TaskExecutorRegistration(
                         getAddress(),
@@ -1348,7 +1355,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
                         memoryConfiguration,
                         taskManagerConfiguration.getDefaultSlotResourceProfile(),
                         taskManagerConfiguration.getTotalResourceProfile());
-
+        // todo 生成链接 TaskExecutorToResourceManagerConnection 实例对象
         resourceManagerConnection =
                 new TaskExecutorToResourceManagerConnection(
                         log,
@@ -1359,6 +1366,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
                         getMainThreadExecutor(),
                         new ResourceManagerRegistrationListener(),
                         taskExecutorRegistration);
+        // todo 进行连接，并注册
         resourceManagerConnection.start();
     }
 
@@ -1369,6 +1377,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
             ClusterInformation clusterInformation) {
 
         final CompletableFuture<Acknowledge> slotReportResponseFuture =
+                //todo 向ResourceManager发送slot注册信息
                 resourceManagerGateway.sendSlotReport(
                         getResourceID(),
                         taskExecutorRegistrationId,
@@ -2244,7 +2253,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
         @Override
         public void notifyLeaderAddress(final String leaderAddress, final UUID leaderSessionID) {
             runAsync(
-                    () ->
+                    () ->   //todo 连接ResourceManager
                             notifyOfNewResourceManagerLeader(
                                     leaderAddress,
                                     ResourceManagerId.fromUuidOrNull(leaderSessionID)));
@@ -2303,7 +2312,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
             runAsync(() -> handleRejectedJobManagerConnection(jobId, targetAddress, rejection));
         }
     }
-
+    //todo taskmanager向ResourceManager注册的回调
     private final class ResourceManagerRegistrationListener
             implements RegistrationConnectionListener<
                     TaskExecutorToResourceManagerConnection,
@@ -2325,6 +2334,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
                         //noinspection ObjectEquality
                         if (resourceManagerConnection == connection) {
                             try {
+                                //todo taskmanager向ResourceManager注册成功后
                                 establishResourceManagerConnection(
                                         resourceManagerGateway,
                                         resourceManagerId,

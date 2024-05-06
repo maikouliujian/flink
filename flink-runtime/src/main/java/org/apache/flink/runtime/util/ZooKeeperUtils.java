@@ -755,7 +755,7 @@ public class ZooKeeperUtils {
                         .setSelector(ZooKeeperUtils.treeCacheSelectorForPath(pathToNode))
                         .setExecutor(Executors.newDirectExecutorService())
                         .build();
-
+        //todo 通过 NodeCache 开启监听
         cache.getListenable().addListener(createTreeCacheListener(nodeChangeCallback));
 
         return cache;

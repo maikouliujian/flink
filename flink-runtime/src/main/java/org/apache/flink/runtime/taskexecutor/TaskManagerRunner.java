@@ -184,12 +184,12 @@ public class TaskManagerRunner implements FatalErrorHandler {
     private void startTaskManagerRunnerServices() throws Exception {
         synchronized (lock) {
             rpcSystem = RpcSystem.load(configuration);
-
+            // todo 初始化一个线程池 ScheduledThreadPoolExecutor 用于处理回调
             this.executor =
                     Executors.newScheduledThreadPool(
                             Hardware.getNumberCPUCores(),
                             new ExecutorThreadFactory("taskmanager-future"));
-
+            //todo 获取高可用模式：ZooKeeperHaServices
             highAvailabilityServices =
                     HighAvailabilityServicesUtils.createHighAvailabilityServices(
                             configuration,
@@ -197,9 +197,9 @@ public class TaskManagerRunner implements FatalErrorHandler {
                             AddressResolution.NO_ADDRESS_RESOLUTION,
                             rpcSystem,
                             this);
-
+            // todo 初始化 JMXServer 服务
             JMXService.startInstance(configuration.getString(JMXServerOptions.JMX_SERVER_PORT));
-
+            // todo 创建 RPC 服务
             rpcService = createRpcService(configuration, highAvailabilityServices, rpcSystem);
 
             this.resourceId =
@@ -211,7 +211,7 @@ public class TaskManagerRunner implements FatalErrorHandler {
                             configuration, resourceId);
 
             LOG.info("Using working directory: {}", workingDirectory);
-
+            // todo 创建心跳服务
             HeartbeatServices heartbeatServices =
                     HeartbeatServices.fromConfiguration(configuration);
 
@@ -229,7 +229,7 @@ public class TaskManagerRunner implements FatalErrorHandler {
                             configuration.getString(TaskManagerOptions.BIND_HOST),
                             rpcSystem);
             metricRegistry.startQueryService(metricQueryServiceRpcService, resourceId.unwrap());
-
+            //todo 创建 BlobCacheService，内部会启动两个定时任务：PermanentBlobCleanupTask 和 TransientBlobCleanupTask
             blobCacheService =
                     BlobUtils.createBlobCacheService(
                             configuration,
@@ -240,7 +240,7 @@ public class TaskManagerRunner implements FatalErrorHandler {
             final ExternalResourceInfoProvider externalResourceInfoProvider =
                     ExternalResourceUtils.createStaticExternalResourceInfoProviderFromConfig(
                             configuration, pluginManager);
-
+            //todo 创建taskExecutorService，内部其实就是创建 TaskExecutor 并且启动
             taskExecutorService =
                     taskExecutorServiceFactory.createTaskExecutor(
                             this.configuration,
@@ -285,7 +285,9 @@ public class TaskManagerRunner implements FatalErrorHandler {
 
     public void start() throws Exception {
         synchronized (lock) {
+            //todo 启动TaskManagerRunnerServices各种服务
             startTaskManagerRunnerServices();
+            //todo 启动TaskExecutorService，本质上是taskExecutor的启动，taskExecutor的start方法，会直接回调到其onstart方法上
             taskExecutorService.start();
         }
     }
@@ -473,10 +475,16 @@ public class TaskManagerRunner implements FatalErrorHandler {
         final TaskManagerRunner taskManagerRunner;
 
         try {
+            //todo 第一步：构建 TaskManagerRunner 实例
+            // 具体实现中也做了两件事：
+            // 第一件事： 初始化了一个 TaskManagerServices 对象！ 其实这个动作就类似于 JobManager 启动的时候的第一件大事（启动8个服务）！
+            // 第二件是： 初始化 TaskExecutor（Standalone集群中，提供资源的角色，ResourceManager 其实就是管理集群中的从节点的管理角色）
+            // TaskExecutor 它是一个 RpcEndpoint，意味着，当 TaskExecutor 实例构造完毕之后，启动 RPC 服务就会跳转到 onStart()方法
             taskManagerRunner =
                     new TaskManagerRunner(
                             configuration,
                             pluginManager,
+                            //todo 创建TaskExecutorService
                             TaskManagerRunner::createTaskExecutorService);
             taskManagerRunner.start();
         } catch (Exception exception) {
@@ -523,6 +531,7 @@ public class TaskManagerRunner implements FatalErrorHandler {
 
             exitCode =
                     SecurityUtils.getInstalledContext()
+                            //todo 启动TaskManager
                             .runSecured(() -> runTaskManager(configuration, pluginManager));
         } catch (Throwable t) {
             throwable = ExceptionUtils.stripException(t, UndeclaredThrowableException.class);
@@ -557,6 +566,7 @@ public class TaskManagerRunner implements FatalErrorHandler {
             throws Exception {
 
         final TaskExecutor taskExecutor =
+                //todo 创建TaskExecutor
                 startTaskManager(
                         configuration,
                         resourceID,
@@ -595,10 +605,10 @@ public class TaskManagerRunner implements FatalErrorHandler {
         LOG.info("Starting TaskManager with ResourceID: {}", resourceID.getStringWithMetadata());
 
         String externalAddress = rpcService.getAddress();
-
+        //todo 初始化该节点的资源配置
         final TaskExecutorResourceSpec taskExecutorResourceSpec =
                 TaskExecutorResourceUtils.resourceSpecFromConfig(configuration);
-
+        //todo // 初始化得到 TaskManagerServicesConfiguration 对象
         TaskManagerServicesConfiguration taskManagerServicesConfiguration =
                 TaskManagerServicesConfiguration.fromConfiguration(
                         configuration,
@@ -614,12 +624,12 @@ public class TaskManagerRunner implements FatalErrorHandler {
                         externalAddress,
                         resourceID,
                         taskManagerServicesConfiguration.getSystemResourceMetricsProbingInterval());
-
+        //todo 初始化从节点的用来执行 IO 处理的线程池，线程数量和物理线程一样
         final ExecutorService ioExecutor =
                 Executors.newFixedThreadPool(
                         taskManagerServicesConfiguration.getNumIoThreads(),
                         new ExecutorThreadFactory("flink-taskexecutor-io"));
-
+        //todo 第一件大事：初始化 TaskManagerServices
         TaskManagerServices taskManagerServices =
                 TaskManagerServices.fromConfiguration(
                         taskManagerServicesConfiguration,
@@ -642,7 +652,8 @@ public class TaskManagerRunner implements FatalErrorHandler {
                         workingDirectory.getTmpDirectory());
 
         String metricQueryServiceAddress = metricRegistry.getMetricQueryServiceGatewayRpcAddress();
-
+        // todo 第二件大事： 初始化一个 TaskExecutor
+        //  TaskExecutor 本身是一个 RpcEndpoint，当启动它的 RPC 服务的时候，就调用这个组件的 onStart() 方法
         return new TaskExecutor(
                 rpcService,
                 taskManagerConfiguration,

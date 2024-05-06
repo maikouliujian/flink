@@ -77,7 +77,7 @@ public final class JobSubmitHandler
         this.executor = executor;
         this.configuration = configuration;
     }
-
+    //todo 处理rest请求
     @Override
     protected CompletableFuture<JobSubmitResponseBody> handleRequest(
             @Nonnull HandlerRequest<JobSubmitRequestBody> request,
@@ -120,6 +120,7 @@ public final class JobSubmitHandler
 
         CompletableFuture<Acknowledge> jobSubmissionFuture =
                 finalizedJobGraphFuture.thenCompose(
+                        //todo 提交任务
                         jobGraph -> gateway.submitJob(jobGraph, timeout));
 
         return jobSubmissionFuture.thenCombine(

@@ -128,6 +128,7 @@ public class HighAvailabilityServicesUtils {
                 return new StandaloneHaServices(
                         resourceManagerRpcUrl, dispatcherRpcUrl, webMonitorAddress);
             case ZOOKEEPER:
+                //todo zk ha
                 return createZooKeeperHaServices(configuration, executor, fatalErrorHandler);
 
             case FACTORY_CLASS:

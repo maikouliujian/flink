@@ -111,7 +111,7 @@ public final class YarnApplicationClusterEntryPoint extends ApplicationClusterEn
 
         YarnApplicationClusterEntryPoint yarnApplicationClusterEntrypoint =
                 new YarnApplicationClusterEntryPoint(configuration, program);
-
+        //todo 启动集群
         ClusterEntrypoint.runClusterEntrypoint(yarnApplicationClusterEntrypoint);
     }
 

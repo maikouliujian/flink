@@ -207,10 +207,11 @@ public class CliFrontend {
                             programOptions,
                             Collections.singletonList(uri.toString()));
         }
-
+        //todo application模式的ApplicationConfiguration
         final ApplicationConfiguration applicationConfiguration =
                 new ApplicationConfiguration(
                         programOptions.getProgramArgs(), programOptions.getEntryPointClassName());
+        //todo application模式运行
         deployer.run(effectiveConfiguration, applicationConfiguration);
     }
 
@@ -219,6 +220,7 @@ public class CliFrontend {
      *
      * @param args Command line arguments for the run action.
      */
+    //todo 运行flink任务
     protected void run(String[] args) throws Exception {
         LOG.info("Running 'run' command.");
 
@@ -244,6 +246,7 @@ public class CliFrontend {
         LOG.debug("Effective executor configuration: {}", effectiveConfiguration);
 
         try (PackagedProgram program = getPackagedProgram(programOptions, effectiveConfiguration)) {
+            //todo 执行程序
             executeProgram(effectiveConfiguration, program);
         }
     }
@@ -833,6 +836,7 @@ public class CliFrontend {
 
     protected void executeProgram(final Configuration configuration, final PackagedProgram program)
             throws ProgramInvocationException {
+        //todo
         ClientUtils.executeProgram(
                 new DefaultExecutorServiceLoader(), configuration, program, false, false);
     }
@@ -1077,9 +1081,11 @@ public class CliFrontend {
             // do action
             switch (action) {
                 case ACTION_RUN:
+                    //todo flink run（session、per-job）
                     run(params);
                     return 0;
                 case ACTION_RUN_APPLICATION:
+                    //todo flink run-application（application）
                     runApplication(params);
                     return 0;
                 case ACTION_LIST:
@@ -1155,6 +1161,7 @@ public class CliFrontend {
             final CliFrontend cli = new CliFrontend(configuration, customCommandLines);
 
             SecurityUtils.install(new SecurityConfiguration(cli.configuration));
+            //todo 解析参数和运行flink程序
             retCode = SecurityUtils.getInstalledContext().runSecured(() -> cli.parseAndRun(args));
         } catch (Throwable t) {
             final Throwable strippedThrowable =

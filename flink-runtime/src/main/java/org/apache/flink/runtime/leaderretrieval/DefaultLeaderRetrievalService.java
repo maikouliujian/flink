@@ -92,6 +92,7 @@ public class DefaultLeaderRetrievalService
 
         synchronized (lock) {
             leaderListener = listener;
+            //todo resourceManagerLeaderRetriever 的内部通过 ZooKeeperLeaderRetrievalDriver 来实现！
             leaderRetrievalDriver =
                     leaderRetrievalDriverFactory.createLeaderRetrievalDriver(
                             this, new LeaderRetrievalFatalErrorHandler());
@@ -146,6 +147,8 @@ public class DefaultLeaderRetrievalService
                     lastLeaderSessionID = newLeaderSessionID;
 
                     // Notify the listener only when the leader is truly changed.
+                    //todo 通过 leaderListener 来通知外部
+                    //todo 记住：这个 leaderListener 就是这段代码中最开始的 start() 方法的参数对象： 如：ResourceManagerLeaderListener
                     leaderListener.notifyLeaderAddress(newLeaderAddress, newLeaderSessionID);
                 }
             } else {

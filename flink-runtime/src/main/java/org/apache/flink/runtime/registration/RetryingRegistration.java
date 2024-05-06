@@ -160,6 +160,7 @@ public abstract class RetryingRegistration<
                     rpcGatewayFuture.thenAcceptAsync(
                             (G rpcGateway) -> {
                                 log.info("Resolved {} address, beginning registration", targetName);
+                                //todo 注册
                                 register(
                                         rpcGateway,
                                         1,
@@ -219,6 +220,7 @@ public abstract class RetryingRegistration<
                     attempt,
                     timeoutMillis);
             CompletableFuture<RegistrationResponse> registrationFuture =
+                    //todo 调用子类的invokeRegistration方法！！！！！！！，获取到resourcemanager：gateway
                     invokeRegistration(gateway, fencingToken, timeoutMillis);
 
             // if the registration was successful, let the TaskExecutor know
@@ -232,6 +234,7 @@ public abstract class RetryingRegistration<
                                                 targetName,
                                                 targetAddress);
                                         S success = (S) result;
+                                        //todo 注册成功
                                         completionFuture.complete(
                                                 RetryingRegistrationResult.success(
                                                         gateway, success));
@@ -245,6 +248,7 @@ public abstract class RetryingRegistration<
                                                 RetryingRegistrationResult.rejection(rejection));
                                     } else {
                                         // registration failure
+                                        //todo 注册失败
                                         if (result instanceof RegistrationResponse.Failure) {
                                             RegistrationResponse.Failure failure =
                                                     (RegistrationResponse.Failure) result;

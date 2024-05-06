@@ -83,7 +83,7 @@ public class PackagedProgram implements AutoCloseable {
     private final URL jarFile;
 
     private final String[] args;
-
+    //todo 用户程序mainclass
     private final Class<?> mainClass;
 
     private final List<File> extractedTempLibraries;
@@ -219,6 +219,7 @@ public class PackagedProgram implements AutoCloseable {
     public void invokeInteractiveModeForExecution() throws ProgramInvocationException {
         FlinkSecurityManager.monitorUserSystemExitForCurrentThread();
         try {
+            //todo 通过反射调用用户自定义flink程序的main方法，最终会执行用户自定义程序中的StreamExecutionEnvironment.execute()
             callMainMethod(mainClass, args);
         } finally {
             FlinkSecurityManager.unmonitorUserSystemExitForCurrentThread();
@@ -352,6 +353,7 @@ public class PackagedProgram implements AutoCloseable {
         }
 
         try {
+            //todo 反射调用用户自定义main方法
             mainMethod.invoke(null, (Object) args);
         } catch (IllegalArgumentException e) {
             throw new ProgramInvocationException(

@@ -84,6 +84,7 @@ public class RouterHandler extends SimpleChannelInboundHandler<HttpRequest> {
         // Route
         HttpMethod method = httpRequest.getMethod();
         QueryStringDecoder qsd = new QueryStringDecoder(httpRequest.uri());
+        //todo 路由不同的请求到不同的handler上
         RouteResult<?> routeResult = router.route(method, qsd.path(), qsd.parameters());
 
         if (routeResult == null) {
@@ -98,11 +99,13 @@ public class RouterHandler extends SimpleChannelInboundHandler<HttpRequest> {
             ChannelHandlerContext channelHandlerContext,
             RouteResult<?> routeResult,
             HttpRequest httpRequest) {
+        //todo 不同的路由handler，比如JobSubmitHandler
         ChannelInboundHandler handler = (ChannelInboundHandler) routeResult.target();
 
         // The handler may have been added (keep alive)
         ChannelPipeline pipeline = channelHandlerContext.pipeline();
         ChannelHandler addedHandler = pipeline.get(ROUTED_HANDLER_NAME);
+        //todo 向pipeline中动态添加handler
         if (handler != addedHandler) {
             if (addedHandler == null) {
                 pipeline.addAfter(ROUTER_HANDLER_NAME, ROUTED_HANDLER_NAME, handler);

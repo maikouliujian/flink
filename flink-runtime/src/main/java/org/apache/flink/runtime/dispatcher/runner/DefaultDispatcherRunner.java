@@ -109,6 +109,7 @@ public final class DefaultDispatcherRunner implements DispatcherRunner, LeaderCo
                             getClass().getSimpleName(),
                             leaderSessionID,
                             DispatcherLeaderProcess.class.getSimpleName());
+                    //todo 启动Dispatcher
                     startNewDispatcherLeaderProcess(leaderSessionID);
                 });
     }
@@ -121,6 +122,7 @@ public final class DefaultDispatcherRunner implements DispatcherRunner, LeaderCo
         final DispatcherLeaderProcess newDispatcherLeaderProcess = dispatcherLeaderProcess;
         FutureUtils.assertNoException(
                 previousDispatcherLeaderProcessTerminationFuture.thenRun(
+                        //todo 启动DispatcherLeaderProcess
                         newDispatcherLeaderProcess::start));
     }
 

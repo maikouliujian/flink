@@ -16,7 +16,7 @@
 #  See the License for the specific language governing permissions and
 # limitations under the License.
 ################################################################################
-
+# todo 启动taskmanager的入口
 # Start/stop a Flink TaskManager.
 USAGE="Usage: taskmanager.sh (start|start-foreground|stop|stop-all)"
 
