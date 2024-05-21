@@ -66,7 +66,7 @@ public class JsonFormatFactory implements DeserializationFormatFactory, Serializ
             DynamicTableFactory.Context context, ReadableConfig formatOptions) {
         FactoryUtil.validateFactoryOptions(this, formatOptions);
         JsonFormatOptionsUtil.validateDecodingFormatOptions(formatOptions);
-
+        //todo
         final boolean failOnMissingField = formatOptions.get(FAIL_ON_MISSING_FIELD);
         final boolean ignoreParseErrors = formatOptions.get(IGNORE_PARSE_ERRORS);
         TimestampFormat timestampOption = JsonFormatOptionsUtil.getTimestampFormat(formatOptions);

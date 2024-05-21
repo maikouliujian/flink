@@ -25,7 +25,7 @@ import org.apache.flink.configuration.ConfigOptions;
 /** Options for the JSON format. */
 @PublicEvolving
 public class JsonFormatOptions {
-
+    //todo
     public static final ConfigOption<Boolean> FAIL_ON_MISSING_FIELD =
             ConfigOptions.key("fail-on-missing-field")
                     .booleanType()

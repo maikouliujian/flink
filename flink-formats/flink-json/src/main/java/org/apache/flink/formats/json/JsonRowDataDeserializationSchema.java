@@ -85,6 +85,7 @@ public class JsonRowDataDeserializationSchema implements DeserializationSchema<R
         this.resultTypeInfo = checkNotNull(resultTypeInfo);
         this.failOnMissingField = failOnMissingField;
         this.ignoreParseErrors = ignoreParseErrors;
+        //todo
         this.runtimeConverter =
                 new JsonToRowDataConverters(failOnMissingField, ignoreParseErrors, timestampFormat)
                         .createConverter(checkNotNull(rowType));

@@ -362,6 +362,7 @@ public class JsonToRowDataConverters implements Serializable {
     private Object convertField(
             JsonToRowDataConverter fieldConverter, String fieldName, JsonNode field) {
         if (field == null) {
+            //todo 如果failOnMissingField为false，出现没有的字段，则该字段值为null
             if (failOnMissingField) {
                 throw new JsonParseException("Could not find field with name '" + fieldName + "'.");
             } else {
@@ -380,6 +381,7 @@ public class JsonToRowDataConverters implements Serializable {
             try {
                 return converter.convert(jsonNode);
             } catch (Throwable t) {
+                //todo
                 if (!ignoreParseErrors) {
                     throw t;
                 }
