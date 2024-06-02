@@ -141,6 +141,7 @@ public class HeartbeatManagerImpl<I, O> implements HeartbeatManager<I, O> {
                         "The target with resource ID {} is already been monitored.",
                         resourceID.getStringWithMetadata());
             } else {
+                //todo 新建一个HeartbeatMonitor对象
                 HeartbeatMonitor<O> heartbeatMonitor =
                         heartbeatMonitorFactory.createHeartbeatMonitor(
                                 resourceID,
@@ -202,7 +203,7 @@ public class HeartbeatManagerImpl<I, O> implements HeartbeatManager<I, O> {
     // ----------------------------------------------------------------------------------------------
     // HeartbeatTarget methods
     // ----------------------------------------------------------------------------------------------
-
+    //todo 当前组件接收到来自其他组件的心跳请求
     @Override
     public CompletableFuture<Void> receiveHeartbeat(
             ResourceID heartbeatOrigin, I heartbeatPayload) {
@@ -217,13 +218,13 @@ public class HeartbeatManagerImpl<I, O> implements HeartbeatManager<I, O> {
 
         return FutureUtils.completedVoidFuture();
     }
-
+    //todo 当前组件主动向其他组件上报心跳
     @Override
     public CompletableFuture<Void> requestHeartbeat(
             final ResourceID requestOrigin, I heartbeatPayload) {
         if (!stopped) {
             log.debug("Received heartbeat request from {}.", requestOrigin);
-
+            //todo 第一件事：进行心跳报告，处理超时
             final HeartbeatTarget<O> heartbeatTarget = reportHeartbeat(requestOrigin);
 
             if (heartbeatTarget != null) {
@@ -232,8 +233,10 @@ public class HeartbeatManagerImpl<I, O> implements HeartbeatManager<I, O> {
                 }
 
                 heartbeatTarget
+                        //todo taskmanager向resourcemanager提交心跳，并上报Payload
                         .receiveHeartbeat(
                                 getOwnResourceID(),
+                                //todo ResourceManagerHeartbeatListener
                                 heartbeatListener.retrievePayload(requestOrigin))
                         .whenCompleteAsync(handleHeartbeatRpc(requestOrigin), mainThreadExecutor);
             }
@@ -279,6 +282,7 @@ public class HeartbeatManagerImpl<I, O> implements HeartbeatManager<I, O> {
     HeartbeatTarget<O> reportHeartbeat(ResourceID resourceID) {
         if (heartbeatTargets.containsKey(resourceID)) {
             HeartbeatMonitor<O> heartbeatMonitor = heartbeatTargets.get(resourceID);
+            //todo 处理超时问题
             heartbeatMonitor.reportHeartbeat();
 
             return heartbeatMonitor.getHeartbeatTarget();

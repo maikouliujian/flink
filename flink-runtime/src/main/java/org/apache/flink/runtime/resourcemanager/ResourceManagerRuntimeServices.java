@@ -81,6 +81,7 @@ public class ResourceManagerRuntimeServices {
             SlotManagerMetricGroup slotManagerMetricGroup) {
         final SlotManagerConfiguration slotManagerConfiguration =
                 configuration.getSlotManagerConfiguration();
+        //todo 是否启用细粒度slot manager
         if (configuration.isEnableFineGrainedResourceManagement()) {
             return new FineGrainedSlotManager(
                     scheduledExecutor,

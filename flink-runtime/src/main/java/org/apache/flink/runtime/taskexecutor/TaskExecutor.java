@@ -227,7 +227,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
     private final Executor ioExecutor;
 
     // --------- task slot allocation table -----------
-
+    //todo taskmanager的slot管理
     private final TaskSlotTable<Task> taskSlotTable;
 
     private final Map<JobID, UUID> currentSlotOfferPerJob = new HashMap<>();
@@ -255,7 +255,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
     /** The heartbeat manager for resource manager in the task manager. */
     private final HeartbeatManager<Void, TaskExecutorHeartbeatPayload>
             resourceManagerHeartbeatManager;
-
+    //todo TaskExecutorPartitionTracker！！！！！！
     private final TaskExecutorPartitionTracker partitionTracker;
 
     // --------- resource manager --------
@@ -2243,6 +2243,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
         @Override
         public CompletableFuture<Void> receiveHeartbeat(
                 ResourceID resourceID, TaskExecutorHeartbeatPayload heartbeatPayload) {
+            //todo 向resourceManager发送心跳
             return resourceManagerGateway.heartbeatFromTaskManager(resourceID, heartbeatPayload);
         }
     }
@@ -2535,7 +2536,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
                     && establishedResourceManagerConnection
                             .getResourceManagerResourceId()
                             .equals(resourceId)) {
-
+                //todo 如果tm连接不上rm，那么进行重新连接
                 reconnectToResourceManager(cause);
             }
         }
@@ -2549,6 +2550,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
         public TaskExecutorHeartbeatPayload retrievePayload(ResourceID resourceID) {
             validateRunsInMainThread();
             return new TaskExecutorHeartbeatPayload(
+                    //todo 上报slot的状态，比如是否被分配，分配的jobid等
                     taskSlotTable.createSlotReport(getResourceID()),
                     partitionTracker.createClusterPartitionReport());
         }

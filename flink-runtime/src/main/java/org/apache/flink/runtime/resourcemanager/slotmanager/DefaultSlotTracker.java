@@ -147,6 +147,7 @@ public class DefaultSlotTracker implements SlotTracker {
         boolean anyStatusChanged = false;
         for (SlotStatus slotStatus : slotStatuses) {
             anyStatusChanged |=
+                    //todo 更改slot的状态所属
                     slotStatusStateReconciler.executeStateTransition(
                             slots.get(slotStatus.getSlotID()), slotStatus.getJobID());
         }

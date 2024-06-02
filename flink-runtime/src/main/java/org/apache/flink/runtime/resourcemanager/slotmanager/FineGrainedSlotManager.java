@@ -64,6 +64,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /** Implementation of {@link SlotManager} supporting fine-grained resource management. */
+//todo 细粒度的SlotManager
 public class FineGrainedSlotManager implements SlotManager {
     private static final Logger LOG = LoggerFactory.getLogger(FineGrainedSlotManager.class);
 

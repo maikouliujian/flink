@@ -936,7 +936,7 @@ public abstract class ResourceManager<WorkerType extends ResourceIDRetrievable>
                     taskExecutorAddress);
             //todo 注册taskmanager
             taskExecutors.put(taskExecutorResourceId, registration);
-            //todo 维持心跳
+            //todo 将每一个taskexecutor注册到taskManagerHeartbeatManager，后续由resourcemanager向taskexecutor发送心跳
             taskManagerHeartbeatManager.monitorTarget(
                     taskExecutorResourceId, new TaskExecutorHeartbeatSender(taskExecutorGateway));
             //todo 返回注册成功的消息，当 TaskExecutor 收到注册成功的消息之后，就会进行 Slot 汇报
@@ -1129,13 +1129,14 @@ public abstract class ResourceManager<WorkerType extends ResourceIDRetrievable>
     }
 
     private void startHeartbeatServices() {
+        // todo 维持 TaskExecutor 和 ResourceManager 之间的心跳
         taskManagerHeartbeatManager =
                 heartbeatServices.createHeartbeatManagerSender(
                         resourceId,
                         new TaskManagerHeartbeatListener(),
                         getMainThreadExecutor(),
                         log);
-
+        //todo 维持 JobMaster 和 ResourceManager 之间的心跳
         jobManagerHeartbeatManager =
                 heartbeatServices.createHeartbeatManagerSender(
                         resourceId,
@@ -1243,6 +1244,7 @@ public abstract class ResourceManager<WorkerType extends ResourceIDRetrievable>
 
         @Override
         public CompletableFuture<Void> requestHeartbeat(ResourceID resourceID, Void payload) {
+            //todo taskExecutor接收来自ResourceManager的心跳
             return taskExecutorGateway.heartbeatFromResourceManager(resourceID);
         }
     }
@@ -1354,7 +1356,7 @@ public abstract class ResourceManager<WorkerType extends ResourceIDRetrievable>
 
             handleTaskManagerConnectionLoss(resourceID, new ResourceManagerException(message));
         }
-
+        //todo rm接收到来自tm的slot
         @Override
         public void reportPayload(
                 final ResourceID resourceID, final TaskExecutorHeartbeatPayload payload) {
@@ -1367,7 +1369,7 @@ public abstract class ResourceManager<WorkerType extends ResourceIDRetrievable>
                         resourceID.getStringWithMetadata());
             } else {
                 InstanceID instanceId = workerRegistration.getInstanceID();
-
+                //todo 修改slot 状态归属
                 slotManager.reportSlotStatus(instanceId, payload.getSlotReport());
                 clusterPartitionTracker.processTaskExecutorClusterPartitionReport(
                         resourceID, payload.getClusterPartitionReport());

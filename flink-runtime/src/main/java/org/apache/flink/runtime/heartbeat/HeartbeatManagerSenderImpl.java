@@ -75,6 +75,7 @@ public class HeartbeatManagerSenderImpl<I, O> extends HeartbeatManagerImpl<I, O>
                 heartbeatMonitorFactory);
 
         this.heartbeatPeriod = heartbeatPeriod;
+        //todo 执行run方法
         mainThreadExecutor.schedule(this, 0L, TimeUnit.MILLISECONDS);
     }
 
@@ -82,10 +83,11 @@ public class HeartbeatManagerSenderImpl<I, O> extends HeartbeatManagerImpl<I, O>
     public void run() {
         if (!stopped) {
             log.debug("Trigger heartbeat request.");
+            //todo 给每个心跳目标【taskexecutor或者jobmaster】对象发送心跳请求
             for (HeartbeatMonitor<O> heartbeatMonitor : getHeartbeatTargets().values()) {
                 requestHeartbeat(heartbeatMonitor);
             }
-
+            //todo heartbeatPeriod后继续执行run方法，实现循环
             getMainThreadExecutor().schedule(this, heartbeatPeriod, TimeUnit.MILLISECONDS);
         }
     }
@@ -95,6 +97,7 @@ public class HeartbeatManagerSenderImpl<I, O> extends HeartbeatManagerImpl<I, O>
         final HeartbeatTarget<O> heartbeatTarget = heartbeatMonitor.getHeartbeatTarget();
 
         heartbeatTarget
+                //todo 向不同的目标发送心跳
                 .requestHeartbeat(getOwnResourceID(), payload)
                 .whenCompleteAsync(
                         handleHeartbeatRpc(heartbeatMonitor.getHeartbeatTargetId()),
