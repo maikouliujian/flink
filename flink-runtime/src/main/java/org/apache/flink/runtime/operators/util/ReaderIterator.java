@@ -57,6 +57,7 @@ public class ReaderIterator<T> implements MutableObjectIterator<T> {
     public T next(T target) throws IOException {
         this.reusingDelegate.setInstance(target);
         try {
+            //todo 读取数据
             if (this.reader.next(this.reusingDelegate)) {
                 return this.reusingDelegate.getInstance();
             } else {

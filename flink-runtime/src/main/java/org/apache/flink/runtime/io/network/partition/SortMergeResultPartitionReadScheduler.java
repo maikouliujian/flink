@@ -156,7 +156,7 @@ class SortMergeResultPartitionReadScheduler implements Runnable, BufferRecycler 
 
         Queue<MemorySegment> buffers = allocateBuffers(availableReaders);
         int numBuffersAllocated = buffers.size();
-
+        //todo 读取数据
         Set<SortMergeSubpartitionReader> finishedReaders = readData(availableReaders, buffers);
 
         int numBuffersRead = numBuffersAllocated - buffers.size();
@@ -217,10 +217,11 @@ class SortMergeResultPartitionReadScheduler implements Runnable, BufferRecycler 
     private Set<SortMergeSubpartitionReader> readData(
             Queue<SortMergeSubpartitionReader> availableReaders, Queue<MemorySegment> buffers) {
         Set<SortMergeSubpartitionReader> finishedReaders = new HashSet<>();
-
+       //todo 轮训读取数据
         while (!availableReaders.isEmpty() && !buffers.isEmpty()) {
             SortMergeSubpartitionReader subpartitionReader = availableReaders.poll();
             try {
+                //todo 读取分区数据！！！！！！将数据读取到 buffersRead 中
                 if (!subpartitionReader.readBuffers(buffers, this)) {
                     // there is no resource to release for finished readers currently
                     finishedReaders.add(subpartitionReader);
@@ -302,6 +303,7 @@ class SortMergeResultPartitionReadScheduler implements Runnable, BufferRecycler 
             checkState(!isReleased, "Partition is already released.");
 
             PartitionedFileReader fileReader = createFileReader(resultFile, targetSubpartition);
+            //todo SortMergeSubpartitionReader
             SortMergeSubpartitionReader subpartitionReader =
                     new SortMergeSubpartitionReader(availabilityListener, fileReader);
             if (allReaders.isEmpty()) {
@@ -311,7 +313,7 @@ class SortMergeResultPartitionReadScheduler implements Runnable, BufferRecycler 
             subpartitionReader
                     .getReleaseFuture()
                     .thenRun(() -> releaseSubpartitionReader(subpartitionReader));
-
+            //todo 触发run方法！！！！！！
             mayTriggerReading();
             return subpartitionReader;
         }
@@ -377,6 +379,7 @@ class SortMergeResultPartitionReadScheduler implements Runnable, BufferRecycler 
                 && numRequestedBuffers + bufferPool.getNumBuffersPerRequest() <= maxRequestedBuffers
                 && numRequestedBuffers < bufferPool.getAverageBuffersPerRequester()) {
             isRunning = true;
+            //todo 触发run方法
             ioExecutor.execute(this);
         }
     }

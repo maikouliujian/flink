@@ -239,6 +239,7 @@ public class NettyShuffleEnvironmentOptions {
      * Parallelism threshold to switch between sort-based blocking shuffle and hash-based blocking
      * shuffle.
      */
+    //todo ！！！！！！！【flink batch shuffle也有sortmerge和hash shuffle区分】
     @Documentation.Section(Documentation.Sections.ALL_TASK_MANAGER_NETWORK)
     public static final ConfigOption<Integer> NETWORK_SORT_SHUFFLE_MIN_PARALLELISM =
             key("taskmanager.network.sort-shuffle.min-parallelism")

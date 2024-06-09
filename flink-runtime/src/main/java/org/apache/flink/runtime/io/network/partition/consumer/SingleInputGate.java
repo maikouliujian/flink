@@ -309,6 +309,7 @@ public class SingleInputGate extends IndexedInputGate {
                 }
 
                 convertRecoveredInputChannels();
+                //todo 请求上游partition数据，只会触发一次，后续由credit机制进行数据传输交互
                 internalRequestPartitions();
             }
 

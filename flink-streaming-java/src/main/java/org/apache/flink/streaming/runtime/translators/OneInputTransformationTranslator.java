@@ -50,6 +50,7 @@ public final class OneInputTransformationTranslator<IN, OUT>
                         keySelector,
                         transformation.getStateKeyType(),
                         context);
+        //todo 如果有分区key，对各个节点添加：inputRequirements，用来排序使用
         boolean isKeyed = keySelector != null;
         if (isKeyed) {
             BatchExecutionUtils.applyBatchExecutionSettings(

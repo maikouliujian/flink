@@ -151,6 +151,7 @@ public class EnvironmentSettings {
         public Builder() {}
 
         /** Sets that the components should work in a batch mode. Streaming mode by default. */
+        //todo 设置批模式
         public Builder inBatchMode() {
             configuration.set(RUNTIME_MODE, BATCH);
             return this;
@@ -158,6 +159,7 @@ public class EnvironmentSettings {
 
         /** Sets that the components should work in a streaming mode. Enabled by default. */
         public Builder inStreamingMode() {
+            //todo 设置流模式
             configuration.set(RUNTIME_MODE, STREAMING);
             return this;
         }

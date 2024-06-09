@@ -83,6 +83,7 @@ class BatchPlanner(
     val planner = createDummyPlanner()
 
     val transformations = execGraph.getRootNodes.map {
+          //todo 获取每一个BatchExecNode算子的Transformation
       case node: BatchExecNode[_] => node.translateToPlan(planner)
       case _ =>
         throw new TableException(

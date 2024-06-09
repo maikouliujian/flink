@@ -81,6 +81,7 @@ public class SortMergeResultPartition extends ResultPartition {
     private final Object lock = new Object();
 
     /** {@link PartitionedFile} produced by this result partition. */
+    //todo shuffle中间文件
     @GuardedBy("lock")
     private PartitionedFile resultFile;
 
@@ -93,6 +94,7 @@ public class SortMergeResultPartition extends ResultPartition {
     private final int networkBufferSize;
 
     /** File writer for this result partition. */
+    //todo 写shuffle中间数据
     @GuardedBy("lock")
     private PartitionedFileWriter fileWriter;
 
@@ -113,6 +115,7 @@ public class SortMergeResultPartition extends ResultPartition {
     /**
      * Data read scheduler for this result partition which schedules data read of all subpartitions.
      */
+    //todo 读取shuffle中间数据
     private final SortMergeResultPartitionReadScheduler readScheduler;
 
     /**
@@ -166,6 +169,7 @@ public class SortMergeResultPartition extends ResultPartition {
         // reading the output of all upstream tasks in the same order, which is better for data
         // input balance of the downstream tasks
         this.subpartitionOrder = getRandomSubpartitionOrder(numSubpartitions);
+        //todo 用来读取分区数据的
         this.readScheduler =
                 new SortMergeResultPartitionReadScheduler(
                         numSubpartitions, readBufferPool, readIOExecutor, lock);
@@ -179,6 +183,7 @@ public class SortMergeResultPartition extends ResultPartition {
             }
             try {
                 // allocate at most 4M heap memory for caching of index entries
+                //todo 写shuffle中间数据
                 fileWriter =
                         new PartitionedFileWriter(numSubpartitions, 4194304, resultFileBasePath);
             } catch (Throwable throwable) {
@@ -500,7 +505,7 @@ public class SortMergeResultPartition extends ResultPartition {
 
         IOUtils.closeQuietly(fileWriter);
     }
-
+    //todo 创建读取分区数据view，会触发数据读取逻辑
     @Override
     public ResultSubpartitionView createSubpartitionView(
             int subpartitionIndex, BufferAvailabilityListener availabilityListener)
@@ -513,7 +518,7 @@ public class SortMergeResultPartition extends ResultPartition {
             if (!resultFile.isReadable()) {
                 throw new PartitionNotFoundException(getPartitionId());
             }
-
+            //todo 创建reader
             return readScheduler.createSubpartitionReader(
                     availabilityListener, subpartitionIndex, resultFile);
         }

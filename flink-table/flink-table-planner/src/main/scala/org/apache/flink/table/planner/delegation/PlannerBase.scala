@@ -179,7 +179,7 @@ abstract class PlannerBase(
     val optimizedRelNodes = optimize(relNodes)
     //todo 将优化后的关系节点转化为执行图
     val execGraph = translateToExecNodeGraph(optimizedRelNodes)
-    //todo 获取所有的transformations
+    //todo 获取所有的transformations【在这里区分StreamPlanner和BatchPlanner】
     val transformations = translateToPlan(execGraph)
     afterTranslation()
     transformations

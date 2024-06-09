@@ -38,7 +38,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 @Internal
 public abstract class SimpleTransformationTranslator<OUT, T extends Transformation<OUT>>
         implements TransformationTranslator<OUT, T> {
-
+    //todo 批执行模式转化
     @Override
     public final Collection<Integer> translateForBatch(
             final T transformation, final Context context) {
@@ -51,7 +51,7 @@ public abstract class SimpleTransformationTranslator<OUT, T extends Transformati
 
         return transformedIds;
     }
-
+    //todo 流执行模式转化
     @Override
     public final Collection<Integer> translateForStreaming(
             final T transformation, final Context context) {

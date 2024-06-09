@@ -48,7 +48,7 @@ public class TaskManagerConfiguration implements TaskManagerRuntimeInfo {
     private final ResourceProfile defaultSlotResourceProfile;
 
     private final ResourceProfile totalResourceProfile;
-
+    //todo 临时文件目录，如果是batch，那么是shuffle中间结果目录
     private final String[] tmpDirectories;
 
     private final Time rpcTimeout;
@@ -192,7 +192,7 @@ public class TaskManagerConfiguration implements TaskManagerRuntimeInfo {
         if (numberSlots == -1) {
             numberSlots = 1;
         }
-
+        //todo taskmanager的临时目录
         final String[] tmpDirPaths = ConfigurationUtils.parseTempDirectories(configuration);
 
         final Time rpcTimeout =

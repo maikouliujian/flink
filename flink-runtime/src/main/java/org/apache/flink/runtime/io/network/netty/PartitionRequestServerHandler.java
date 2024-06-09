@@ -87,7 +87,7 @@ class PartitionRequestServerHandler extends SimpleChannelInboundHandler<NettyMes
                     reader =
                             new CreditBasedSequenceNumberingViewReader(
                                     request.receiverId, request.credit, outboundQueue);
-
+                    //todo 读取分区数据的入口！！！！！！！
                     reader.requestSubpartitionView(
                             partitionProvider, request.partitionId, request.queueIndex);
 
@@ -114,6 +114,7 @@ class PartitionRequestServerHandler extends SimpleChannelInboundHandler<NettyMes
                 outboundQueue.cancel(request.receiverId);
             } else if (msgClazz == CloseRequest.class) {
                 outboundQueue.close();
+                //todo 下游告诉上游申请到credit了，继续发送数据
             } else if (msgClazz == AddCredit.class) {
                 AddCredit request = (AddCredit) msg;
 

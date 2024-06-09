@@ -829,6 +829,7 @@ public class StreamingJobGraphGenerator {
                             vertex.getInputRequirements()
                                     .getOrDefault(
                                             inputIndex, StreamConfig.InputRequirement.PASS_THROUGH);
+                    //todo
                     inputConfigs[inputIndex] =
                             new StreamConfig.NetworkInputConfig(
                                     inputSerializers[inputIndex],
@@ -969,6 +970,7 @@ public class StreamingJobGraphGenerator {
         StreamPartitioner<?> partitioner = edge.getPartitioner();
 
         ResultPartitionType resultPartitionType;
+        //todo 根据ExchangeMode决定resultPartitionType
         switch (edge.getExchangeMode()) {
             case PIPELINED:
                 resultPartitionType = ResultPartitionType.PIPELINED_BOUNDED;

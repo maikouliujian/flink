@@ -148,6 +148,7 @@ public abstract class RecordWriter<T extends IOReadableWritable> implements Avai
     }
 
     public void flushAll() {
+        //todo 刷数据，会根据不同的targetPartition，执行不同的逻辑
         targetPartition.flushAll();
     }
 

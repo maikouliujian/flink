@@ -43,7 +43,7 @@ import static org.apache.flink.util.Preconditions.checkState;
 /** The manager used for creating/deleting file channels based on config temp dirs. */
 public class FileChannelManagerImpl implements FileChannelManager {
     private static final Logger LOG = LoggerFactory.getLogger(FileChannelManagerImpl.class);
-
+    //todo
     /** The temporary directories for files. */
     private final File[] paths;
 

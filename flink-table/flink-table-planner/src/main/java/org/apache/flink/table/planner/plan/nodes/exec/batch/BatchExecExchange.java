@@ -62,6 +62,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
  *
  * <p>TODO Remove this class once FLINK-21224 is finished.
  */
+//todo shuffle算子
 public class BatchExecExchange extends CommonExecExchange implements BatchExecNode<RowData> {
     // the required exchange mode for reusable BatchExecExchange
     // if it's None, use value from configuration

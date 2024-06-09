@@ -51,7 +51,7 @@ class CreditBasedSequenceNumberingViewReader
     private final InputChannelID receiverId;
 
     private final PartitionRequestQueue requestQueue;
-
+    //todo 初始化的credit
     private final int initialCredit;
 
     private volatile ResultSubpartitionView subpartitionView;
@@ -66,6 +66,7 @@ class CreditBasedSequenceNumberingViewReader
     private boolean isRegisteredAsAvailable = false;
 
     /** The number of available buffers for holding data on the consumer side. */
+    //todo 下游inputchannel空闲Credits个buffer，会改变
     private int numCreditsAvailable;
 
     CreditBasedSequenceNumberingViewReader(
@@ -77,7 +78,7 @@ class CreditBasedSequenceNumberingViewReader
         this.numCreditsAvailable = initialCredit;
         this.requestQueue = requestQueue;
     }
-
+    //todo 请求读取SubpartitionView来读取subpartition的数据
     @Override
     public void requestSubpartitionView(
             ResultPartitionProvider partitionProvider,
@@ -91,6 +92,7 @@ class CreditBasedSequenceNumberingViewReader
                 // schedule a separate task at the event loop that will
                 // start consuming this. Otherwise the reference to the
                 // view cannot be available in getNextBuffer().
+                //todo createSubpartitionView，读取分区数据！！！！！！
                 this.subpartitionView =
                         partitionProvider.createSubpartitionView(
                                 resultPartitionId, subPartitionIndex, this);
@@ -98,7 +100,7 @@ class CreditBasedSequenceNumberingViewReader
                 throw new IllegalStateException("Subpartition already requested");
             }
         }
-
+        //todo 将读取的数据写到下游！！！！！！
         notifyDataAvailable();
     }
 
@@ -192,8 +194,10 @@ class CreditBasedSequenceNumberingViewReader
     @Nullable
     @Override
     public BufferAndAvailability getNextBuffer() throws IOException {
+        //todo 读取buffler and backlog
         BufferAndBacklog next = subpartitionView.getNextBuffer();
         if (next != null) {
+            //todo 每次读取都要对numCreditsAvailable减1
             if (next.buffer().isBuffer() && --numCreditsAvailable < 0) {
                 throw new IllegalStateException("no credit available");
             }

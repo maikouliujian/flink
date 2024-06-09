@@ -49,6 +49,7 @@ class SortMergeSubpartitionReader
     private final BufferAvailabilityListener availabilityListener;
 
     /** Buffers already read which can be consumed by netty thread. */
+    //todo 已经读取的数据，等待被消费
     @GuardedBy("lock")
     private final Queue<Buffer> buffersRead = new ArrayDeque<>();
 
@@ -56,6 +57,7 @@ class SortMergeSubpartitionReader
     private final PartitionedFileReader fileReader;
 
     /** Number of remaining non-event buffers in the buffer queue. */
+    //todo 读取一个buffer数据，dataBufferBacklog加1
     @GuardedBy("lock")
     private int dataBufferBacklog;
 
@@ -88,6 +90,7 @@ class SortMergeSubpartitionReader
             }
 
             if (buffer.isBuffer()) {
+                //todo 消费了一个buffer的数据，dataBufferBacklog减1
                 --dataBufferBacklog;
             }
             totalBuffersSize -= buffer.getSize();
@@ -113,6 +116,7 @@ class SortMergeSubpartitionReader
 
                 buffersRead.add(buffer);
                 if (buffer.isBuffer()) {
+                    //todo 读取一个buffer的数据，dataBufferBacklog加1，dataBufferBacklog的数据是已经读取到内存中了
                     ++dataBufferBacklog;
                 }
                 totalBuffersSize += buffer.getSize();

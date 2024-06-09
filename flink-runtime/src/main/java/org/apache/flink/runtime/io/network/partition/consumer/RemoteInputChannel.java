@@ -95,9 +95,11 @@ public class RemoteInputChannel extends InputChannel {
     private volatile PartitionRequestClient partitionRequestClient;
 
     /** The next expected sequence number for the next buffer. */
+    //todo 记录每一个buffer数据的序号！！！！！！
     private int expectedSequenceNumber = 0;
 
     /** The initial number of exclusive buffers assigned to this channel. */
+    //todo 初始值为：networkBuffersPerChannel
     private final int initialCredit;
 
     /** The number of available buffers that have not been announced to the producer yet. */
@@ -189,7 +191,7 @@ public class RemoteInputChannel extends InputChannel {
                 // TaskExecutor
                 throw new PartitionConnectionException(partitionId, e);
             }
-
+            //todo 发送netty请求
             partitionRequestClient.requestSubpartition(
                     partitionId, consumedSubpartitionIndex, this, 0);
         }
@@ -522,6 +524,7 @@ public class RemoteInputChannel extends InputChannel {
         boolean recycleBuffer = true;
 
         try {
+            //todo 序号校验
             if (expectedSequenceNumber != sequenceNumber) {
                 onError(new BufferReorderingException(expectedSequenceNumber, sequenceNumber));
                 return;

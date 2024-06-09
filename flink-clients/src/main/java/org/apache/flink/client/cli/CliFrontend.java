@@ -1149,6 +1149,7 @@ public class CliFrontend {
         final String configurationDirectory = getConfigurationDirectoryFromEnv();
 
         // 2. load the global configuration
+        //todo 读取flink-conf.yaml文件
         final Configuration configuration =
                 GlobalConfiguration.loadConfiguration(configurationDirectory);
 
@@ -1178,6 +1179,7 @@ public class CliFrontend {
     // --------------------------------------------------------------------------------------------
 
     public static String getConfigurationDirectoryFromEnv() {
+        //todo 从系统环境变量中读取 FLINK_CONF_DIR
         String location = System.getenv(ConfigConstants.ENV_FLINK_CONF_DIR);
 
         if (location != null) {
@@ -1192,6 +1194,7 @@ public class CliFrontend {
                                 + "' environment variable, does not exist.");
             }
         } else if (new File(CONFIG_DIRECTORY_FALLBACK_1).exists()) {
+            //todo 命中
             location = CONFIG_DIRECTORY_FALLBACK_1;
         } else if (new File(CONFIG_DIRECTORY_FALLBACK_2).exists()) {
             location = CONFIG_DIRECTORY_FALLBACK_2;

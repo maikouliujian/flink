@@ -49,6 +49,7 @@ public class ExecutionOptions {
     public static final ConfigOption<BatchShuffleMode> BATCH_SHUFFLE_MODE =
             ConfigOptions.key("execution.batch-shuffle-mode")
                     .enumType(BatchShuffleMode.class)
+                    //todo shuffle模式
                     .defaultValue(BatchShuffleMode.ALL_EXCHANGES_BLOCKING)
                     .withDescription(
                             Description.builder()
@@ -108,6 +109,7 @@ public class ExecutionOptions {
 
     @Documentation.ExcludeFromDocumentation(
             "This is an expert option, that we do not want to expose in the documentation")
+    //todo
     public static final ConfigOption<Boolean> SORT_INPUTS =
             ConfigOptions.key("execution.sorted-inputs.enabled")
                     .booleanType()

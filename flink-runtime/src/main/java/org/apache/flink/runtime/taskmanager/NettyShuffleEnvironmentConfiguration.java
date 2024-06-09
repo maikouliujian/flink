@@ -79,7 +79,7 @@ public class NettyShuffleEnvironmentConfiguration {
     private final boolean isNetworkDetailedMetrics;
 
     private final NettyConfig nettyConfig;
-
+    //todo
     private final String[] tempDirs;
 
     private final BoundedBlockingSubpartitionType blockingSubpartitionType;

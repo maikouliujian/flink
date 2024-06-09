@@ -757,6 +757,7 @@ public class StreamConfig implements Serializable {
          * same key arrive on multiple inputs to ensure that the operator sees all records with a
          * key as one consecutive group.
          */
+        //todo for batch
         SORTED,
 
         /**
@@ -837,7 +838,7 @@ public class StreamConfig implements Serializable {
             return inputEdge.hashCode();
         }
     }
-
+    //todo
     public static boolean requiresSorting(StreamConfig.InputConfig inputConfig) {
         return inputConfig instanceof StreamConfig.NetworkInputConfig
                 && ((StreamConfig.NetworkInputConfig) inputConfig).getInputRequirement()

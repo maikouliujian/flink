@@ -32,6 +32,7 @@ public enum ResultPartitionType {
      * {@link #PIPELINED} partitions), but only released through the scheduler, when it determines
      * that the partition is no longer needed.
      */
+    //todo 批任务
     BLOCKING(false, false, false, false, true),
 
     /**
@@ -57,6 +58,7 @@ public enum ResultPartitionType {
      * <p>This result partition type may keep an arbitrary amount of data in-flight, in contrast to
      * the {@link #PIPELINED_BOUNDED} variant.
      */
+    //todo 流任务
     PIPELINED(true, true, false, false, false),
 
     /**

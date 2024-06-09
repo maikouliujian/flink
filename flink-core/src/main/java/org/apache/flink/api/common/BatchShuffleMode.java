@@ -41,7 +41,7 @@ import static org.apache.flink.configuration.description.TextElement.text;
 public enum BatchShuffleMode implements DescribedEnum {
 
     /**
-     * Upstream and downstream tasks run simultaneously.
+     * Upstream and downstream tasks run simultaneously【同时的】.
      *
      * <p>This leads to lower latency and more evenly distributed (but higher) resource usage across
      * tasks.
@@ -57,6 +57,7 @@ public enum BatchShuffleMode implements DescribedEnum {
      * <p>This reduces the resource usage as downstream tasks are started after upstream tasks
      * finished.
      */
+    //todo 默认的
     ALL_EXCHANGES_BLOCKING(
             text(
                     "Upstream and downstream tasks run subsequently. This reduces the resource usage "

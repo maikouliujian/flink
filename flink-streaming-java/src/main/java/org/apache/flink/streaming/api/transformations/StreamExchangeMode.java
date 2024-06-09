@@ -34,6 +34,7 @@ public enum StreamExchangeMode {
      * The producer first produces its entire result and finishes. After that, the consumer is
      * started and may consume the data.
      */
+    //todo 批模式
     BATCH,
 
     /**

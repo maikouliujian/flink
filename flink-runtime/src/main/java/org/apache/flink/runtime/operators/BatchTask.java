@@ -77,6 +77,7 @@ import java.util.Map;
 
 import static java.util.Collections.emptyList;
 
+
 /**
  * The base class for all batch tasks. Encapsulated common behavior and implements the main
  * life-cycle of the user code.
@@ -117,6 +118,7 @@ public class BatchTask<S extends Function, OT> extends AbstractInvokable
     protected List<RecordWriter<?>> eventualOutputs;
 
     /** The input readers of this task. */
+    //todo 读取数据
     protected MutableReader<?>[] inputReaders;
 
     /** The input readers for the configured broadcast variables for this task. */
@@ -268,7 +270,7 @@ public class BatchTask<S extends Function, OT> extends AbstractInvokable
                 int numInputs = driver.getNumberOfInputs();
                 int numComparators = driver.getNumberOfDriverComparators();
                 int numBroadcastInputs = this.config.getNumBroadcastInputs();
-
+                //todo
                 initInputsSerializersAndComparators(numInputs, numComparators);
                 initBroadcastInputsSerializers(numBroadcastInputs);
 
@@ -327,7 +329,7 @@ public class BatchTask<S extends Function, OT> extends AbstractInvokable
                     }
                     this.iterativeBroadcastInputs = asArray(iterativeBcInputs);
                 }
-
+                //todo
                 initLocalStrategies(numInputs);
             } catch (Exception e) {
                 throw new RuntimeException(
@@ -692,6 +694,7 @@ public class BatchTask<S extends Function, OT> extends AbstractInvokable
 
             if (groupSize == 1) {
                 // non-union case
+                //todo
                 inputReaders[i] =
                         new MutableRecordReader<>(
                                 getEnvironment().getInputGate(currentReaderOffset),
@@ -774,7 +777,7 @@ public class BatchTask<S extends Function, OT> extends AbstractInvokable
             final TypeSerializerFactory<?> serializerFactory =
                     this.config.getInputSerializer(i, userCodeClassLoader);
             this.inputSerializers[i] = serializerFactory;
-
+            //todo
             this.inputIterators[i] =
                     createInputIterator(this.inputReaders[i], this.inputSerializers[i]);
         }

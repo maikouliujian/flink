@@ -71,7 +71,8 @@ public class ResultPartitionManager implements ResultPartitionProvider {
             }
 
             LOG.debug("Requesting subpartition {} of {}.", subpartitionIndex, partition);
-
+            //todo subpartitionView，用来读取subpartition中的数据
+            //todo 不同的ResultPartition会创建不同的SubpartitionView
             subpartitionView =
                     partition.createSubpartitionView(subpartitionIndex, availabilityListener);
         }

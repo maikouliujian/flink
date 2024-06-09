@@ -310,6 +310,7 @@ public class StreamGraphGenerator {
         streamGraph.setEnableCheckpointsAfterTasksFinish(
                 configuration.get(
                         ExecutionCheckpointingOptions.ENABLE_CHECKPOINTS_AFTER_TASKS_FINISH));
+        //todo 在StreamGraph生成时判断执行模式是流还是批
         shouldExecuteInBatchMode = shouldExecuteInBatchMode();
         configureStreamGraph(streamGraph);
 
@@ -459,13 +460,14 @@ public class StreamGraphGenerator {
             }
         }
     }
-
+    //todo 判断是否使用批模式！！！！！！
     private boolean shouldExecuteInBatchMode() {
+        //todo 获取配置中的执行模式
         final RuntimeExecutionMode configuredMode =
                 configuration.get(ExecutionOptions.RUNTIME_MODE);
-
+        //todo 判断source是否存在无界流
         final boolean existsUnboundedSource = existsUnboundedSource();
-
+        //todo 批模式不能处理无界流！！！！！！
         checkState(
                 configuredMode != RuntimeExecutionMode.BATCH || !existsUnboundedSource,
                 "Detected an UNBOUNDED source with the '"
@@ -478,6 +480,7 @@ public class StreamGraphGenerator {
         if (checkNotNull(configuredMode) != RuntimeExecutionMode.AUTOMATIC) {
             return configuredMode == RuntimeExecutionMode.BATCH;
         }
+        //todo 如果是AUTOMATIC，那么会根据是否为有界流来判断，如果存在无界流，那么采用流模式，如果不存在无界流，那么采用批模式
         return !existsUnboundedSource;
     }
 

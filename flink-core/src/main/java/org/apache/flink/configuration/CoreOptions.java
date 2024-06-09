@@ -367,6 +367,7 @@ public class CoreOptions {
      * The config parameter defining the directories for temporary files, separated by ",", "|", or
      * the system's {@link java.io.File#pathSeparator}.
      */
+    //todo shuffle中间结果存储的目录
     @Documentation.OverrideDefault(
             "'LOCAL_DIRS' on Yarn. System.getProperty(\"java.io.tmpdir\") in standalone.")
     @Documentation.Section(Documentation.Sections.COMMON_MISCELLANEOUS)

@@ -140,6 +140,7 @@ public class ResultPartitionFactory {
         ResultSubpartition[] subpartitions = new ResultSubpartition[numberOfSubpartitions];
 
         final ResultPartition partition;
+        //todo PIPELINED流执行模式
         if (type == ResultPartitionType.PIPELINED
                 || type == ResultPartitionType.PIPELINED_BOUNDED
                 || type == ResultPartitionType.PIPELINED_APPROXIMATE) {
@@ -168,8 +169,10 @@ public class ResultPartitionFactory {
             }
 
             partition = pipelinedPartition;
+            //todo BLOCKING批模式
         } else if (type == ResultPartitionType.BLOCKING
                 || type == ResultPartitionType.BLOCKING_PERSISTENT) {
+            //todo sortShuffleMinParallelism默认值为1
             if (numberOfSubpartitions >= sortShuffleMinParallelism) {
                 partition =
                         new SortMergeResultPartition(

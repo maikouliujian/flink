@@ -106,10 +106,12 @@ public class OneInputStreamTask<IN, OUT> extends StreamTask<OUT, OneInputStreamO
             StreamConfig.InputConfig[] inputConfigs =
                     configuration.getInputs(getUserCodeClassLoader());
             StreamConfig.InputConfig inputConfig = inputConfigs[0];
+            //todo 如果是批模式，会按照key对数据进行排序
             if (requiresSorting(inputConfig)) {
                 checkState(
                         !configuration.isCheckpointingEnabled(),
                         "Checkpointing is not allowed with sorted inputs.");
+                //todo 对输入进行排序
                 input = wrapWithSorted(input);
             }
 
@@ -136,6 +138,7 @@ public class OneInputStreamTask<IN, OUT> extends StreamTask<OUT, OneInputStreamO
 
     private StreamTaskInput<IN> wrapWithSorted(StreamTaskInput<IN> input) {
         ClassLoader userCodeClassLoader = getUserCodeClassLoader();
+        //todo 对输入进行排序
         return new SortingDataInput<>(
                 input,
                 configuration.getTypeSerializerIn(input.getInputIndex(), userCodeClassLoader),

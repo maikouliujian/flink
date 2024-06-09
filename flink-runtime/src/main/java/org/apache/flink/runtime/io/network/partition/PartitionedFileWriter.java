@@ -110,9 +110,12 @@ public class PartitionedFileWriter implements AutoCloseable {
 
         this.numSubpartitions = numSubpartitions;
         this.maxIndexBufferSize = alignMaxIndexBufferSize(maxIndexBufferSize);
+        //todo 记录每一个子分区数据的offset
         this.subpartitionOffsets = new long[numSubpartitions];
         this.subpartitionBuffers = new int[numSubpartitions];
+        //todo 数据文件
         this.dataFilePath = new File(basePath + PartitionedFile.DATA_FILE_SUFFIX).toPath();
+        //todo 索引文件
         this.indexFilePath = new File(basePath + PartitionedFile.INDEX_FILE_SUFFIX).toPath();
 
         this.indexBuffer = ByteBuffer.allocate(MIN_INDEX_BUFFER_SIZE);
@@ -154,7 +157,7 @@ public class PartitionedFileWriter implements AutoCloseable {
         writeRegionIndex();
         this.isBroadcastRegion = isBroadcastRegion;
     }
-
+    //todo 写index文件，记录了子分区数据offset和大小
     private void writeIndexEntry(long subpartitionOffset, int numBuffers) throws IOException {
         if (!indexBuffer.hasRemaining()) {
             if (!extendIndexBufferIfPossible()) {
@@ -186,6 +189,7 @@ public class PartitionedFileWriter implements AutoCloseable {
     private void writeRegionIndex() throws IOException {
         if (Arrays.stream(subpartitionBuffers).sum() > 0) {
             for (int channel = 0; channel < numSubpartitions; ++channel) {
+                //todo 写index文件
                 writeIndexEntry(subpartitionOffsets[channel], subpartitionBuffers[channel]);
             }
 
@@ -194,7 +198,7 @@ public class PartitionedFileWriter implements AutoCloseable {
             Arrays.fill(subpartitionBuffers, 0);
         }
     }
-
+    //todo 写index文件
     private void flushIndexBuffer() throws IOException {
         indexBuffer.flip();
         if (indexBuffer.limit() > 0) {
@@ -210,6 +214,7 @@ public class PartitionedFileWriter implements AutoCloseable {
      * <p>Note: The caller is responsible for recycling the target buffers and releasing the failed
      * {@link PartitionedFile} if any exception occurs.
      */
+    //todo 写数据
     public void writeBuffers(List<BufferWithChannel> bufferWithChannels) throws IOException {
         checkState(!isFinished, "File writer is already finished.");
         checkState(!isClosed, "File writer is already closed.");
@@ -242,6 +247,7 @@ public class PartitionedFileWriter implements AutoCloseable {
                 checkState(
                         subpartitionBuffers[subpartition] == 0,
                         "Must write data of the same channel together.");
+                //todo 记录offset，其实就是累计文件大小
                 subpartitionOffsets[subpartition] = fileOffset;
                 currentSubpartition = subpartition;
             }

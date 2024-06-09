@@ -105,6 +105,7 @@ public final class SortingDataInput<T, K> implements StreamTaskInput<T> {
             KeyAndValueSerializer<T> keyAndValueSerializer =
                     new KeyAndValueSerializer<>(typeSerializer, keyLength);
             this.wrappedInput = wrappedInput;
+            //todo 排序器！！！！！！
             this.sorter =
                     ExternalSorter.newBuilder(
                                     memoryManager,
