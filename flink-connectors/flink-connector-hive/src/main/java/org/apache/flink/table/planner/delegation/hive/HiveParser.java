@@ -201,6 +201,7 @@ public class HiveParser extends ParserImpl {
             startSessionState(hiveConf, catalogManager);
             // We override Hive's grouping function. Refer to the implementation for more details.
             hiveShim.registerTemporaryFunction("grouping", HiveGenericUDFGrouping.class);
+            //todo
             return processCmd(statement, hiveConf, hiveShim, (HiveCatalog) currentCatalog);
         } finally {
             clearSessionState();
@@ -212,8 +213,10 @@ public class HiveParser extends ParserImpl {
         try {
             final HiveParserContext context = new HiveParserContext(hiveConf);
             // parse statement to get AST
+            //todo 通过hive parser解析sql为ast
             final HiveParserASTNode node = HiveASTParseUtils.parse(cmd, context);
             Operation operation;
+            //todo 处理ddl
             if (DDL_NODES.contains(node.getType())) {
                 HiveParserQueryState queryState = new HiveParserQueryState(hiveConf);
                 HiveParserDDLSemanticAnalyzer ddlAnalyzer =
@@ -231,6 +234,7 @@ public class HiveParser extends ParserImpl {
                 final boolean explain = node.getType() == HiveASTParser.TOK_EXPLAIN;
                 // first child is the underlying explicandum
                 HiveParserASTNode input = explain ? (HiveParserASTNode) node.getChild(0) : node;
+                //todo 解析sql！！！！！！
                 operation = analyzeSql(context, hiveConf, hiveShim, input);
                 // explain an nop is also considered nop
                 if (explain && !(operation instanceof NopOperation)) {
@@ -281,8 +285,10 @@ public class HiveParser extends ParserImpl {
     private Operation analyzeSql(
             HiveParserContext context, HiveConf hiveConf, HiveShim hiveShim, HiveParserASTNode node)
             throws SemanticException {
+        //todo HiveParserCalcitePlanner
         HiveParserCalcitePlanner analyzer =
                 createCalcitePlanner(context, new HiveParserQueryState(hiveConf), hiveShim);
+        //todo 解析成关系节点
         RelNode relNode = analyzer.genLogicalPlan(node);
         if (relNode == null) {
             return new NopOperation();

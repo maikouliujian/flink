@@ -46,6 +46,7 @@ public class HiveParserFactory implements ParserFactory {
 
     @Override
     public Parser create(Context context) {
+        //todo hive dialect sql解析器
         return new HiveParser(
                 context.getCatalogManager(),
                 context.getPlannerContext()::createFlinkPlanner,
