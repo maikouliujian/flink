@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 /** Default handler for the {@link OperatorCoordinator OperatorCoordinators}. */
 public class DefaultOperatorCoordinatorHandler implements OperatorCoordinatorHandler {
     private final ExecutionGraph executionGraph;
-
+    //todo~~~~~~~
     private final Map<OperatorID, OperatorCoordinatorHolder> coordinatorMap;
 
     private final GlobalFailureHandler globalFailureHandler;
@@ -55,7 +55,7 @@ public class DefaultOperatorCoordinatorHandler implements OperatorCoordinatorHan
     public DefaultOperatorCoordinatorHandler(
             ExecutionGraph executionGraph, GlobalFailureHandler globalFailureHandler) {
         this.executionGraph = executionGraph;
-
+        //todo 创建<算子id,算子OperatorCoordinatorHolder>的map
         this.coordinatorMap = createCoordinatorMap(executionGraph);
         this.globalFailureHandler = globalFailureHandler;
     }
@@ -64,6 +64,7 @@ public class DefaultOperatorCoordinatorHandler implements OperatorCoordinatorHan
             ExecutionGraph executionGraph) {
         return executionGraph.getAllVertices().values().stream()
                 .filter(ExecutionJobVertex::isInitialized)
+                //todo 获取所有协调者
                 .flatMap(v -> v.getOperatorCoordinators().stream())
                 .collect(
                         Collectors.toMap(

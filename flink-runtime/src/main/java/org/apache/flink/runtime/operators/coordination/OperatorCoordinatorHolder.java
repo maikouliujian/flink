@@ -430,8 +430,10 @@ public class OperatorCoordinatorHolder
             throws Exception {
 
         try (TemporaryClassLoaderContext ignored = TemporaryClassLoaderContext.of(classLoader)) {
+            //todo OperatorCoordinator.Provider
             final OperatorCoordinator.Provider provider =
                     serializedProvider.deserializeValue(classLoader);
+            //todo 获取算子id
             final OperatorID opId = provider.getOperatorId();
 
             final SubtaskAccess.SubtaskAccessFactory taskAccesses =
@@ -468,9 +470,9 @@ public class OperatorCoordinatorHolder
                         userCodeClassLoader,
                         operatorParallelism,
                         coordinatorStore);
-
+        //todo 创建coordinator
         final OperatorCoordinator coordinator = coordinatorProvider.create(context);
-
+        //todo 创建OperatorCoordinatorHolder
         return new OperatorCoordinatorHolder(
                 opId,
                 coordinator,
