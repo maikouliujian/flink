@@ -309,7 +309,7 @@ public class RuntimeEnvironment implements Environment {
         checkpointResponder.declineCheckpoint(
                 jobId, executionId, checkpointId, checkpointException);
     }
-
+    //todo TaskOperatorEventGateway
     @Override
     public TaskOperatorEventGateway getOperatorCoordinatorEventGateway() {
         return operatorEventGateway;

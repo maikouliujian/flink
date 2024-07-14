@@ -90,7 +90,7 @@ public class DefaultOperatorCoordinatorHandler implements OperatorCoordinatorHan
 
     @Override
     public void deliverOperatorEventToCoordinator(
-            final ExecutionAttemptID taskExecutionId,
+            final ExecutionAttemptID taskExecutionId,//todo subtask
             final OperatorID operatorId,
             final OperatorEvent evt)
             throws FlinkException {
@@ -112,7 +112,7 @@ public class DefaultOperatorCoordinatorHandler implements OperatorCoordinatorHan
             throw new TaskNotRunningException(
                     "Task is not known or in state running on the JobManager.");
         }
-
+        //todo 寻找operatorId对应的OperatorCoordinatorHolder
         final OperatorCoordinatorHolder coordinator = coordinatorMap.get(operatorId);
         if (coordinator == null) {
             throw new FlinkException("No coordinator registered for operator " + operatorId);

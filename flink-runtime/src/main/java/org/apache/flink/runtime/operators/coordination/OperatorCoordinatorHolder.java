@@ -202,6 +202,7 @@ public class OperatorCoordinatorHolder
 
     public void handleEventFromOperator(int subtask, OperatorEvent event) throws Exception {
         mainThreadExecutor.assertRunningInMainThread();
+        //todo 处理来自其他算子的事件
         coordinator.handleEventFromOperator(subtask, event);
     }
 

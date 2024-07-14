@@ -674,7 +674,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
                             taskInformation.getJobVertexId(),
                             tdd.getExecutionAttemptId(),
                             taskManagerConfiguration.getRpcTimeout());
-
+            //todo 创建TaskOperatorEventGateway
             final TaskOperatorEventGateway taskOperatorEventGateway =
                     new RpcTaskOperatorEventGateway(
                             jobManagerConnection.getJobManagerGateway(),
@@ -745,7 +745,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
                             taskManagerActions,
                             inputSplitProvider,
                             checkpointResponder,
-                            taskOperatorEventGateway,
+                            taskOperatorEventGateway,//todo
                             aggregateManager,
                             classLoaderHandle,
                             fileCache,

@@ -1038,7 +1038,7 @@ public abstract class SchedulerBase implements SchedulerNG, CheckpointScheduling
             final OperatorID operatorId,
             final OperatorEvent evt)
             throws FlinkException {
-
+        //todo 分发OperatorEvent到对应的算子Coordinator
         operatorCoordinatorHandler.deliverOperatorEventToCoordinator(
                 taskExecutionId, operatorId, evt);
     }

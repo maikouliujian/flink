@@ -129,7 +129,7 @@ public interface Environment {
      *     this environment.
      */
     InputSplitProvider getInputSplitProvider();
-
+    //todo
     /** Gets the gateway through which operators can send events to the operator coordinators. */
     TaskOperatorEventGateway getOperatorCoordinatorEventGateway();
 

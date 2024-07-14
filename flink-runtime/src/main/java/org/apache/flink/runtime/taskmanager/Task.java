@@ -227,6 +227,7 @@ public class Task
     /**
      * The gateway for operators to send messages to the operator coordinators on the Job Manager.
      */
+    //todo
     private final TaskOperatorEventGateway operatorCoordinatorEventGateway;
 
     /** GlobalAggregateManager used to update aggregates on the JobMaster. */

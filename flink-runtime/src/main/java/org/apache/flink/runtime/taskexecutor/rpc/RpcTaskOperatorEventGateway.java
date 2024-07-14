@@ -57,6 +57,7 @@ public class RpcTaskOperatorEventGateway implements TaskOperatorEventGateway {
     public void sendOperatorEventToCoordinator(
             OperatorID operator, SerializedValue<OperatorEvent> event) {
         final CompletableFuture<Acknowledge> result =
+                //todo 各个subtask通过JobMasterOperatorEventGateway，将请求发送至operator对应的Coordinator
                 rpcGateway.sendOperatorEventToCoordinator(taskExecutionId, operator, event);
 
         result.whenComplete(
