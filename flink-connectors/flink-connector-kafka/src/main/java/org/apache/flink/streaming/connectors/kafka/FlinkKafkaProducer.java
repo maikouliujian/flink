@@ -310,6 +310,8 @@ public class FlinkKafkaProducer<IN>
                 topicId,
                 serializationSchema,
                 producerConfig,
+                //todo FlinkFixedPartitioner会导致每一个subtask的数据发送到一个kafka分区中
+                //todo 如果kafka分区数大于 task 并行度，则会出现空分区
                 Optional.of(new FlinkFixedPartitioner<>()));
     }
 

@@ -197,6 +197,7 @@ class KafkaWriter<IN>
     public void write(IN element, Context context) throws IOException {
         final ProducerRecord<byte[], byte[]> record =
                 recordSerializer.serialize(element, kafkaSinkContext, context.timestamp());
+        //todo 采用kafka的api进行数据发送！！！！！！【默认是随机策略】
         currentProducer.send(record, deliveryCallback);
         numRecordsSendCounter.inc();
     }
