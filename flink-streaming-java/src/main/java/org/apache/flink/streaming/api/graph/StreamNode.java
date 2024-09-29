@@ -78,7 +78,7 @@ public class StreamNode {
 
     private List<StreamEdge> inEdges = new ArrayList<StreamEdge>();
     private List<StreamEdge> outEdges = new ArrayList<StreamEdge>();
-
+    //todo task的执行节点！！！！！！！！！！！！
     private final Class<? extends TaskInvokable> jobVertexClass;
 
     private InputFormat<?, ?> inputFormat;

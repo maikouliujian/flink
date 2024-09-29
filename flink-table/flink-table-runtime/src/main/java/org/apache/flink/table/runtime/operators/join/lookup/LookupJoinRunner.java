@@ -31,6 +31,7 @@ import org.apache.flink.table.runtime.generated.GeneratedFunction;
 import org.apache.flink.util.Collector;
 
 /** The join runner to lookup the dimension table. */
+//todo lookup join函数
 public class LookupJoinRunner extends ProcessFunction<RowData, RowData> {
     private static final long serialVersionUID = -4521543015709964733L;
 

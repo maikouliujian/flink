@@ -366,7 +366,7 @@ public class StreamGraph implements Pipeline {
         }
         sinks.add(vertexID);
     }
-
+    //todo 添加节点！！！！！！
     public <IN, OUT> void addOperator(
             Integer vertexID,
             @Nullable String slotSharingGroup,
@@ -375,6 +375,7 @@ public class StreamGraph implements Pipeline {
             TypeInformation<IN> inTypeInfo,
             TypeInformation<OUT> outTypeInfo,
             String operatorName) {
+        //todo 判断是否为source
         Class<? extends TaskInvokable> invokableClass =
                 operatorFactory.isStreamSource()
                         ? SourceStreamTask.class
@@ -496,7 +497,7 @@ public class StreamGraph implements Pipeline {
             Integer vertexID,
             @Nullable String slotSharingGroup,
             @Nullable String coLocationGroup,
-            Class<? extends TaskInvokable> vertexClass,
+            Class<? extends TaskInvokable> vertexClass,//todo task的执行节点！！！！！！
             StreamOperatorFactory<?> operatorFactory,
             String operatorName) {
 
@@ -594,7 +595,7 @@ public class StreamGraph implements Pipeline {
             return node.getSlotSharingGroup();
         }
     }
-
+    //todo 添加边！！！！！！
     public void addEdge(Integer upStreamVertexID, Integer downStreamVertexID, int typeNumber) {
         addEdgeInternal(
                 upStreamVertexID,

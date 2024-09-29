@@ -39,6 +39,7 @@ import scala.collection.JavaConversions._
  * <p> Flink supports extract the primary key and row time attribute from the view if the view comes
  * from [[LogicalRank]] node which can convert to a [[Deduplicate]] node.
  */
+//todo temporal join with unique key
 class TemporalJoinRewriteWithUniqueKeyRule
   extends RelOptRule(
     operand(
@@ -54,7 +55,9 @@ class TemporalJoinRewriteWithUniqueKeyRule
     val snapshotInput = call.rel[FlinkLogicalRel](3)
 
     val isTemporalJoin = matches(snapshot)
+    //todo 判断是否可以转化为lookup join
     val canConvertToLookup = canConvertToLookupJoin(snapshot, snapshotInput)
+    //todo 只支持inner join 和 left join
     val supportedJoinTypes = Seq(JoinRelType.INNER, JoinRelType.LEFT)
 
     isTemporalJoin && !canConvertToLookup && supportedJoinTypes.contains(join.getJoinType)

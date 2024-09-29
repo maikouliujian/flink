@@ -207,6 +207,7 @@ abstract class PlannerBase(
           ConnectorCatalogTable.sink(s.getSink, !isStreamingMode))
 
       case collectModifyOperation: CollectModifyOperation =>
+        //todo sql查询走这里
         val input = createRelBuilder.queryOperation(modifyOperation.getChild).build()
         DynamicSinkUtils.convertCollectToRel(
           createRelBuilder,

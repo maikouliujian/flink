@@ -1963,8 +1963,10 @@ public class StreamExecutionEnvironment {
      * @return The result of the job execution, containing elapsed time and accumulators.
      * @throws Exception which occurs during job execution.
      */
+    //todo per-job、session模式提交作业的入口
     public JobExecutionResult execute(String jobName) throws Exception {
         Preconditions.checkNotNull(jobName, "Streaming Job name should not be null.");
+        //todo 生成StreamGraph
         final StreamGraph streamGraph = getStreamGraph();
         streamGraph.setJobName(jobName);
         return execute(streamGraph);
@@ -2136,6 +2138,7 @@ public class StreamExecutionEnvironment {
     //todo 根据transformations集合生成StreamGraph
     @Internal
     public StreamGraph getStreamGraph(boolean clearTransformations) {
+        //todo StreamGraph是如何生成的，是将transformations进行转化生成的
         final StreamGraph streamGraph = getStreamGraphGenerator(transformations).generate();
         if (clearTransformations) {
             transformations.clear();

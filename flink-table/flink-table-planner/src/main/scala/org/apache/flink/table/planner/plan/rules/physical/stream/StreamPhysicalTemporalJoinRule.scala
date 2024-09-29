@@ -35,6 +35,7 @@ class StreamPhysicalTemporalJoinRule
 
   override def matches(call: RelOptRuleCall): Boolean = {
     val join = call.rel[FlinkLogicalJoin](0)
+    //todo 判断是否满足TemporalJoin
     if (!satisfyTemporalJoin(join)) {
       return false
     }
@@ -57,6 +58,7 @@ class StreamPhysicalTemporalJoinRule
         snapshot.getInput
       case rel: FlinkLogicalRel => rel
     }
+    //todo TemporalJoin的relnode
     new StreamPhysicalTemporalJoin(
       join.getCluster,
       providedTraitSet,

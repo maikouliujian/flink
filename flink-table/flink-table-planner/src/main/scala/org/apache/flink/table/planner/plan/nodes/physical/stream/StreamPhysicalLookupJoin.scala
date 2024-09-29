@@ -75,6 +75,7 @@ class StreamPhysicalLookupJoin(
       case _ =>
         (null, null)
     }
+    //todo lookup join的执行节点
     new StreamExecLookupJoin(
       unwrapTableConfig(this),
       JoinTypeUtil.getFlinkJoinType(joinType),

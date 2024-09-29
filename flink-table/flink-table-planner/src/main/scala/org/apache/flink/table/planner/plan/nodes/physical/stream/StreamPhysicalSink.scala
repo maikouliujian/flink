@@ -38,6 +38,7 @@ import java.util
 /**
  * Stream physical RelNode to to write data into an external sink defined by a [[DynamicTableSink]].
  */
+//todo 根节点
 class StreamPhysicalSink(
     cluster: RelOptCluster,
     traitSet: RelTraitSet,

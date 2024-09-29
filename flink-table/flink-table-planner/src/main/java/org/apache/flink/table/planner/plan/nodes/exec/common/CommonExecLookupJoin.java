@@ -156,6 +156,7 @@ public abstract class CommonExecLookupJoin extends ExecNodeBase<RowData>
      * lookup keys: the key is index in dim table. the value is source of lookup key either constant
      * or field from right table.
      */
+    //todo lookupKeys
     @JsonProperty(FIELD_NAME_LOOKUP_KEYS)
     private final Map<Integer, LookupJoinUtil.LookupKey> lookupKeys;
 
@@ -204,6 +205,7 @@ public abstract class CommonExecLookupJoin extends ExecNodeBase<RowData>
     @SuppressWarnings("unchecked")
     public Transformation<RowData> translateToPlanInternal(
             PlannerBase planner, ExecNodeConfig config) {
+        //todo lookup table source
         RelOptTable temporalTable =
                 temporalTableSourceSpec.getTemporalTable(
                         planner.getFlinkContext(), unwrapTypeFactory(planner));
@@ -216,6 +218,7 @@ public abstract class CommonExecLookupJoin extends ExecNodeBase<RowData>
         validateLookupKeyType(lookupKeys, inputRowType, tableSourceRowType);
 
         boolean isAsyncEnabled = false;
+        //todo 用户定义的函数
         UserDefinedFunction userDefinedFunction =
                 LookupJoinUtil.getLookupFunction(temporalTable, lookupKeys.keySet());
         UserDefinedFunctionHelper.prepareInstance(config, userDefinedFunction);
@@ -226,7 +229,9 @@ public abstract class CommonExecLookupJoin extends ExecNodeBase<RowData>
 
         boolean isLeftOuterJoin = joinType == FlinkJoinType.LEFT;
         StreamOperatorFactory<RowData> operatorFactory;
+        //todo lookup join函数分异步和同步
         if (isAsyncEnabled) {
+            //todo 异步
             operatorFactory =
                     createAsyncLookupJoin(
                             temporalTable,
@@ -239,6 +244,7 @@ public abstract class CommonExecLookupJoin extends ExecNodeBase<RowData>
                             resultRowType,
                             isLeftOuterJoin);
         } else {
+            //todo 同步
             operatorFactory =
                     createSyncLookupJoin(
                             temporalTable,
@@ -316,7 +322,7 @@ public abstract class CommonExecLookupJoin extends ExecNodeBase<RowData>
 
         DataTypeFactory dataTypeFactory =
                 ShortcutUtils.unwrapContext(relBuilder).getCatalogManager().getDataTypeFactory();
-
+        //todo
         LookupJoinCodeGenerator.GeneratedTableFunctionWithDataType<AsyncFunction<RowData, Object>>
                 generatedFuncWithType =
                         LookupJoinCodeGenerator.generateAsyncLookupFunction(
@@ -404,7 +410,7 @@ public abstract class CommonExecLookupJoin extends ExecNodeBase<RowData>
                 ShortcutUtils.unwrapContext(relBuilder).getCatalogManager().getDataTypeFactory();
 
         int[] orderedLookupKeys = LookupJoinUtil.getOrderedLookupKeys(allLookupKeys.keySet());
-
+        //todo 读取外部数据源的方法！！！！！！！
         GeneratedFunction<FlatMapFunction<RowData, RowData>> generatedFetcher =
                 LookupJoinCodeGenerator.generateSyncLookupFunction(
                         config,
@@ -448,7 +454,7 @@ public abstract class CommonExecLookupJoin extends ExecNodeBase<RowData>
                             filterOnTemporalTable,
                             temporalTableOutputType.get(),
                             tableSourceRowType);
-
+            //todo 函数
             processFunc =
                     new LookupJoinWithCalcRunner(
                             generatedFetcher,
@@ -458,6 +464,7 @@ public abstract class CommonExecLookupJoin extends ExecNodeBase<RowData>
                             rightRowType.getFieldCount());
         } else {
             // right type is the same as table source row type, because no calc after temporal table
+            //todo 函数
             processFunc =
                     new LookupJoinRunner(
                             generatedFetcher,

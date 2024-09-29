@@ -366,6 +366,7 @@ object FlinkStreamRuleSets {
     // filter push down
     PushFilterInCalcIntoTableSourceScanRule.INSTANCE,
     // Rule that rewrites temporal join with extracted primary key
+    //todo tmeporal join转化
     TemporalJoinRewriteWithUniqueKeyRule.INSTANCE,
     // Rule that splits python ScalarFunctions from java/scala ScalarFunctions.
     PythonCalcSplitRule.SPLIT_CONDITION_REX_FIELD,
@@ -428,6 +429,7 @@ object FlinkStreamRuleSets {
     StreamPhysicalWindowRankRule.INSTANCE,
     StreamPhysicalWindowDeduplicateRule.INSTANCE,
     // join
+    //todo join相关的规则
     StreamPhysicalJoinRule.INSTANCE,
     StreamPhysicalIntervalJoinRule.INSTANCE,
     StreamPhysicalTemporalJoinRule.INSTANCE,

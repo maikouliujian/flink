@@ -41,6 +41,7 @@ import scala.collection.JavaConversions._
  * [[org.apache.flink.table.planner.plan.rules.physical.batch.BatchPhysicalLookupJoinRule]] and
  * [[org.apache.flink.table.planner.plan.rules.physical.stream.StreamPhysicalLookupJoinRule]].
  */
+//todo lookup join rule
 trait CommonLookupJoinRule extends CommonTemporalTableJoinRule {
 
   protected def matches(
@@ -54,12 +55,13 @@ trait CommonLookupJoinRule extends CommonTemporalTableJoinRule {
     }
 
     // Temporal table join implemented by lookup join only supports on LookupTableSource
+    //todo lookup join必须是TableSourceScan和LookupTableSource
     if (!isTableSourceScan(tableScan) || !isLookupTableSource(tableScan)) {
       return false
     }
-
     // Temporal table join implemented by lookup join only supports processing-time join
     // Other temporal table join will be matched by CommonTemporalTableJoinRule
+    //todo lookup join只支持processing-time
     val isProcessingTime = snapshot.getPeriod.getType match {
       case t: TimeIndicatorRelDataType if !t.isEventTime => true
       case _ => false
@@ -75,7 +77,7 @@ trait CommonLookupJoinRule extends CommonTemporalTableJoinRule {
       case _ => false
     }
   }
-
+  //todo 判断是否为LookupTableSource
   protected def isLookupTableSource(relNode: RelNode): Boolean = {
     relNode match {
       case scan: FlinkLogicalLegacyTableSourceScan =>

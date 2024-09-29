@@ -55,7 +55,7 @@ trait CommonTemporalTableJoinRule {
 
     true
   }
-
+  //todo 判断是否可以转化为lookup join
   protected def canConvertToLookupJoin(
       snapshot: FlinkLogicalSnapshot,
       snapshotInput: FlinkLogicalRel): Boolean = {
@@ -95,7 +95,7 @@ trait CommonTemporalTableJoinRule {
       case _ => false
     }
   }
-
+  //todo 是否为lookup table source
   private def isLookupTableSource(relNode: RelNode): Boolean = relNode match {
     case scan: FlinkLogicalLegacyTableSourceScan =>
       scan.tableSource.isInstanceOf[LookupableTableSource[_]]

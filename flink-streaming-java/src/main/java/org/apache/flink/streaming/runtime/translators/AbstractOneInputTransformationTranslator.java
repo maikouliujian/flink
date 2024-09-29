@@ -59,7 +59,7 @@ abstract class AbstractOneInputTransformationTranslator<IN, OUT, OP extends Tran
         final String slotSharingGroup = context.getSlotSharingGroup();
         final int transformationId = transformation.getId();
         final ExecutionConfig executionConfig = streamGraph.getExecutionConfig();
-
+        //todo 添加节点
         streamGraph.addOperator(
                 transformationId,
                 slotSharingGroup,
@@ -88,6 +88,7 @@ abstract class AbstractOneInputTransformationTranslator<IN, OUT, OP extends Tran
                         + parentTransformations.size());
 
         for (Integer inputId : context.getStreamNodeIds(parentTransformations.get(0))) {
+            //todo 添加边
             streamGraph.addEdge(inputId, transformationId, 0);
         }
 

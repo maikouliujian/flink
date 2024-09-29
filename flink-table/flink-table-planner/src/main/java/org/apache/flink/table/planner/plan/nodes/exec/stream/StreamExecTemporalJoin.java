@@ -174,7 +174,7 @@ public class StreamExecTemporalJoin extends ExecNodeBase<RowData>
         }
 
         RowType returnType = (RowType) getOutputType();
-
+        //todo join算子！！！！！！！！
         TwoInputStreamOperator<RowData, RowData, RowData> joinOperator =
                 getJoinOperator(config, leftInputType, rightInputType);
         Transformation<RowData> leftTransform =
@@ -240,7 +240,7 @@ public class StreamExecTemporalJoin extends ExecNodeBase<RowData>
                         body,
                         CodeGenUtils.DEFAULT_INPUT1_TERM(),
                         CodeGenUtils.DEFAULT_INPUT2_TERM());
-
+        //todo
         return createJoinOperator(config, leftInputType, rightInputType, generatedJoinCondition);
     }
 
@@ -254,6 +254,7 @@ public class StreamExecTemporalJoin extends ExecNodeBase<RowData>
         long minRetentionTime = config.getStateRetentionTime();
         long maxRetentionTime = TableConfigUtils.getMaxIdleStateRetentionTime(config);
         if (rightTimeAttributeIndex >= 0) {
+            //todo
             return new TemporalRowTimeJoinOperator(
                     InternalTypeInfo.of(leftInputType),
                     InternalTypeInfo.of(rightInputType),
@@ -265,6 +266,7 @@ public class StreamExecTemporalJoin extends ExecNodeBase<RowData>
                     isLeftOuterJoin);
         } else {
             if (isTemporalFunctionJoin) {
+                //todo
                 return new TemporalProcessTimeJoinOperator(
                         InternalTypeInfo.of(rightInputType),
                         generatedJoinCondition,

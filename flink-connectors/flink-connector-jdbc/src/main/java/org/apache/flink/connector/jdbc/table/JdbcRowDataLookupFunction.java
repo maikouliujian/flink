@@ -144,6 +144,7 @@ public class JdbcRowDataLookupFunction extends TableFunction<RowData> {
      *
      * @param keys lookup keys
      */
+    //todo jdbc lookup join执行方法
     public void eval(Object... keys) {
         RowData keyRow = GenericRowData.of(keys);
         if (cache != null) {

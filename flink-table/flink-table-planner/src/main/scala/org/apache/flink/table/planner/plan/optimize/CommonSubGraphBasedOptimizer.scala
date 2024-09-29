@@ -73,7 +73,7 @@ abstract class CommonSubGraphBasedOptimizer extends Optimizer {
    */
     //todo 对关系节点进行优化
   override def optimize(roots: Seq[RelNode]): Seq[RelNode] = {
-      //todo 优化
+      //todo 优化【在这里区分 流 和 批】
     val sinkBlocks = doOptimize(roots)
     val optimizedPlan = sinkBlocks.map {
       block =>

@@ -47,6 +47,7 @@ import java.util.Objects;
 import java.util.stream.IntStream;
 
 /** Utilities for lookup joins using {@link LookupTableSource}. */
+//todo lookup join工具类
 @Internal
 public final class LookupJoinUtil {
 
@@ -148,7 +149,7 @@ public final class LookupJoinUtil {
     /** Gets LookupFunction from temporal table according to the given lookup keys. */
     public static UserDefinedFunction getLookupFunction(
             RelOptTable temporalTable, Collection<Integer> lookupKeys) {
-
+        //todo lookup keys sorted index
         int[] lookupKeyIndicesInOrder = getOrderedLookupKeys(lookupKeys);
 
         if (temporalTable instanceof TableSourceTable) {

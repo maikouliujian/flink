@@ -109,7 +109,7 @@ public abstract class Transformation<T> {
 
     // This is used to assign a unique ID to every Transformation
     protected static Integer idCounter = 0;
-
+    //todo nodeid
     public static int getNewNodeId() {
         idCounter++;
         return idCounter;
@@ -549,6 +549,7 @@ public abstract class Transformation<T> {
      * Returns the {@link Transformation transformations} that are the immediate predecessors of the
      * current transformation in the transformation graph.
      */
+    //todo 每一个Transformation对应的上游节点！！！！！！
     public abstract List<Transformation<?>> getInputs();
 
     @Override
