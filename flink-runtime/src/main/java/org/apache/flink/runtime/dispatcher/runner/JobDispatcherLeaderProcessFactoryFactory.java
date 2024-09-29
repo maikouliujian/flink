@@ -75,7 +75,7 @@ public class JobDispatcherLeaderProcessFactoryFactory
         } catch (FlinkException e) {
             throw new FlinkRuntimeException("Could not retrieve the JobGraph.", e);
         }
-
+        //todo jobgraph存储路径
         final JobResultStore jobResultStore = jobPersistenceComponentFactory.createJobResultStore();
         final Collection<JobResult> recoveredDirtyJobResults = getDirtyJobResults(jobResultStore);
 

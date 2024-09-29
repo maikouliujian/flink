@@ -63,7 +63,7 @@ public enum JobMasterServiceLeadershipRunnerFactory implements JobManagerRunnerF
 
         final JobMasterConfiguration jobMasterConfiguration =
                 JobMasterConfiguration.fromConfiguration(configuration);
-
+        //todo 获取JobResultStore
         final JobResultStore jobResultStore = highAvailabilityServices.getJobResultStore();
 
         final LeaderElectionService jobManagerLeaderElectionService =

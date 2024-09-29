@@ -219,7 +219,7 @@ public class RestClusterClient<T> implements ClusterClient<T> {
 
         this.waitStrategy = checkNotNull(waitStrategy);
         this.clusterId = checkNotNull(clusterId);
-
+        //todo ha服务
         this.clientHAServices =
                 clientHAServicesFactory.create(
                         configuration,

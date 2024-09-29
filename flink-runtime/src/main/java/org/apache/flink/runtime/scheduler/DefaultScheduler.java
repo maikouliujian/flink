@@ -221,7 +221,7 @@ public class DefaultScheduler extends SchedulerBase implements SchedulerOperatio
                 failoverStrategy,
                 jobGraph.getName(),
                 jobGraph.getJobID());
-
+        //todo 执行失败handler中添加重启策略
         this.executionFailureHandler =
                 new ExecutionFailureHandler(
                         getSchedulingTopology(), failoverStrategy, restartBackoffTimeStrategy);
@@ -299,6 +299,7 @@ public class DefaultScheduler extends SchedulerBase implements SchedulerOperatio
         final FailureHandlingResult failureHandlingResult =
                 executionFailureHandler.getFailureHandlingResult(
                         executionVertexId, error, timestamp);
+        //todo 根据重启策略，判断是否重新分发task
         maybeRestartTasks(failureHandlingResult);
     }
 
@@ -324,6 +325,7 @@ public class DefaultScheduler extends SchedulerBase implements SchedulerOperatio
 
     private void maybeRestartTasks(final FailureHandlingResult failureHandlingResult) {
         if (failureHandlingResult.canRestart()) {
+            //todo 重启task
             restartTasksWithDelay(failureHandlingResult);
         } else {
             failJob(failureHandlingResult.getError(), failureHandlingResult.getTimestamp());
@@ -331,6 +333,7 @@ public class DefaultScheduler extends SchedulerBase implements SchedulerOperatio
     }
 
     private void restartTasksWithDelay(final FailureHandlingResult failureHandlingResult) {
+        //todo 根据ExecutionVertexID进行重启
         final Set<ExecutionVertexID> verticesToRestart =
                 failureHandlingResult.getVerticesToRestart();
 
@@ -356,6 +359,7 @@ public class DefaultScheduler extends SchedulerBase implements SchedulerOperatio
                                         () -> {
                                             archiveFromFailureHandlingResult(
                                                     failureHandlingResultSnapshot);
+                                            //todo 重启task
                                             restartTasks(executionVertexVersions, globalRecovery);
                                         },
                                         getMainThreadExecutor())),

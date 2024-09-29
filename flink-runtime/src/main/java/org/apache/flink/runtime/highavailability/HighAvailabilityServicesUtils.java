@@ -81,7 +81,7 @@ public class HighAvailabilityServicesUtils {
             Configuration configuration, Executor executor, FatalErrorHandler fatalErrorHandler)
             throws Exception {
         BlobStoreService blobStoreService = BlobUtils.createBlobStoreFromConfig(configuration);
-
+        //todo 启动zk
         final CuratorFrameworkWithUnhandledErrorListener curatorFrameworkWrapper =
                 ZooKeeperUtils.startCuratorFramework(configuration, fatalErrorHandler);
 
@@ -138,7 +138,7 @@ public class HighAvailabilityServicesUtils {
                 throw new Exception("Recovery mode " + highAvailabilityMode + " is not supported.");
         }
     }
-
+    //todo 创建ha services
     public static ClientHighAvailabilityServices createClientHAService(
             Configuration configuration, FatalErrorHandler fatalErrorHandler) throws Exception {
         HighAvailabilityMode highAvailabilityMode = HighAvailabilityMode.fromConfig(configuration);

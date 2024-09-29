@@ -124,6 +124,7 @@ public class ExecutionFailureHandler {
         }
 
         restartBackoffTimeStrategy.notifyFailure(cause);
+        //todo 判断是否可以重启
         if (restartBackoffTimeStrategy.canRestart()) {
             numberOfRestarts++;
 
