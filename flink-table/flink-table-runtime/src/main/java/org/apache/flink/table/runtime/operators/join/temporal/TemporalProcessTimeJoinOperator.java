@@ -52,7 +52,7 @@ public class TemporalProcessTimeJoinOperator extends BaseTwoInputStreamOperatorW
     private final boolean isLeftOuterJoin;
     private final InternalTypeInfo<RowData> rightType;
     private final GeneratedJoinCondition generatedJoinCondition;
-
+    //todo 只维护最新的状态
     private transient ValueState<RowData> rightState;
     private transient JoinCondition joinCondition;
 
@@ -102,6 +102,7 @@ public class TemporalProcessTimeJoinOperator extends BaseTwoInputStreamOperatorW
                 return;
             }
         } else {
+            //todo
             if (joinCondition.apply(leftSideRow, rightSideRow)) {
                 collectJoinedRow(leftSideRow, rightSideRow);
             } else {

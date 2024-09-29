@@ -113,7 +113,7 @@ class StreamPhysicalTemporalJoin(
         // right time attribute defined in temporal join condition iff in Event time join
         (leftTimeAttributeInputRef, Optional.empty().asInstanceOf[Optional[Integer]])
       }
-
+    //todo
     new StreamExecTemporalJoin(
       unwrapTableConfig(this),
       temporalJoinSpec,

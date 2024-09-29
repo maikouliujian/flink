@@ -164,7 +164,7 @@ object LookupJoinCodeGenerator {
 
     val inference =
       createLookupTypeInference(dataTypeFactory, callContext, lookupFunctionBase, udf, functionName)
-
+    //todo
     val ctx = CodeGeneratorContext(tableConfig)
     val operands = prepareOperands(ctx, inputType, lookupKeys, lookupKeyOrder, fieldCopy)
     val callWithDataType = BridgingFunctionGenUtil.generateFunctionAwareCallWithDataType(

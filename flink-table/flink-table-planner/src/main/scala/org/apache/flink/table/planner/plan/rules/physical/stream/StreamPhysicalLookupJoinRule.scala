@@ -77,6 +77,7 @@ object StreamPhysicalLookupJoinRule {
     val requiredTrait = input.getTraitSet.replace(FlinkConventions.STREAM_PHYSICAL)
 
     val convInput = RelOptRule.convert(input, requiredTrait)
+    //todo
     new StreamPhysicalLookupJoin(
       cluster,
       providedTrait,

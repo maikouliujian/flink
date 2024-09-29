@@ -420,6 +420,7 @@ object TemporalJoinUtil {
    * @return
    *   True if input join node satisfy preconditions to convert into temporal join, else false.
    */
+    //todo 判断是否满足条件
   def satisfyTemporalJoin(join: FlinkLogicalJoin): Boolean = {
     satisfyTemporalJoin(join, join.getLeft, join.getRight)
   }

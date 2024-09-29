@@ -50,7 +50,7 @@ import static org.apache.flink.client.cli.ProgramOptionsUtils.isPythonEntryPoint
 public class ProgramOptions extends CommandLineOptions {
 
     private String jarFilePath;
-
+    //todo 用户程序mainclass
     protected String entryPointClass;
 
     private final List<URL> classpaths;

@@ -222,6 +222,7 @@ public class StreamGraphGenerator {
 
     // Keep track of which Transforms we have already transformed, this is necessary because
     // we have loops, i.e. feedback edges.
+    //todo 存放转化后的Transformation
     private Map<Transformation<?>, Collection<Integer>> alreadyTransformed;
 
     public StreamGraphGenerator(
@@ -315,7 +316,7 @@ public class StreamGraphGenerator {
         configureStreamGraph(streamGraph);
 
         alreadyTransformed = new IdentityHashMap<>();
-
+        //todo 重点！！！！！！
         for (Transformation<?> transformation : transformations) {
             //todo 真正执行将transformation依据transformationTransfer转化为StreamNode或者StreamEdge
             transform(transformation);
@@ -809,7 +810,7 @@ public class StreamGraphGenerator {
             final Transformation<?> transform) {
         checkNotNull(translator);
         checkNotNull(transform);
-
+        //todo 先转化inputs
         final List<Collection<Integer>> allInputIds = getParentInputIds(transform.getInputs());
 
         // the recursive call might have already transformed this

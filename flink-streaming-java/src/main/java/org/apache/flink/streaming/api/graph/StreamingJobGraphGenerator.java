@@ -475,10 +475,11 @@ public class StreamingJobGraphGenerator {
                     operatorConfig.setOperatorName(sourceNode.getOperatorName());
                     chainedSources.put(
                             sourceNodeId, new ChainedSourceInfo(operatorConfig, inputConfig));
-
+                    //todo 获取算子工厂
                     final SourceOperatorFactory<?> sourceOpFact =
                             (SourceOperatorFactory<?>) sourceNode.getOperatorFactory();
                     final OperatorCoordinator.Provider coord =
+                            //todo 根据算子工厂获取CoordinatorProvider
                             sourceOpFact.getCoordinatorProvider(sourceNode.getOperatorName(), opId);
 
                     final OperatorChainInfo chainInfo =
@@ -491,6 +492,7 @@ public class StreamingJobGraphGenerator {
                                                     legacyHashes,
                                                     chainedSources,
                                                     streamGraph));
+                    //todo 添加CoordinatorProvider
                     chainInfo.addCoordinatorProvider(coord);
                     continue;
                 }
@@ -744,6 +746,7 @@ public class StreamingJobGraphGenerator {
         for (OperatorCoordinator.Provider coordinatorProvider :
                 chainInfo.getCoordinatorProviders()) {
             try {
+                //todo 给jobVertex 添加 OperatorCoordinator
                 jobVertex.addOperatorCoordinator(new SerializedValue<>(coordinatorProvider));
             } catch (IOException e) {
                 throw new FlinkRuntimeException(

@@ -45,11 +45,11 @@ import java.util.List;
 public class OneInputTransformation<IN, OUT> extends PhysicalTransformation<OUT> {
     //todo 持有上游引用
     private final Transformation<IN> input;
-    //todo StreamOperatorFactory中持有算子
+    //todo StreamOperatorFactory中持有算子，算子中持有userfunction
     private final StreamOperatorFactory<OUT> operatorFactory;
-
+    //todo 分区key
     private KeySelector<IN, ?> stateKeySelector;
-
+    //todo 分区key的类型
     private TypeInformation<?> stateKeyType;
 
     /**

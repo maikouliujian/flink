@@ -87,6 +87,7 @@ public class ParserImpl implements Parser {
      * @param statement input statement.
      * @return parsed operations.
      */
+    //todo 将sql解析，并转化为Operation
     @Override
     public List<Operation> parse(String statement) {
         CalciteParser parser = calciteParserSupplier.get();

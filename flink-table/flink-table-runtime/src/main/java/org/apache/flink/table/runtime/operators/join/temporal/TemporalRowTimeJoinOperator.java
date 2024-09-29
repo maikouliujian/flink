@@ -104,6 +104,7 @@ public class TemporalRowTimeJoinOperator extends BaseTwoInputStreamOperatorWithS
      * <p>TODO: this could be OrderedMultiMap[Jlong, Row] indexed by row's timestamp, to avoid full
      * map traversals (if we have lots of rows on the state that exceed `currentWatermark`).
      */
+    //todo 左侧数据<index, row>
     private transient MapState<Long, RowData> leftState;
 
     /**
@@ -112,6 +113,7 @@ public class TemporalRowTimeJoinOperator extends BaseTwoInputStreamOperatorWithS
      * <p>TODO: having `rightState` as an OrderedMapState would allow us to avoid sorting cost once
      * per watermark
      */
+    //todo 右侧数据<right rowtime, row>
     private transient MapState<Long, RowData> rightState;
 
     // Long for correct handling of default null
@@ -179,7 +181,9 @@ public class TemporalRowTimeJoinOperator extends BaseTwoInputStreamOperatorWithS
     @Override
     public void processElement1(StreamRecord<RowData> element) throws Exception {
         RowData row = element.getValue();
+        //todo 加入左侧的数据【index，row】
         leftState.put(getNextLeftIndex(), row);
+        //todo 注册left time
         registerSmallestTimer(getLeftTime(row)); // Timer to emit and clean up the state
 
         registerProcessingCleanupTimer();
@@ -190,6 +194,7 @@ public class TemporalRowTimeJoinOperator extends BaseTwoInputStreamOperatorWithS
         RowData row = element.getValue();
 
         long rowTime = getRightTime(row);
+        //todo 加入左侧的数据【right rowtime，row】
         rightState.put(rowTime, row);
         registerSmallestTimer(rowTime); // Timer to clean up the state
 
@@ -199,6 +204,7 @@ public class TemporalRowTimeJoinOperator extends BaseTwoInputStreamOperatorWithS
     @Override
     public void onEventTime(InternalTimer<Object, VoidNamespace> timer) throws Exception {
         registeredTimer.clear();
+        //todo
         long lastUnprocessedTime = emitResultAndCleanUpState(timerService.currentWatermark());
         if (lastUnprocessedTime < Long.MAX_VALUE) {
             registerTimer(lastUnprocessedTime);
@@ -228,6 +234,7 @@ public class TemporalRowTimeJoinOperator extends BaseTwoInputStreamOperatorWithS
      *     have been processed.
      */
     private long emitResultAndCleanUpState(long currentWatermark) throws Exception {
+        //todo 获取右侧数据，并排序
         List<RowData> rightRowsSorted = getRightRowSorted(rightRowtimeComparator);
         long lastUnprocessedTime = Long.MAX_VALUE;
 
@@ -240,6 +247,7 @@ public class TemporalRowTimeJoinOperator extends BaseTwoInputStreamOperatorWithS
             Long leftSeq = entry.getKey();
             RowData leftRow = entry.getValue();
             long leftTime = getLeftTime(leftRow);
+            //todo 处理小于currentWatermark的数据
             if (leftTime <= currentWatermark) {
                 orderedLeftRecords.put(leftSeq, leftRow);
                 leftIterator.remove();
@@ -250,26 +258,31 @@ public class TemporalRowTimeJoinOperator extends BaseTwoInputStreamOperatorWithS
 
         // iterate the triggered left records in the ascending order of the sequence key, i.e. the
         // arrival order.
+        //todo 遍历左侧数据
         orderedLeftRecords.forEach(
                 (leftSeq, leftRow) -> {
                     long leftTime = getLeftTime(leftRow);
+                    //todo 通过左侧的时间寻找右侧的数据（二分查找）
                     Optional<RowData> rightRow = latestRightRowToJoin(rightRowsSorted, leftTime);
                     if (rightRow.isPresent() && RowDataUtil.isAccumulateMsg(rightRow.get())) {
+                        //todo 根据join条件 判断是否可以join上
                         if (joinCondition.apply(leftRow, rightRow.get())) {
                             collectJoinedRow(leftRow, rightRow.get());
                         } else {
+                            //todo left join，右侧数据为null
                             if (isLeftOuterJoin) {
                                 collectJoinedRow(leftRow, rightNullRow);
                             }
                         }
                     } else {
+                        //todo left join，右侧数据为null
                         if (isLeftOuterJoin) {
                             collectJoinedRow(leftRow, rightNullRow);
                         }
                     }
                 });
         orderedLeftRecords.clear();
-
+        //todo 清除右侧过期数据【比watermark小的数据】
         cleanupExpiredVersionInState(currentWatermark, rightRowsSorted);
         return lastUnprocessedTime;
     }
@@ -318,7 +331,7 @@ public class TemporalRowTimeJoinOperator extends BaseTwoInputStreamOperatorWithS
             return firstIndexNewerThenTimer - 1;
         }
     }
-
+    //todo 找到第一个比timerTimestamp大的index
     private int indexOfFirstElementNewerThanTimer(long timerTimestamp, List<RowData> list) {
         ListIterator<RowData> iter = list.listIterator();
         while (iter.hasNext()) {

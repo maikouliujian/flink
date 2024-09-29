@@ -813,10 +813,11 @@ public class TableEnvironmentImpl implements TableEnvironmentInternal {
             throw new TableException("Failed to execute sql", e);
         }
     }
-
+    //todo 执行sql查询
     private TableResultInternal executeQueryOperation(QueryOperation operation) {
         CollectModifyOperation sinkOperation = new CollectModifyOperation(operation);
         List<Transformation<?>> transformations =
+                //todo 转化为Transformation
                 translate(Collections.singletonList(sinkOperation));
         final String defaultJobName = "collect";
         // We pass only the configuration to avoid reconfiguration with the rootConfiguration
@@ -1307,6 +1308,7 @@ public class TableEnvironmentImpl implements TableEnvironmentInternal {
                                 describeTableOperation.getSqlIdentifier().asSummaryString()));
             }
         } else if (operation instanceof QueryOperation) {
+            //todo sql查询走这
             return executeQueryOperation((QueryOperation) operation);
         } else if (operation instanceof CreateTableASOperation) {
             CreateTableASOperation createTableASOperation = (CreateTableASOperation) operation;
