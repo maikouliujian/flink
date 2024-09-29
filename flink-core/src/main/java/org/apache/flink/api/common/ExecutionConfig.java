@@ -455,6 +455,7 @@ public class ExecutionConfig implements Serializable, Archiveable<ArchivedExecut
      *
      * @return The specified restart configuration
      */
+    //todo ExecutionConfig中获取重启策略
     @PublicEvolving
     @SuppressWarnings("deprecation")
     public RestartStrategies.RestartStrategyConfiguration getRestartStrategy() {

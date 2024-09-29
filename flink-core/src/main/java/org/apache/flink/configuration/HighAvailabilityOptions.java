@@ -50,6 +50,7 @@ public class HighAvailabilityOptions {
      * The ID of the Flink cluster, used to separate multiple Flink clusters Needs to be set for
      * standalone clusters, is automatically inferred in YARN.
      */
+    //todo 作为zk的根节点，用来区分不同的flink集群
     @Documentation.Section(Documentation.Sections.COMMON_HIGH_AVAILABILITY)
     public static final ConfigOption<String> HA_CLUSTER_ID =
             key("high-availability.cluster-id")
@@ -61,7 +62,7 @@ public class HighAvailabilityOptions {
                     .withDescription(
                             "The ID of the Flink cluster, used to separate multiple Flink clusters from each other."
                                     + " Needs to be set for standalone clusters but is automatically inferred in YARN.");
-
+    //todo high-availability.storageDir，用来存储元数据的文件系统路径（URI）在高可用设置中，比如jobgraph
     /** File system path (URI) where Flink persists metadata in high-availability setups. */
     @Documentation.Section(Documentation.Sections.COMMON_HIGH_AVAILABILITY)
     public static final ConfigOption<String> HA_STORAGE_PATH =

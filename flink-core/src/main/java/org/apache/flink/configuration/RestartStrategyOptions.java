@@ -49,7 +49,7 @@ import static org.apache.flink.configuration.description.TextElement.text;
                     keyPrefix = "restart-strategy.failure-rate")
         })
 public class RestartStrategyOptions {
-
+    //todo 重启策略
     public static final ConfigOption<String> RESTART_STRATEGY =
             ConfigOptions.key("restart-strategy")
                     .stringType()

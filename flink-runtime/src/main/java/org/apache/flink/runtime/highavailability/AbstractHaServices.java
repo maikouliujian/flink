@@ -133,7 +133,7 @@ public abstract class AbstractHaServices implements HighAvailabilityServices {
     public JobGraphStore getJobGraphStore() throws Exception {
         return createJobGraphStore();
     }
-
+    //todo jobgraph存储路径
     @Override
     public JobResultStore getJobResultStore() throws Exception {
         return jobResultStore;

@@ -87,6 +87,7 @@ public class FileSystemJobResultStore extends AbstractThreadsafeJobResultStore {
     public static FileSystemJobResultStore fromConfiguration(Configuration config)
             throws IOException {
         Preconditions.checkNotNull(config);
+        //todo jobgraph存储路径
         final String jrsStoragePath = config.get(JobResultStoreOptions.STORAGE_PATH);
         final Path basePath;
 

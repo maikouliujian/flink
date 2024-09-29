@@ -384,6 +384,7 @@ public class RestartStrategies {
      * @param configuration configuration object to retrieve parameters from
      * @return {@link Optional#empty()} when no restart strategy parameters provided
      */
+    //todo 获取重启策略的配置
     public static Optional<RestartStrategyConfiguration> fromConfiguration(
             ReadableConfig configuration) {
         return configuration

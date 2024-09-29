@@ -27,6 +27,7 @@ import org.apache.flink.configuration.description.TextElement;
 
 /** The set of configuration options relating to the Job Result Store. */
 public class JobResultStoreOptions {
+    //todo jobgraph存储路径
     @Documentation.Section(Documentation.Sections.COMMON_HIGH_AVAILABILITY_JOB_RESULT_STORE)
     public static final ConfigOption<String> STORAGE_PATH =
             ConfigOptions.key("job-result-store.storage-path")
@@ -43,6 +44,7 @@ public class JobResultStoreOptions {
                                                             .createDefaultJobResultStorePath(
                                                                     String.format(
                                                                             "{%s}",
+                                                                            //todo 定义
                                                                             HighAvailabilityOptions
                                                                                     .HA_STORAGE_PATH
                                                                                     .key()),

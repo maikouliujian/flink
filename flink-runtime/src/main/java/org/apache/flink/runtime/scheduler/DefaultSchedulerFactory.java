@@ -89,10 +89,12 @@ public class DefaultSchedulerFactory implements SchedulerNGFactory {
                         jobMasterConfiguration,
                         slotPool,
                         slotRequestTimeout);
+        //todo 调度器中的重启策略
         final RestartBackoffTimeStrategy restartBackoffTimeStrategy =
                 RestartBackoffTimeStrategyFactoryLoader.createRestartBackoffTimeStrategyFactory(
                                 jobGraph.getSerializedExecutionConfig()
                                         .deserializeValue(userCodeLoader)
+                                        //todo 获取重启策略
                                         .getRestartStrategy(),
                                 jobMasterConfiguration,
                                 jobGraph.isCheckpointingEnabled())
@@ -129,7 +131,7 @@ public class DefaultSchedulerFactory implements SchedulerNGFactory {
                 jobManagerJobMetricGroup,
                 schedulerComponents.getSchedulingStrategyFactory(),
                 FailoverStrategyFactoryLoader.loadFailoverStrategyFactory(jobMasterConfiguration),
-                restartBackoffTimeStrategy,
+                restartBackoffTimeStrategy,//todo 重启策略
                 new DefaultExecutionVertexOperations(),
                 new ExecutionVertexVersioner(),
                 schedulerComponents.getAllocatorFactory(),

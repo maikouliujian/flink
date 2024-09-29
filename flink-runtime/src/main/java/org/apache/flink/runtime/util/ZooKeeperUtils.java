@@ -222,7 +222,7 @@ public class ZooKeeperUtils {
                 configuration.getInteger(HighAvailabilityOptions.ZOOKEEPER_MAX_RETRY_ATTEMPTS);
 
         String root = configuration.getValue(HighAvailabilityOptions.HA_ZOOKEEPER_ROOT);
-
+        //todo 作为zk的根节点，用来区分不同的flink集群
         String namespace = configuration.getValue(HighAvailabilityOptions.HA_CLUSTER_ID);
 
         boolean disableSaslClient =

@@ -243,10 +243,11 @@ public class JobMasterServiceLeadershipRunner implements JobManagerRunner, Leade
             return jobMasterServiceProcess.isInitializedAndRunning();
         }
     }
-
+    //todo ha监听是否有leader变化
     @Override
     public void grantLeadership(UUID leaderSessionID) {
         runIfStateRunning(
+                //todo 获取新的jobmaster
                 () -> startJobMasterServiceProcessAsync(leaderSessionID),
                 "starting a new JobMasterServiceProcess");
     }
@@ -259,7 +260,7 @@ public class JobMasterServiceLeadershipRunner implements JobManagerRunner, Leade
                                 runIfValidLeader(
                                         leaderSessionId,
                                         ThrowingRunnable.unchecked(
-                                                () ->
+                                                () ->   //todo 验证job状态，创建新的jobmaster
                                                         verifyJobSchedulingStatusAndCreateJobMasterServiceProcess(
                                                                 leaderSessionId)),
                                         "verify job scheduling status and create JobMasterServiceProcess"));
@@ -274,6 +275,7 @@ public class JobMasterServiceLeadershipRunner implements JobManagerRunner, Leade
             if (jobResultStore.hasJobResultEntry(getJobID())) {
                 jobAlreadyDone();
             } else {
+                //todo 创建新的jobmaster
                 createNewJobMasterServiceProcess(leaderSessionId);
             }
         } catch (IOException e) {
