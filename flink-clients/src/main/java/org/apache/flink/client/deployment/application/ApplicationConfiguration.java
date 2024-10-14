@@ -43,9 +43,9 @@ public class ApplicationConfiguration {
 
     public static final ConfigOption<String> APPLICATION_MAIN_CLASS =
             ConfigOptions.key("$internal.application.main").stringType().noDefaultValue();
-
+    //todo 任务的main参数
     private final String[] programArguments;
-
+    //todo 任务的main class
     @Nullable private final String applicationClassName;
 
     public ApplicationConfiguration(

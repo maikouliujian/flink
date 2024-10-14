@@ -652,7 +652,10 @@ public final class Utils {
             org.apache.flink.configuration.Configuration configuration,
             FunctionWithException<String, Path, IOException> strToPathMapper)
             throws IOException, FlinkException {
-
+        /***
+         * spark使用: --conf spark.yarn.provided.lib.dirs=hdfs://namenode_host:port/path/to/libs
+         * flink使用: flink run -yD yarn.provided.lib.dirs=hdfs://namenode_host:port/path/to/libs
+         */
         final List<Path> providedLibDirs =
                 ConfigUtils.decodeListFromConfig(
                         configuration, YarnConfigOptions.PROVIDED_LIB_DIRS, strToPathMapper);
