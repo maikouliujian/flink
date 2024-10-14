@@ -50,7 +50,7 @@ public class HighAvailabilityOptions {
      * The ID of the Flink cluster, used to separate multiple Flink clusters Needs to be set for
      * standalone clusters, is automatically inferred in YARN.
      */
-    //todo 作为zk的根节点，用来区分不同的flink集群
+    //todo 作为zk的根节点，用来区分不同的flink集群，这个参数不能设置，不然会导致所有app共享这个目录
     @Documentation.Section(Documentation.Sections.COMMON_HIGH_AVAILABILITY)
     public static final ConfigOption<String> HA_CLUSTER_ID =
             key("high-availability.cluster-id")

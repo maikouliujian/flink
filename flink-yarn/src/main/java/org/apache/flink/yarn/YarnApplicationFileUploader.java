@@ -68,7 +68,7 @@ class YarnApplicationFileUploader implements AutoCloseable {
     private final ApplicationId applicationId;
 
     private final Path homeDir;
-
+    //todo /user/bear/.flink/applicationId
     private final Path applicationDir;
 
     /**
@@ -100,6 +100,7 @@ class YarnApplicationFileUploader implements AutoCloseable {
         this.applicationId = checkNotNull(applicationId);
 
         this.localResources = new HashMap<>();
+        //todo 目录为/user/bear[user]/.flink/applicationId
         this.applicationDir = getApplicationDir(applicationId);
         checkArgument(
                 !isUsrLibDirIncludedInProvidedLib(providedLibDirs),
@@ -164,7 +165,7 @@ class YarnApplicationFileUploader implements AutoCloseable {
             throws IOException {
 
         addToRemotePaths(whetherToAddToRemotePaths, resourcePath);
-
+        //todo 如果已经在hdfs上，则就不上传了【比如我们提前将flink相关的jar上传到hdfs上，就不需要上传了！！！！！！】
         if (Utils.isRemotePath(resourcePath.toString())) {
             final FileStatus fileStatus = fileSystem.getFileStatus(resourcePath);
             LOG.debug("Using remote file {} to register local resource", fileStatus.getPath());
@@ -178,7 +179,7 @@ class YarnApplicationFileUploader implements AutoCloseable {
         }
 
         final File localFile = new File(resourcePath.toUri().getPath());
-        //todo 上传本地文件
+        //todo 上传本地文件到/user/bear/.flink/applicationId/relativeDstPath/resourcePath 目录下！！！！！！
         final Tuple2<Path, Long> remoteFileInfo =
                 uploadLocalFileToRemote(resourcePath, relativeDstPath);
         final YarnLocalResourceDescriptor descriptor =
@@ -187,7 +188,7 @@ class YarnApplicationFileUploader implements AutoCloseable {
                         remoteFileInfo.f0,
                         localFile.length(),
                         remoteFileInfo.f1,
-                        LocalResourceVisibility.APPLICATION,
+                        LocalResourceVisibility.APPLICATION, //todo 应用级文件
                         resourceType);
         addToEnvShipResourceList(whetherToAddToEnvShipResourceList, descriptor);
         localResources.put(key, descriptor.toLocalResource());
@@ -232,6 +233,7 @@ class YarnApplicationFileUploader implements AutoCloseable {
      * @param resourceType type of the resource, which can be one of FILE, PATTERN, or ARCHIVE
      * @return list of class paths with the proper resource keys from the registration
      */
+    //todo 上传多个文件到hdfs
     List<String> registerMultipleLocalResources(
             final Collection<Path> shipFiles,
             final String localResourcesDirectory,
@@ -241,6 +243,7 @@ class YarnApplicationFileUploader implements AutoCloseable {
         final List<Path> localPaths = new ArrayList<>();
         final List<Path> relativePaths = new ArrayList<>();
         for (Path shipFile : shipFiles) {
+            //todo 文件是否在hdfs上存在
             if (Utils.isRemotePath(shipFile.toString())) {
                 if (fileSystem.isDirectory(shipFile)) {
                     final URI parentURI = shipFile.getParent().toUri();
@@ -274,6 +277,7 @@ class YarnApplicationFileUploader implements AutoCloseable {
                 }
             }
             localPaths.add(shipFile);
+            //todo 设置文件全路径
             relativePaths.add(new Path(localResourcesDirectory, shipFile.getName()));
         }
 
@@ -282,9 +286,11 @@ class YarnApplicationFileUploader implements AutoCloseable {
         for (int i = 0; i < localPaths.size(); i++) {
             final Path localPath = localPaths.get(i);
             final Path relativePath = relativePaths.get(i);
+            //todo 排除掉flink-dist下的jar
             if (!isFlinkDistJar(relativePath.getName())) {
                 final String key = relativePath.toString();
                 final YarnLocalResourceDescriptor resourceDescriptor =
+                        //todo 上传到/user/bear/.flink/applicationid目录下
                         registerSingleLocalResource(
                                 key,
                                 localPath,
@@ -446,11 +452,11 @@ class YarnApplicationFileUploader implements AutoCloseable {
 
         return false;
     }
-
+    //todo 目录为：/user/bear/.flink/applicationId
     static Path getApplicationDirPath(final Path homeDir, final ApplicationId applicationId) {
         return new Path(checkNotNull(homeDir), ".flink/" + checkNotNull(applicationId) + '/');
     }
-
+    //todo homeDir的目录为：/user/bear
     private Path getApplicationDir(final ApplicationId applicationId) throws IOException {
         final Path applicationDir = getApplicationDirPath(homeDir, applicationId);
         if (!fileSystem.exists(applicationDir)) {

@@ -185,7 +185,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
 
         getLocalFlinkDistPath(flinkConfiguration).ifPresent(this::setLocalJarPath);
         //todo 添加ShipFiles【作用是在Flink应用程序的YARN集群提交描述符中指定要随应用程序一起分发到集群的文件列表，
-        // 以确保在集群上启动任务时，所有必需的文件都可供任务访问，这些jars会上传到hdfs上，再分发到yarn集群中】
+        // 以确保在集群上启动任务时，所有必需的文件都可供任务访问，这些jars/config 会上传到hdfs上，再分发到yarn集群中】
         decodeFilesToShipToCluster(flinkConfiguration, YarnConfigOptions.SHIP_FILES)
                 .ifPresent(this::addShipFiles);
         decodeFilesToShipToCluster(flinkConfiguration, YarnConfigOptions.SHIP_ARCHIVES)
@@ -816,7 +816,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
         //todo 已经在hdfs上提供的共享文件
         final List<Path> providedLibDirs =
                 Utils.getQualifiedRemoteSharedPaths(configuration, yarnConfiguration);
-
+        //todo 存储application文件的目录： 如 /user/bear/.flink/
         Path stagingDirPath = getStagingDir(fs);
         FileSystem stagingDirFs = stagingDirPath.getFileSystem(yarnConfiguration);
         //todo 将client文件上传到hdfs上
@@ -829,6 +829,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
                         getFileReplication());
 
         // The files need to be shipped and added to classpath.
+        //todo 添加shipfiles 到 systemShipFiles
         Set<File> systemShipFiles = new HashSet<>(shipFiles.size());
         for (File file : shipFiles) {
             systemShipFiles.add(file.getAbsoluteFile());
@@ -837,6 +838,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
         final String logConfigFilePath =
                 configuration.getString(YarnConfigOptionsInternal.APPLICATION_LOG_CONFIG_FILE);
         if (logConfigFilePath != null) {
+            //todo 添加日志文件，如log4j
             systemShipFiles.add(new File(logConfigFilePath));
         }
 
@@ -845,10 +847,12 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
         final ApplicationId appId = appContext.getApplicationId();
 
         // ------------------ Add Zookeeper namespace to local flinkConfiguraton ------
+        //todo 以为appid为根目录设置ha路径
         setHAClusterIdIfNotSet(configuration, appId);
 
         if (HighAvailabilityMode.isHighAvailabilityModeActivated(configuration)) {
             // activate re-execution of failed applications
+            //todo 开启ha，设置appmaster重启次数
             appContext.setMaxAppAttempts(
                     configuration.getInteger(
                             YarnConfigOptions.APPLICATION_ATTEMPTS.key(),
@@ -869,9 +873,10 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
                             .map(Path::new)
                             .collect(Collectors.toSet()));
         }
-
+        //todo pipeline.jars ===> 用户自定义程序的jar
         final List<URI> jarUrls =
                 ConfigUtils.decodeListFromConfig(configuration, PipelineOptions.JARS, URI::create);
+        //todo 处理application模式
         if (jarUrls != null
                 && YarnApplicationClusterEntryPoint.class.getName().equals(yarnClusterEntrypoint)) {
             userJarFiles.addAll(jarUrls.stream().map(Path::new).collect(Collectors.toSet()));
@@ -902,6 +907,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
         // and upload the remaining dependencies as local resources with APPLICATION visibility.
         //todo 获取要被yarn缓存， 被所有app共享的资源，classpaths：LocalResourceVisibility.PUBLIC级别
         final List<String> systemClassPaths = fileUploader.registerProvidedLocalResources();
+        //todo 将systemShipFiles上传到/user/bear/.flink/applicationid目录下
         final List<String> uploadedDependencies =
                 fileUploader.registerMultipleLocalResources(
                         systemShipFiles.stream()
@@ -943,6 +949,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
         }
 
         // Upload and register user jars
+        //todo 上传用户自定义jar
         final List<String> userClassPaths =
                 fileUploader.registerMultipleLocalResources(
                         userJarFiles,
@@ -1170,6 +1177,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
         fileUploader.close();
 
         // Setup CLASSPATH and environment variables for ApplicationMaster
+        //todo
         final Map<String, String> appMasterEnv =
                 generateApplicationMasterEnv(
                         fileUploader,
@@ -1865,6 +1873,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
     private void setHAClusterIdIfNotSet(Configuration configuration, ApplicationId appId) {
         // set cluster-id to app id if not specified
         if (!configuration.contains(HighAvailabilityOptions.HA_CLUSTER_ID)) {
+            //todo 不设置high-availability.cluster-id，默认以appid为目录，便于不用app区分
             configuration.set(
                     HighAvailabilityOptions.HA_CLUSTER_ID, ConverterUtils.toString(appId));
         }
@@ -1897,6 +1906,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
                         ResourceManagerOptions.CONTAINERIZED_MASTER_ENV_PREFIX,
                         this.flinkConfiguration));
         // set Flink app class path
+        //todo 设置flink classspath
         env.put(ENV_FLINK_CLASSPATH, classPathStr);
         // Set FLINK_LIB_DIR to `lib` folder under working dir in container
         env.put(ENV_FLINK_LIB_DIR, Path.CUR_DIR + "/" + ConfigConstants.DEFAULT_FLINK_LIB_DIR);
@@ -1915,9 +1925,10 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
                 fileUploader.getApplicationDir().toUri().toString());
         // https://github.com/apache/hadoop/blob/trunk/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-site/src/site/markdown/YarnApplicationSecurity.md#identity-on-an-insecure-cluster-hadoop_user_name
         env.put(
-                YarnConfigKeys.ENV_HADOOP_USER_NAME,
+                YarnConfigKeys.ENV_HADOOP_USER_NAME, //todo hadoop user name
                 UserGroupInformation.getCurrentUser().getUserName());
         // set classpath from YARN configuration
+        //todo 将ENV_FLINK_CLASSPATH、YARN_APPLICATION_CLASSPATH 加入到classpath下
         Utils.setupYarnClassPath(this.yarnConfiguration, env);
         return env;
     }
