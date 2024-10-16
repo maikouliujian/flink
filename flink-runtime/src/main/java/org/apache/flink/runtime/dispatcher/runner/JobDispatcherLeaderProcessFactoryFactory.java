@@ -70,6 +70,7 @@ public class JobDispatcherLeaderProcessFactoryFactory
         try {
             jobGraph =
                     Preconditions.checkNotNull(
+                            //todo 获取jobgraph
                             jobGraphRetriever.retrieveJobGraph(
                                     partialDispatcherServices.getConfiguration()));
         } catch (FlinkException e) {

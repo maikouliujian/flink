@@ -140,7 +140,9 @@ public final class YarnApplicationClusterEntryPoint extends ApplicationClusterEn
         // No need to do pipelineJars validation if it is a PyFlink job.
         if (!(PackagedProgramUtils.isPython(jobClassName)
                 || PackagedProgramUtils.isPython(programArguments))) {
+            //todo 获取用户程序jar
             final File userApplicationJar = getUserApplicationJar(userLibDir, configuration);
+            //todo !!!!!!
             return DefaultPackagedProgramRetriever.create(
                     userLibDir, userApplicationJar, jobClassName, programArguments, configuration);
         }

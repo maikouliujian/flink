@@ -118,6 +118,7 @@ public class ApplicationDispatcherBootstrap implements DispatcherBootstrap {
         this.errorHandler = checkNotNull(errorHandler);
 
         this.applicationCompletionFuture =
+                //todo
                 fixJobIdAndRunApplicationAsync(dispatcherGateway, scheduledExecutor);
 
         this.bootstrapCompletionFuture = finishBootstrapTasks(dispatcherGateway);
@@ -219,6 +220,7 @@ public class ApplicationDispatcherBootstrap implements DispatcherBootstrap {
             configuration.set(
                     PipelineOptionsInternal.PIPELINE_FIXED_JOB_ID, ZERO_JOB_ID.toHexString());
         }
+        //todo application模式提交job
         return runApplicationAsync(
                 dispatcherGateway, scheduledExecutor, true, submitFailedJobOnApplicationError);
     }
@@ -240,7 +242,7 @@ public class ApplicationDispatcherBootstrap implements DispatcherBootstrap {
         // from the scheduled task that executes the user program
         applicationExecutionTask =
                 scheduledExecutor.schedule(
-                        () ->
+                        () ->   //todo application模式启动
                                 runApplicationEntryPoint(
                                         applicationExecutionFuture,
                                         tolerateMissingResult,
@@ -284,10 +286,11 @@ public class ApplicationDispatcherBootstrap implements DispatcherBootstrap {
         }
         final List<JobID> applicationJobIds = new ArrayList<>(recoveredJobIds);
         try {
+            //todo 执行
             final PipelineExecutorServiceLoader executorServiceLoader =
                     new EmbeddedExecutorServiceLoader(
                             applicationJobIds, dispatcherGateway, scheduledExecutor);
-
+            //todo application模式下执行用户程序！！！！！！会触发应用程序中的StreamExecutionEnvironment.execute()
             ClientUtils.executeProgram(
                     executorServiceLoader,
                     configuration,
@@ -340,6 +343,7 @@ public class ApplicationDispatcherBootstrap implements DispatcherBootstrap {
                         .map(
                                 jobId ->
                                         unwrapJobResultException(
+                                                //todo 获取job状态
                                                 getJobResult(
                                                         dispatcherGateway,
                                                         jobId,
@@ -359,6 +363,7 @@ public class ApplicationDispatcherBootstrap implements DispatcherBootstrap {
         final Time retryPeriod =
                 Time.milliseconds(configuration.get(ClientOptions.CLIENT_RETRY_PERIOD).toMillis());
         final CompletableFuture<JobResult> jobResultFuture =
+                //todo 获取job状态
                 JobStatusPollingUtils.getJobResult(
                         dispatcherGateway, jobId, scheduledExecutor, timeout, retryPeriod);
         if (tolerateMissingResult) {

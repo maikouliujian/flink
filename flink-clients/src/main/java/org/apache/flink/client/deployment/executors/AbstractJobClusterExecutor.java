@@ -80,7 +80,7 @@ public class AbstractJobClusterExecutor<
                     clusterClientFactory.getClusterSpecification(configuration);
 
             final ClusterClientProvider<ClusterID> clusterClientProvider =
-                    //todo per-job提交
+                    //todo per-job提交【每次新建一个集群】
                     clusterDescriptor.deployJobCluster(
                             clusterSpecification, jobGraph, configAccessor.getDetachedMode());
             LOG.info("Job has been submitted with JobID " + jobGraph.getJobID());

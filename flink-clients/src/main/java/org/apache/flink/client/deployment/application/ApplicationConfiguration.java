@@ -34,13 +34,13 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 /** Application-specific configurations. */
 @Internal
 public class ApplicationConfiguration {
-
+    //todo flink程序参数
     public static final ConfigOption<List<String>> APPLICATION_ARGS =
             ConfigOptions.key("$internal.application.program-args")
                     .stringType()
                     .asList()
                     .noDefaultValue();
-
+    //todo flink程序主类
     public static final ConfigOption<String> APPLICATION_MAIN_CLASS =
             ConfigOptions.key("$internal.application.main").stringType().noDefaultValue();
     //todo 任务的main参数

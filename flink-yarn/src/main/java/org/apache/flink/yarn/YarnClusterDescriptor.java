@@ -481,7 +481,7 @@ public class YarnClusterDescriptor implements ClusterDescriptor<ApplicationId> {
             throw new ClusterDeploymentException("Couldn't deploy Yarn Application Cluster", e);
         }
     }
-    //todo per-job模式提交任务
+    //todo per-job模式提交任务【为每一个job启动一个集群，一个job一个JobGraph】
     @Override
     public ClusterClientProvider<ApplicationId> deployJobCluster(
             ClusterSpecification clusterSpecification, JobGraph jobGraph, boolean detached)

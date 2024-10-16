@@ -2084,7 +2084,7 @@ public class StreamExecutionEnvironment {
         checkNotNull(
                 configuration.get(DeploymentOptions.TARGET),
                 "No execution.target specified in your configuration file.");
-
+        //todo 区分不同的executorFactory
         final PipelineExecutorFactory executorFactory =
                 executorServiceLoader.getExecutorFactory(configuration);
 
@@ -2095,8 +2095,9 @@ public class StreamExecutionEnvironment {
 
         CompletableFuture<JobClient> jobClientFuture =
                 executorFactory
+                        //todo 在这里区分不同的Executor(session、per-job、application)来执行job
                         .getExecutor(configuration)
-                        //todo 提交flink作业[session或者per-job模式]
+                        //todo 提交flink作业[session、per-job、application模式]
                         .execute(streamGraph, configuration, userClassloader);
 
         try {

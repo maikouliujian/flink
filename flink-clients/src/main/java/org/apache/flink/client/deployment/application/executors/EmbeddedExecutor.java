@@ -100,7 +100,7 @@ public class EmbeddedExecutor implements PipelineExecutor {
         if (optJobId.isPresent() && submittedJobIds.contains(optJobId.get())) {
             return getJobClientFuture(optJobId.get(), userCodeClassloader);
         }
-
+        //todo application模式下提交job
         return submitAndGetJobClientFuture(pipeline, configuration, userCodeClassloader);
     }
 
@@ -118,7 +118,7 @@ public class EmbeddedExecutor implements PipelineExecutor {
             throws MalformedURLException {
         final Time timeout =
                 Time.milliseconds(configuration.get(ClientOptions.CLIENT_TIMEOUT).toMillis());
-
+        //todo application模式下获取jobGraph
         final JobGraph jobGraph = PipelineExecutorUtils.getJobGraph(pipeline, configuration);
         final JobID actualJobId = jobGraph.getJobID();
 
@@ -128,7 +128,7 @@ public class EmbeddedExecutor implements PipelineExecutor {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Effective Configuration: {}", configuration);
         }
-
+        //todo application模式提交job
         final CompletableFuture<JobID> jobSubmissionFuture =
                 submitJob(configuration, dispatcherGateway, jobGraph, timeout);
 
@@ -179,7 +179,7 @@ public class EmbeddedExecutor implements PipelineExecutor {
                             } catch (FlinkException e) {
                                 throw new CompletionException(e);
                             }
-
+                            //todo application模式提交job
                             return dispatcherGateway.submitJob(jobGraph, rpcTimeout);
                         })
                 .thenApply(ack -> jobGraph.getJobID());

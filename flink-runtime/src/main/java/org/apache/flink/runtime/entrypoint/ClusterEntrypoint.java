@@ -293,6 +293,7 @@ public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErro
             //   创建 ResourceManager 的工厂实例
             //   创建 Dispatcher 的工厂实例
             //   创建 WebMonitorEndpoint 的工厂实例
+            //todo 这里会区分不同的执行模式！！！！！！
             final DispatcherResourceManagerComponentFactory
                     dispatcherResourceManagerComponentFactory =
                             createDispatcherResourceManagerComponentFactory(configuration);

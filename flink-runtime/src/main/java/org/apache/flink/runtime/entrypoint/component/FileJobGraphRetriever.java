@@ -43,7 +43,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  * disk.
  */
 public class FileJobGraphRetriever extends AbstractUserClassPathJobGraphRetriever {
-
+    //todo jobgraph
     public static final ConfigOption<String> JOB_GRAPH_FILE_PATH =
             ConfigOptions.key("internal.jobgraph-path").stringType().defaultValue("job.graph");
 
@@ -54,7 +54,7 @@ public class FileJobGraphRetriever extends AbstractUserClassPathJobGraphRetrieve
         super(usrLibDir);
         this.jobGraphFile = jobGraphFile;
     }
-
+    //todo 获取jobgraph
     @Override
     public JobGraph retrieveJobGraph(Configuration configuration) throws FlinkException {
         final File fp = new File(jobGraphFile);
