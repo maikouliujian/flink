@@ -100,6 +100,7 @@ public class ApplicationDispatcherGatewayServiceFactory
                             recoveredJobs,
                             recoveredDirtyJobResults,
                             (dispatcherGateway, scheduledExecutor, errorHandler) ->
+                                    //todo
                                     new ApplicationDispatcherBootstrap(
                                             application,
                                             recoveredJobIds,

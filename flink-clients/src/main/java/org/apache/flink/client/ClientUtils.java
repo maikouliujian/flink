@@ -112,7 +112,7 @@ public enum ClientUtils {
                     suppressSysout);
 
             try {
-                //todo 执行用户程序
+                //todo 反射执行用户程序main方法，main方法中有StreamExecutionEnvironment.execute()
                 program.invokeInteractiveModeForExecution();
             } finally {
                 ContextEnvironment.unsetAsContext();

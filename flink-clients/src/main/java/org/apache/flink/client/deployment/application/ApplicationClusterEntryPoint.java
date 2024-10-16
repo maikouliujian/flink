@@ -71,6 +71,7 @@ public class ApplicationClusterEntryPoint extends ClusterEntrypoint {
             createDispatcherResourceManagerComponentFactory(final Configuration configuration) {
         return new DefaultDispatcherResourceManagerComponentFactory(
                 new DefaultDispatcherRunnerFactory(
+                        //todo
                         ApplicationDispatcherLeaderProcessFactoryFactory.create(
                                 configuration, SessionDispatcherFactory.INSTANCE, program)),
                 resourceManagerFactory,

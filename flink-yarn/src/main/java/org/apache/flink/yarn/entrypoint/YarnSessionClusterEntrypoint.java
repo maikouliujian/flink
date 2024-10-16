@@ -86,7 +86,7 @@ public class YarnSessionClusterEntrypoint extends SessionClusterEntrypoint {
 
         YarnSessionClusterEntrypoint yarnSessionClusterEntrypoint =
                 new YarnSessionClusterEntrypoint(configuration);
-
+        //todo session模式提交job
         ClusterEntrypoint.runClusterEntrypoint(yarnSessionClusterEntrypoint);
     }
 }
