@@ -407,7 +407,7 @@ public class TaskManagerOptions {
                                     + " (JVM direct memory and native memory) reserved for TaskExecutor framework, which will not be"
                                     + " allocated to task slots. The configured value will be fully counted when Flink calculates the JVM"
                                     + " max direct memory size parameter.");
-
+    //todo taskmanager的内存配置
     /** Task Heap Memory size for TaskExecutors. */
     @Documentation.Section(Documentation.Sections.COMMON_MEMORY)
     public static final ConfigOption<MemorySize> TASK_HEAP_MEMORY =

@@ -57,6 +57,7 @@ import static org.apache.flink.core.memory.MemorySegmentFactory.allocateOffHeapU
  * MemorySegment}). Releasing a memory segment will make it re-claimable by the garbage collector,
  * but does not necessarily immediately releases the underlying memory.
  */
+//todo 管理内存
 public class MemoryManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(MemoryManager.class);
