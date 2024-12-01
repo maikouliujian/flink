@@ -353,7 +353,7 @@ public class TaskManagerServices {
                                 checkClassLoaderLeak));
 
         final SlotAllocationSnapshotPersistenceService slotAllocationSnapshotPersistenceService;
-
+        //todo 开启状态本地恢复
         if (taskManagerServicesConfiguration.isLocalRecoveryEnabled()) {
             slotAllocationSnapshotPersistenceService =
                     new FileSlotAllocationSnapshotPersistenceService(

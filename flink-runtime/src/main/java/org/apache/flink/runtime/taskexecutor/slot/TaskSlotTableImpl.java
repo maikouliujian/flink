@@ -600,7 +600,7 @@ public class TaskSlotTableImpl<T extends TaskSlotPayload> implements TaskSlotTab
         }
         return taskSlot.getAllocationId();
     }
-
+    //todo 获取管理内存
     @Override
     public MemoryManager getTaskMemoryManager(AllocationID allocationID)
             throws SlotNotFoundException {

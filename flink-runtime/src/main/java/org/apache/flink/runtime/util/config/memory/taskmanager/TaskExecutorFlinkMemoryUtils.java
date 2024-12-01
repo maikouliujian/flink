@@ -112,6 +112,7 @@ public class TaskExecutorFlinkMemoryUtils implements FlinkMemoryUtils<TaskExecut
 
         final MemorySize taskHeapMemorySize;
         final MemorySize networkMemorySize;
+        //todo 管理内存
         final MemorySize managedMemorySize;
 
         if (isTaskHeapMemorySizeExplicitlyConfigured(config)) {

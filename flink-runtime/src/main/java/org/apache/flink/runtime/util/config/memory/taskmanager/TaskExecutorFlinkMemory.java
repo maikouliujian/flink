@@ -76,6 +76,7 @@ public class TaskExecutorFlinkMemory implements FlinkMemory {
     private final MemorySize taskHeap;
     private final MemorySize taskOffHeap;
     private final MemorySize network;
+    //todo 管理内存
     private final MemorySize managed;
 
     public TaskExecutorFlinkMemory(

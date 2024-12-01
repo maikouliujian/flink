@@ -272,7 +272,7 @@ public class TaskManagerServicesConfiguration {
 
             localStateDirs = Reference.owned(createdLocalStateDirs);
         }
-
+        //todo 状态本地恢复
         boolean localRecoveryMode = configuration.getBoolean(CheckpointingOptions.LOCAL_RECOVERY);
 
         final QueryableStateConfiguration queryableStateConfig =

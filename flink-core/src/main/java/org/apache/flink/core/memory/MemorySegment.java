@@ -101,6 +101,7 @@ public final class MemorySegment {
      * segment will point to undefined addresses outside the heap and may in out-of-order execution
      * cases cause segmentation faults.
      */
+    //todo 对象
     @Nullable private final byte[] heapMemory;
 
     /**
@@ -113,6 +114,7 @@ public final class MemorySegment {
      * The address to the data, relative to the heap memory byte array. If the heap memory byte
      * array is <tt>null</tt>, this becomes an absolute memory address outside the heap.
      */
+    //todo 对象的绝对地址
     private long address;
 
     /**

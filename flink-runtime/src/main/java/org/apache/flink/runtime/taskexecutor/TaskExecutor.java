@@ -434,7 +434,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
                     new FileCache(
                             taskManagerConfiguration.getTmpDirectories(),
                             taskExecutorBlobService.getPermanentBlobService());
-
+            //todo 从本地恢复状态
             tryLoadLocalAllocationSnapshots();
         } catch (Exception e) {
             handleStartTaskExecutorServicesException(e);
