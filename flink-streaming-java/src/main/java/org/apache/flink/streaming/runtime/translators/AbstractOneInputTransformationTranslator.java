@@ -88,7 +88,7 @@ abstract class AbstractOneInputTransformationTranslator<IN, OUT, OP extends Tran
                         + parentTransformations.size());
 
         for (Integer inputId : context.getStreamNodeIds(parentTransformations.get(0))) {
-            //todo 添加边
+            //todo 在上游节点和当前节点之间添加边
             streamGraph.addEdge(inputId, transformationId, 0);
         }
 

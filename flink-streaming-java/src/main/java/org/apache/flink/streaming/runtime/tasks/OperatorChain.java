@@ -127,8 +127,9 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
      * first
      */
     @Nullable protected final StreamOperatorWrapper<OUT, OP> mainOperatorWrapper;
-
+    //todo 双向链表，头
     @Nullable protected final StreamOperatorWrapper<?, ?> firstOperatorWrapper;
+    //todo 双向链表，尾
     @Nullable protected final StreamOperatorWrapper<?, ?> tailOperatorWrapper;
 
     protected final Map<StreamConfig.SourceInputConfig, ChainedSource> chainedSources;

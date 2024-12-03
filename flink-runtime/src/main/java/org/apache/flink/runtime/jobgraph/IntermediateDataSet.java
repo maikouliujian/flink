@@ -31,14 +31,15 @@ import static org.apache.flink.util.Preconditions.checkState;
  *
  * <p>Intermediate data sets may be read by other operators, materialized, or discarded.
  */
+//todo 中间数据集：介于JobVertex和JobEdge之间的结构，JobVertex---> IntermediateDataSet ---> JobEdge
 public class IntermediateDataSet implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private final IntermediateDataSetID id; // the identifier
-
+    //todo 生产者
     private final JobVertex producer; // the operation that produced this data set
-
+    //todo 消费者
     @Nullable private JobEdge consumer;
 
     // The type of partition to use at runtime

@@ -157,6 +157,7 @@ class SplitAggregateRule
       .toArray
 
     val hashFieldsMap: util.Map[Int, Int] = new util.HashMap()
+    //todo bucket数
     val buckets =
       tableConfig.get(OptimizerConfigOptions.TABLE_OPTIMIZER_DISTINCT_AGG_SPLIT_BUCKET_NUM)
 

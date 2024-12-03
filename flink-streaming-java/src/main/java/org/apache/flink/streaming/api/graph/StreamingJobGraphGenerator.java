@@ -106,6 +106,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 import static org.apache.flink.util.Preconditions.checkState;
 
 /** The StreamingJobGraphGenerator converts a {@link StreamGraph} into a {@link JobGraph}. */
+//todo StreamGraph ---> JobGraph
 @Internal
 public class StreamingJobGraphGenerator {
 
@@ -118,6 +119,7 @@ public class StreamingJobGraphGenerator {
     }
 
     public static JobGraph createJobGraph(StreamGraph streamGraph, @Nullable JobID jobID) {
+        //todo 创建JobGraph
         return new StreamingJobGraphGenerator(streamGraph, jobID).createJobGraph();
     }
 
@@ -164,6 +166,7 @@ public class StreamingJobGraphGenerator {
 
     private JobGraph createJobGraph() {
         preValidate();
+        //todo 设置job类型：流、批
         jobGraph.setJobType(streamGraph.getJobType());
 
         jobGraph.enableApproximateLocalRecovery(
@@ -171,6 +174,8 @@ public class StreamingJobGraphGenerator {
 
         // Generate deterministic hashes for the nodes in order to identify them across
         // submission iff they didn't change.
+        //todo // 广度优先遍历 StreamGraph 并且为每个SteamNode生成hash，hash值将被用于 JobVertexId 中
+        //     // 保证如果提交的拓扑没有改变，则每次生成的hash都是一样的
         Map<Integer, byte[]> hashes =
                 defaultStreamGraphHasher.traverseStreamGraphAndGenerateHashes(streamGraph);
 
@@ -179,9 +184,10 @@ public class StreamingJobGraphGenerator {
         for (StreamGraphHasher hasher : legacyStreamGraphHashers) {
             legacyHashes.add(hasher.traverseStreamGraphAndGenerateHashes(streamGraph));
         }
-
+        //todo 主要的转换逻辑，生成 JobVetex， JobEdge 等，还有chain
         setChaining(hashes, legacyHashes);
-
+        //todo 将每个JobVertex的输入边集合也序列化到该JobVertex的StreamConfig中
+        // (出边集合已经在setChaining的时候写入了)
         setPhysicalEdges();
 
         setSlotSharingAndCoLocation();
@@ -192,9 +198,9 @@ public class StreamingJobGraphGenerator {
                 Collections.unmodifiableMap(chainedConfigs),
                 id -> streamGraph.getStreamNode(id).getManagedMemoryOperatorScopeUseCaseWeights(),
                 id -> streamGraph.getStreamNode(id).getManagedMemorySlotScopeUseCases());
-
+        //todo 配置 checkpoint
         configureCheckpointing();
-
+        //todo 配置 savepoint
         jobGraph.setSavepointRestoreSettings(streamGraph.getSavepointRestoreSettings());
 
         final Map<String, DistributedCache.DistributedCacheEntry> distributedCacheEntries =
@@ -532,7 +538,7 @@ public class StreamingJobGraphGenerator {
                     chainEntryPoints);
         }
     }
-
+    //todo 递归设置chain
     private List<StreamEdge> createChain(
             final Integer currentNodeId,
             final int chainIndex,
@@ -550,6 +556,7 @@ public class StreamingJobGraphGenerator {
             StreamNode currentNode = streamGraph.getStreamNode(currentNodeId);
 
             for (StreamEdge outEdge : currentNode.getOutEdges()) {
+                //todo 是否可以chain一起
                 if (isChainable(outEdge, streamGraph)) {
                     chainableOutputs.add(outEdge);
                 } else {
@@ -621,8 +628,9 @@ public class StreamingJobGraphGenerator {
                 config.setChainStart();
                 config.setChainIndex(chainIndex);
                 config.setOperatorName(streamGraph.getStreamNode(currentNodeId).getOperatorName());
-
+                //todo 将当前节点(headOfChain)与所有出边相连
                 for (StreamEdge edge : transitiveOutEdges) {
+                    //todo 通过StreamEdge构建出JobEdge，创建IntermediateDataSet，用来将JobVertex和JobEdge相连
                     connect(startNodeId, edge);
                 }
 
@@ -992,6 +1000,7 @@ public class StreamingJobGraphGenerator {
         checkBufferTimeout(resultPartitionType, edge);
 
         JobEdge jobEdge;
+        //todo //根据StreamPartitioner类型决定在上游节点（生产者）的子任务和下游节点（消费者）之间的连接模式
         if (partitioner.isPointwise()) {
             jobEdge =
                     downStreamVertex.connectNewDataSetAsInput(
@@ -1056,23 +1065,26 @@ public class StreamingJobGraphGenerator {
                                 + streamGraph.getGlobalStreamExchangeMode());
         }
     }
-
+    //todo 是否可以chain一起
     public static boolean isChainable(StreamEdge edge, StreamGraph streamGraph) {
         StreamNode downStreamVertex = streamGraph.getTargetVertex(edge);
-
+        //todo 下游节点只有一个入边
         return downStreamVertex.getInEdges().size() == 1 && isChainableInput(edge, streamGraph);
     }
 
     private static boolean isChainableInput(StreamEdge edge, StreamGraph streamGraph) {
         StreamNode upStreamVertex = streamGraph.getSourceVertex(edge);
         StreamNode downStreamVertex = streamGraph.getTargetVertex(edge);
-
+        //todo 以下条件全部满足
+        //todo //在同一个slot共享组中
         if (!(upStreamVertex.isSameSlotSharingGroup(downStreamVertex)
                 && areOperatorsChainable(upStreamVertex, downStreamVertex, streamGraph)
+                //todo//上下游节点之间的数据传输方式必须是FORWARD，而不能是REBALANCE等其它模式
                 && arePartitionerAndExchangeModeChainable(
                         edge.getPartitioner(),
                         edge.getExchangeMode(),
                         streamGraph.getExecutionConfig().isDynamicGraph())
+                //todo //上下游节点的并行度要一致
                 && upStreamVertex.getParallelism() == downStreamVertex.getParallelism()
                 && streamGraph.isChainingEnabled())) {
 

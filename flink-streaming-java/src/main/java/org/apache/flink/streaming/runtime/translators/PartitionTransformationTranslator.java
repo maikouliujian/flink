@@ -46,6 +46,7 @@ public class PartitionTransformationTranslator<OUT>
     @Override
     protected Collection<Integer> translateForBatchInternal(
             final PartitionTransformation<OUT> transformation, final Context context) {
+        //todo batch支持supportsBatchExchange
         return translateInternal(transformation, context, true);
     }
 

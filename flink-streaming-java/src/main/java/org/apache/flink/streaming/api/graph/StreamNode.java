@@ -86,7 +86,7 @@ public class StreamNode {
 
     private String transformationUID;
     private String userHash;
-
+    //todo 添加InputRequirement
     private final Map<Integer, StreamConfig.InputRequirement> inputRequirements = new HashMap<>();
 
     @VisibleForTesting

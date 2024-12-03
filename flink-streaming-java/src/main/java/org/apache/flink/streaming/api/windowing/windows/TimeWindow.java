@@ -43,7 +43,7 @@ import java.util.Set;
  */
 @PublicEvolving
 public class TimeWindow extends Window {
-
+    //todo 窗口范围[start, end)
     private final long start;
     private final long end;
 

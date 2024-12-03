@@ -65,6 +65,7 @@ public class RocksDBOptions {
     /**
      * The number of threads used to transfer (download and upload) files in RocksDBStateBackend.
      */
+    //todo 将rocksdb中文件上传到hdfs中
     @Documentation.Section(Documentation.Sections.EXPERT_ROCKSDB)
     public static final ConfigOption<Integer> CHECKPOINT_TRANSFER_THREAD_NUM =
             ConfigOptions.key("state.backend.rocksdb.checkpoint.transfer.thread.num")
@@ -144,7 +145,7 @@ public class RocksDBOptions {
                                     "The fraction of cache memory that is reserved for high-priority data like index, filter, and "
                                             + "compression dictionary blocks. This option only has an effect when '%s' or '%s' are configured.",
                                     USE_MANAGED_MEMORY.key(), FIX_PER_SLOT_MEMORY_SIZE.key()));
-
+    //todo 分区索引功能 ， 复用了RocksDB的partitioned Index & filter功能，简单来说就是对  RocksDB 的partitioned Index做了多级索引
     @Documentation.Section(Documentation.Sections.STATE_BACKEND_ROCKSDB)
     public static final ConfigOption<Boolean> USE_PARTITIONED_INDEX_FILTERS =
             ConfigOptions.key("state.backend.rocksdb.memory.partitioned-index-filters")

@@ -22,13 +22,14 @@ import org.apache.flink.annotation.Internal;
 import org.apache.flink.util.Preconditions;
 
 /** Use cases of managed memory. */
+//todo 管理内存
 @Internal
 public enum ManagedMemoryUseCase {
 
     /** Currently, weights are defined as mebibyte values. */
-    OPERATOR(Scope.OPERATOR),
+    OPERATOR(Scope.OPERATOR), //todo 批模式
 
-    STATE_BACKEND(Scope.SLOT),
+    STATE_BACKEND(Scope.SLOT), //todo 流模式
 
     PYTHON(Scope.SLOT);
 

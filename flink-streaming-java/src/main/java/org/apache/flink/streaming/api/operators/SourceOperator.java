@@ -299,6 +299,7 @@ public class SourceOperator<OUT, SplitT extends SourceSplit> extends AbstractStr
 
         // in the future when we this one is migrated to the "eager initialization" operator
         // (StreamOperatorV2), then we should evaluate this during operator construction.
+        //todo 是否发生watermark
         if (emitProgressiveWatermarks) {
             eventTimeLogic =
                     TimestampsAndWatermarks.createProgressiveEventTimeLogic(

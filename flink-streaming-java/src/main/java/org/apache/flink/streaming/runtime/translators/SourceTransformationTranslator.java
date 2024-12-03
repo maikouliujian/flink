@@ -37,6 +37,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  *
  * @param <OUT> The type of the elements that this source produces.
  */
+//todo 对于source而言，流批的区别就是流需要发射watermark，批不需要
 @Internal
 public class SourceTransformationTranslator<OUT, SplitT extends SourceSplit, EnumChkT>
         extends SimpleTransformationTranslator<OUT, SourceTransformation<OUT, SplitT, EnumChkT>> {

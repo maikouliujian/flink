@@ -1963,7 +1963,7 @@ public class StreamExecutionEnvironment {
      * @return The result of the job execution, containing elapsed time and accumulators.
      * @throws Exception which occurs during job execution.
      */
-    //todo per-job、session模式提交作业的入口
+    //todo per-job、session模式提交作业的入口【每执行一次该方法，生成一个job】
     public JobExecutionResult execute(String jobName) throws Exception {
         Preconditions.checkNotNull(jobName, "Streaming Job name should not be null.");
         //todo 生成StreamGraph

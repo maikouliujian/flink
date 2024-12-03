@@ -181,7 +181,7 @@ public class StreamGraphGenerator {
                     Class<? extends Transformation>,
                     TransformationTranslator<?, ? extends Transformation>>
             translatorMap;
-    //todo 每一个Transformation都对应一个TransformationTranslator,
+    //todo 每一个Transformation都对应一个TransformationTranslator【翻译器】,
     // TransformationTranslator的作用是将Transformation转化和添加为StreamNode和StreamEdge
     static {
         @SuppressWarnings("rawtypes")
@@ -222,7 +222,7 @@ public class StreamGraphGenerator {
 
     // Keep track of which Transforms we have already transformed, this is necessary because
     // we have loops, i.e. feedback edges.
-    //todo 存放转化后的Transformation
+    //todo 存放转化后的Transformation和ID的对应关系
     private Map<Transformation<?>, Collection<Integer>> alreadyTransformed;
 
     public StreamGraphGenerator(
@@ -506,6 +506,7 @@ public class StreamGraphGenerator {
      * <p>This checks whether we already transformed it and exits early in that case. If not it
      * delegates to one of the transformation specific methods.
      */
+    //todo 递归，从前向后转
     private Collection<Integer> transform(Transformation<?> transform) {
         if (alreadyTransformed.containsKey(transform)) {
             return alreadyTransformed.get(transform);
@@ -804,7 +805,7 @@ public class StreamGraphGenerator {
 
         return Collections.singleton(itSource.getId());
     }
-
+    //todo 翻译，按照不同的执行模式，对流批模式分别翻译
     private Collection<Integer> translate(
             final TransformationTranslator<?, Transformation<?>> translator,
             final Transformation<?> transform) {

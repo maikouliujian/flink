@@ -35,6 +35,7 @@ public class OptimizerConfigOptions {
     // ------------------------------------------------------------------------
     //  Optimizer Options
     // ------------------------------------------------------------------------
+    //todo 聚合策略
     @Documentation.TableOption(execMode = Documentation.ExecMode.BATCH_STREAMING)
     public static final ConfigOption<String> TABLE_OPTIMIZER_AGG_PHASE_STRATEGY =
             key("table.optimizer.agg-phase-strategy")
@@ -56,7 +57,7 @@ public class OptimizerConfigOptions {
                     .withDescription(
                             "Configures the maximum size in bytes for a table that will be broadcast to all worker "
                                     + "nodes when performing a join. By setting this value to -1 to disable broadcasting.");
-
+    //todo split-distinct
     @Documentation.TableOption(execMode = Documentation.ExecMode.STREAMING)
     public static final ConfigOption<Boolean> TABLE_OPTIMIZER_DISTINCT_AGG_SPLIT_ENABLED =
             key("table.optimizer.distinct-agg.split.enabled")

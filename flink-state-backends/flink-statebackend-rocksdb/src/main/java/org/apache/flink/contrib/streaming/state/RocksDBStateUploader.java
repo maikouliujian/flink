@@ -43,9 +43,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 /** Help class for uploading RocksDB state files. */
+//todo 将rocksdb的文件上传到hdfs的组件
 public class RocksDBStateUploader extends RocksDBStateDataTransfer {
     private static final int READ_BUFFER_SIZE = 16 * 1024;
-
+    //todo 线程数
     public RocksDBStateUploader(int numberOfSnapshottingThreads) {
         super(numberOfSnapshottingThreads);
     }
@@ -102,11 +103,13 @@ public class RocksDBStateUploader extends RocksDBStateDataTransfer {
             final Supplier<StreamStateHandle> supplier =
                     CheckedSupplier.unchecked(
                             () ->
+                                    //todo 异步上传逻辑
                                     uploadLocalFileToCheckpointFs(
                                             entry.getValue(),
                                             checkpointStreamFactory,
                                             stateScope,
                                             closeableRegistry));
+            //todo 异步上传文件
             futures.put(entry.getKey(), CompletableFuture.supplyAsync(supplier, executorService));
         }
 

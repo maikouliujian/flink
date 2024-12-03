@@ -53,7 +53,7 @@ public class RocksDBConfigurableOptions implements Serializable {
     // --------------------------------------------------------------------------
     // Provided configurable DBOptions within Flink
     // --------------------------------------------------------------------------
-
+    //todo 用于后台flush和合并sst文件的线程数，  默认为1， 建议调大，机械硬盘用户可以改为4等更大的值
     public static final ConfigOption<Integer> MAX_BACKGROUND_THREADS =
             key("state.backend.rocksdb.thread.num")
                     .intType()
@@ -182,7 +182,7 @@ public class RocksDBConfigurableOptions implements Serializable {
                     .withDescription(
                             "The amount of data built up in memory (backed by an unsorted log on disk) "
                                     + "before converting to a sorted on-disk files. The default writebuffer size is '64MB'.");
-
+    //todo 一个cf对应的writer buffer的数量
     public static final ConfigOption<Integer> MAX_WRITE_BUFFER_NUMBER =
             key("state.backend.rocksdb.writebuffer.count")
                     .intType()
@@ -190,7 +190,7 @@ public class RocksDBConfigurableOptions implements Serializable {
                     .withDescription(
                             "The maximum number of write buffers that are built up in memory. "
                                     + "The default value is '2'.");
-
+    //todo 将数据从writebuffer中flush到磁盘时，需要合并的writebuffer最小数量，默认值为  1，  可以调成 3。
     public static final ConfigOption<Integer> MIN_WRITE_BUFFER_NUMBER_TO_MERGE =
             key("state.backend.rocksdb.writebuffer.number-to-merge")
                     .intType()
@@ -215,7 +215,7 @@ public class RocksDBConfigurableOptions implements Serializable {
                             "Approximate size of partitioned metadata packed per block. "
                                     + "Currently applied to indexes block when partitioned index/filters option is enabled. "
                                     + "The default blocksize is '4KB'.");
-
+    //todo rocksdb的读缓存
     public static final ConfigOption<MemorySize> BLOCK_CACHE_SIZE =
             key("state.backend.rocksdb.block.cache-size")
                     .memoryType()

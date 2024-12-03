@@ -43,7 +43,7 @@ public class PartitionTransformation<T> extends Transformation<T> {
     private final Transformation<T> input;
 
     private final StreamPartitioner<T> partitioner;
-
+    //todo 执行模式，支持流和批
     private final StreamExchangeMode exchangeMode;
 
     /**
