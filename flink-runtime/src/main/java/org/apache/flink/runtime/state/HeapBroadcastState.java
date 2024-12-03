@@ -39,6 +39,7 @@ import java.util.Map;
  * @param <K> The key type of the elements in the {@link BroadcastState Broadcast State}.
  * @param <V> The value type of the elements in the {@link BroadcastState Broadcast State}.
  */
+//todo 广播状态
 public class HeapBroadcastState<K, V> implements BackendWritableBroadcastState<K, V> {
 
     /** Meta information of the state, including state name, assignment mode, and serializer. */
