@@ -117,7 +117,7 @@ public class ExecutionOptions {
                     .withDescription(
                             "A flag to enable or disable sorting inputs of keyed operators. "
                                     + "NOTE: It takes effect only in the BATCH runtime mode.");
-
+    //todo the managed memory size for sorting inputs
     @Documentation.ExcludeFromDocumentation(
             "This is an expert option, that we do not want to expose in the documentation")
     public static final ConfigOption<MemorySize> SORTED_INPUTS_MEMORY =

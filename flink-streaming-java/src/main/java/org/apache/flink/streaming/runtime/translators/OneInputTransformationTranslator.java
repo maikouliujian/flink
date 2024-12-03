@@ -43,6 +43,7 @@ public final class OneInputTransformationTranslator<IN, OUT>
             final OneInputTransformation<IN, OUT> transformation, final Context context) {
         KeySelector<IN, ?> keySelector = transformation.getStateKeySelector();
         Collection<Integer> ids =
+                //todo 添加节点和边
                 translateInternal(
                         transformation,
                         transformation.getOperatorFactory(),
@@ -63,6 +64,7 @@ public final class OneInputTransformationTranslator<IN, OUT>
     @Override
     public Collection<Integer> translateForStreamingInternal(
             final OneInputTransformation<IN, OUT> transformation, final Context context) {
+        //todo 添加节点和边
         return translateInternal(
                 transformation,
                 transformation.getOperatorFactory(),

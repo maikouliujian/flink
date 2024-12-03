@@ -523,6 +523,7 @@ public class RocksDBKeyedStateBackendBuilder<K> extends AbstractKeyedStateBacken
             long lastCompletedCheckpointId) {
         RocksDBSnapshotStrategyBase<K, ?> checkpointSnapshotStrategy;
         if (enableIncrementalCheckpointing) {
+            //todo rocksdb文件上传线程
             RocksDBStateUploader stateUploader =
                     injectRocksDBStateUploader == null
                             ? new RocksDBStateUploader(numberOfTransferingThreads)

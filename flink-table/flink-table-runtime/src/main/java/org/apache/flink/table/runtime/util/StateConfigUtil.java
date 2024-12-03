@@ -28,6 +28,7 @@ public class StateConfigUtil {
      *
      * @param retentionTime State ttl time which unit is MILLISECONDS.
      */
+    //todo flinksql ttl设置
     public static StateTtlConfig createTtlConfig(long retentionTime) {
         if (retentionTime > 0) {
             return StateTtlConfig.newBuilder(Time.milliseconds(retentionTime))

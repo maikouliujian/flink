@@ -307,6 +307,7 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT> extends RichS
 
             logWarningIfTimeoutAlmostReached(pendingTransaction);
             try {
+                //todo 提交每一个事务
                 commit(pendingTransaction.handle);
             } catch (Throwable t) {
                 if (firstError == null) {
@@ -342,6 +343,7 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT> extends RichS
                 currentTransactionHolder);
 
         if (currentTransactionHolder != null) {
+            //todo 预提交
             preCommit(currentTransactionHolder.handle);
             pendingCommitTransactions.put(checkpointId, currentTransactionHolder);
             LOG.debug("{} - stored pending transactions {}", name(), pendingCommitTransactions);

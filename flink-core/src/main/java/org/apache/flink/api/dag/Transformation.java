@@ -549,7 +549,7 @@ public abstract class Transformation<T> {
      * Returns the {@link Transformation transformations} that are the immediate predecessors of the
      * current transformation in the transformation graph.
      */
-    //todo 每一个Transformation对应的上游节点！！！！！！
+    //todo 每一个Transformation对应的上游节点的引用！！！！！！
     public abstract List<Transformation<?>> getInputs();
 
     @Override

@@ -328,7 +328,7 @@ public final class RocksDBResourceContainer implements AutoCloseable {
 
         currentOptions.setMaxBytesForLevelBase(
                 internalGetOption(RocksDBConfigurableOptions.MAX_SIZE_LEVEL_BASE).getBytes());
-
+        //todo 设置writer buffer
         currentOptions.setWriteBufferSize(
                 internalGetOption(RocksDBConfigurableOptions.WRITE_BUFFER_SIZE).getBytes());
 
@@ -358,7 +358,7 @@ public final class RocksDBResourceContainer implements AutoCloseable {
 
         blockBasedTableConfig.setMetadataBlockSize(
                 internalGetOption(RocksDBConfigurableOptions.METADATA_BLOCK_SIZE).getBytes());
-
+        //todo 设置rocksdb的blockcache
         blockBasedTableConfig.setBlockCacheSize(
                 internalGetOption(RocksDBConfigurableOptions.BLOCK_CACHE_SIZE).getBytes());
 

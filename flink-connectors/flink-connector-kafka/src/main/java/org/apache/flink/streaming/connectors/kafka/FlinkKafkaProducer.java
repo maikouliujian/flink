@@ -986,6 +986,7 @@ public class FlinkKafkaProducer<IN>
             throws FlinkKafkaException {
         switch (semantic) {
             case EXACTLY_ONCE:
+                //todo 初始化带事物id的producer
                 FlinkKafkaInternalProducer<byte[], byte[]> producer = createTransactionalProducer();
                 producer.beginTransaction();
                 return new FlinkKafkaProducer.KafkaTransactionState(
@@ -1069,6 +1070,7 @@ public class FlinkKafkaProducer<IN>
     @Override
     protected void abort(FlinkKafkaProducer.KafkaTransactionState transaction) {
         if (transaction.isTransactional()) {
+            //todo 回滚
             transaction.producer.abortTransaction();
             recycleTransactionalProducer(transaction.producer);
         }

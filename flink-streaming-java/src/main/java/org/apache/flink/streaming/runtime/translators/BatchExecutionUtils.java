@@ -62,6 +62,7 @@ class BatchExecutionUtils {
                 node.addInputRequirement(i, inputRequirements[i]);
             }
             Map<ManagedMemoryUseCase, Integer> operatorScopeUseCaseWeights = new HashMap<>();
+            //todo Sets the managed memory size for sorting inputs of keyed operators
             operatorScopeUseCaseWeights.put(
                     ManagedMemoryUseCase.OPERATOR,
                     deriveMemoryWeight(context.getGraphGeneratorConfig()));

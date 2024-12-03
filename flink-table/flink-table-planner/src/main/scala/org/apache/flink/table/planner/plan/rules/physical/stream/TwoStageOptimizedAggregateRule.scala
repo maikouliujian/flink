@@ -110,6 +110,7 @@ class TwoStageOptimizedAggregateRule
     val localAggTraitSet = realInput.getTraitSet
       .plus(ModifyKindSetTrait.INSERT_ONLY)
       .plus(UpdateKindTrait.NONE)
+    //todo 1、local GroupAggregate
     val localHashAgg = new StreamPhysicalLocalGroupAggregate(
       originalAgg.getCluster,
       localAggTraitSet,
@@ -124,10 +125,11 @@ class TwoStageOptimizedAggregateRule
     val globalGrouping = originalAgg.grouping.indices.toArray
     val globalDistribution = createDistribution(globalGrouping)
     // create exchange if needed
+    //todo 2、StreamPhysicalExchange
     val newInput =
       satisfyDistribution(FlinkConventions.STREAM_PHYSICAL, localHashAgg, globalDistribution)
     val globalAggProvidedTraitSet = originalAgg.getTraitSet
-
+    //todo 3、Global GroupAggregate
     val globalAgg = new StreamPhysicalGlobalGroupAggregate(
       originalAgg.getCluster,
       globalAggProvidedTraitSet,

@@ -313,6 +313,7 @@ public class StreamGraph implements Pipeline {
             TypeInformation<IN> inTypeInfo,
             TypeInformation<OUT> outTypeInfo,
             String operatorName) {
+        //todo
         addOperator(
                 vertexID,
                 slotSharingGroup,
@@ -400,7 +401,7 @@ public class StreamGraph implements Pipeline {
             TypeInformation<OUT> outTypeInfo,
             String operatorName,
             Class<? extends TaskInvokable> invokableClass) {
-
+        //todo
         addNode(
                 vertexID,
                 slotSharingGroup,
@@ -492,12 +493,12 @@ public class StreamGraph implements Pipeline {
             LOG.debug("CO-TASK: {}", vertexID);
         }
     }
-
+    //todo 添加StreamNode
     protected StreamNode addNode(
             Integer vertexID,
             @Nullable String slotSharingGroup,
             @Nullable String coLocationGroup,
-            Class<? extends TaskInvokable> vertexClass,//todo task的执行节点！！！！！！
+            Class<? extends TaskInvokable> vertexClass,//todo task的执行类！！！！！！
             StreamOperatorFactory<?> operatorFactory,
             String operatorName) {
 
@@ -615,7 +616,9 @@ public class StreamGraph implements Pipeline {
             List<String> outputNames,
             OutputTag outputTag,
             StreamExchangeMode exchangeMode) {
-
+        // todo 先判断是不是虚拟节点上的边，如果是，则找到虚拟节点上游对应的物理节点
+        // todo 在两个物理节点之间添加边，并把对应的 StreamPartitioner,或者 OutputTag 等补充信息添加到StreamEdge中
+        // todo 添加outputTag
         if (virtualSideOutputNodes.containsKey(upStreamVertexID)) {
             int virtualId = upStreamVertexID;
             upStreamVertexID = virtualSideOutputNodes.get(virtualId).f0;
@@ -631,6 +634,7 @@ public class StreamGraph implements Pipeline {
                     outputTag,
                     exchangeMode);
         } else if (virtualPartitionNodes.containsKey(upStreamVertexID)) {
+            //todo 添加分区器和exchangeMode
             int virtualId = upStreamVertexID;
             upStreamVertexID = virtualPartitionNodes.get(virtualId).f0;
             if (partitioner == null) {
@@ -705,7 +709,7 @@ public class StreamGraph implements Pipeline {
          * StreamEdge}.
          */
         int uniqueId = getStreamEdges(upstreamNode.getId(), downstreamNode.getId()).size();
-
+        //todo 创建边
         StreamEdge edge =
                 new StreamEdge(
                         upstreamNode,
