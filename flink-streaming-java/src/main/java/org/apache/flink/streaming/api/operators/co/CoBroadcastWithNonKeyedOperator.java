@@ -50,6 +50,7 @@ import static org.apache.flink.util.Preconditions.checkState;
  * @param <IN2> The input type of the broadcast side.
  * @param <OUT> The output type of the operator.
  */
+//todo 处理广播流的算子
 @Internal
 public class CoBroadcastWithNonKeyedOperator<IN1, IN2, OUT>
         extends AbstractUdfStreamOperator<OUT, BroadcastProcessFunction<IN1, IN2, OUT>>
@@ -85,6 +86,7 @@ public class CoBroadcastWithNonKeyedOperator<IN1, IN2, OUT>
 
         this.broadcastStates = new HashMap<>(broadcastStateDescriptors.size());
         for (MapStateDescriptor<?, ?> descriptor : broadcastStateDescriptors) {
+            //todo 获取广播状态
             broadcastStates.put(
                     descriptor, getOperatorStateBackend().getBroadcastState(descriptor));
         }
