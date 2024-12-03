@@ -51,6 +51,7 @@ import static java.util.Objects.requireNonNull;
  * @param <IN1> The input type of the non-broadcast side.
  * @param <IN2> The input type of the broadcast side.
  */
+//todo 广播流
 @PublicEvolving
 public class BroadcastConnectedStream<IN1, IN2> {
 
@@ -256,7 +257,7 @@ public class BroadcastConnectedStream<IN1, IN2> {
         broadcastStream.getType();
 
         KeyedStream<IN1, KEY> keyedInputStream = (KeyedStream<IN1, KEY>) nonBroadcastStream;
-
+        //todo 构建：KeyedBroadcastStateTransformation
         final KeyedBroadcastStateTransformation<KEY, IN1, IN2, OUT> transformation =
                 new KeyedBroadcastStateTransformation<>(
                         "Co-Process-Broadcast-Keyed",
