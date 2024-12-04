@@ -72,7 +72,7 @@ public class NetworkBufferPool
     private final int totalNumberOfMemorySegments;
 
     private final int memorySegmentSize;
-
+    //todo 内存页队列
     private final ArrayDeque<MemorySegment> availableMemorySegments;
 
     private volatile boolean isDestroyed;
@@ -492,6 +492,7 @@ public class NetworkBufferPool
 
             // We are good to go, create a new buffer pool and redistribute
             // non-fixed size buffers.
+            //todo 创建LocalBufferPool
             LocalBufferPool localBufferPool =
                     new LocalBufferPool(
                             this,

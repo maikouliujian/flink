@@ -557,7 +557,7 @@ public class TaskManagerOptions {
                     .withDescription(
                             "The target total time after which buffered in-flight data should be fully consumed. "
                                     + "This configuration option will be used, in combination with the measured throughput, to adjust the amount of in-flight data.");
-
+    //todo 是否开启buffer-debloat
     @Documentation.Section(Documentation.Sections.ALL_TASK_MANAGER_NETWORK)
     public static final ConfigOption<Boolean> BUFFER_DEBLOAT_ENABLED =
             ConfigOptions.key("taskmanager.network.memory.buffer-debloat.enabled")

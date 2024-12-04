@@ -220,6 +220,7 @@ public class NettyPartitionRequestClient implements PartitionRequestClient {
 
     @Override
     public void notifyNewBufferSize(RemoteInputChannel inputChannel, int bufferSize) {
+        //todo 通知channel以及其对应的buffer
         sendToChannel(new NewBufferSizeMessage(inputChannel, bufferSize));
     }
 

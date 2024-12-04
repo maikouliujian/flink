@@ -398,6 +398,7 @@ public class SingleInputGate extends IndexedInputGate {
 
     @VisibleForTesting
     public void announceBufferSize(int newBufferSize) {
+        //todo 更新inputgate中所有channel的buffer
         for (InputChannel channel : channels) {
             if (!channel.isReleased()) {
                 channel.announceBufferSize(newBufferSize);
@@ -412,6 +413,7 @@ public class SingleInputGate extends IndexedInputGate {
         }
 
         checkState(bufferDebloater != null, "Buffer debloater should not be null");
+        //todo 计算吞吐量 = 数据大小 / 时间区间
         final long currentThroughput = throughputCalculator.calculateThroughput();
         bufferDebloater
                 //todo 重新计算buffer大小

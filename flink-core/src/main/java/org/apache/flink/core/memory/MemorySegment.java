@@ -66,6 +66,7 @@ import static org.apache.flink.core.memory.MemoryUtils.getByteBufferAddress;
  * different memory types with inheritance, to avoid the overhead from looking for concrete
  * implementations on invocations of abstract methods.
  */
+//todo 内存页
 @Internal
 public final class MemorySegment {
 
