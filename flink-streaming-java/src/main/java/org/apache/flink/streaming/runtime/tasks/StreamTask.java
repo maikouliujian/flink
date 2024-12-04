@@ -800,13 +800,14 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
                         .getBoolean(TaskManagerOptions.BUFFER_DEBLOAT_ENABLED)) {
             return;
         }
-        // 注册一个事件，在buffer debloat间隔时间之后调用debloat方法
-        // buffer debloat间隔时间由配置项taskmanager.network.memory.buffer-debloat.period决定
+        // todo 注册一个事件，在buffer debloat间隔时间之后调用debloat方法
+        // todo buffer debloat间隔时间由配置项taskmanager.network.memory.buffer-debloat.period决定
         systemTimerService.registerTimer(
                 systemTimerService.getCurrentProcessingTime() + bufferDebloatPeriod,
                 timestamp ->
                         mainMailboxExecutor.execute(
                                 () -> {
+                                    //todo 触发debloat
                                     debloat();
                                     //todo 再schedule一个作业，实现周期定时调用
                                     scheduleBufferDebloater();
@@ -817,6 +818,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
     @VisibleForTesting
     void debloat() {
         for (IndexedInputGate inputGate : environment.getAllInputGates()) {
+            //todo 调用所有inputGate触发Debloating
             inputGate.triggerDebloating();
         }
     }

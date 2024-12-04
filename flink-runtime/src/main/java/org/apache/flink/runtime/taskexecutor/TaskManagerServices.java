@@ -284,7 +284,7 @@ public class TaskManagerServices {
         //todo 初始化 IOManagerASync
         final IOManager ioManager =
                 new IOManagerAsync(taskManagerServicesConfiguration.getTmpDirPaths());
-        //todo 初始化 NettyShuffleEnvironment
+        //todo 初始化 NettyShuffleEnvironment【内存管理】
         final ShuffleEnvironment<?, ?> shuffleEnvironment =
                 createShuffleEnvironment(
                         taskManagerServicesConfiguration,
@@ -421,6 +421,7 @@ public class TaskManagerServices {
 
         return ShuffleServiceLoader.loadShuffleServiceFactory(
                         taskManagerServicesConfiguration.getConfiguration())
+                //todo 创建netty shuffle Environment
                 .createShuffleEnvironment(shuffleEnvironmentContext);
     }
 

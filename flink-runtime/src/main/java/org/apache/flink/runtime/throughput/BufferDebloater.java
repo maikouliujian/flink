@@ -78,7 +78,7 @@ public class BufferDebloater {
         // todo 当前实际buffer使用量
         int actualBuffersInUse = Math.max(1, buffersInUse);
         // todo 计算期待的buffer大小，计算公式为：
-        // 当前吞吐量 x buffer数据被全部消费的期望等待时间（taskmanager.network.memory.buffer-debloat.target）
+        // todo 当前吞吐量 x buffer数据被全部消费的期望等待时间（taskmanager.network.memory.buffer-debloat.target）
         long desiredTotalBufferSizeInBytes =
                 (currentThroughput * targetTotalBufferSize) / MILLIS_IN_SECOND;
 

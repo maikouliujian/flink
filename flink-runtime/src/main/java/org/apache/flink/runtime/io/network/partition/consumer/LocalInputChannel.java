@@ -66,6 +66,7 @@ public class LocalInputChannel extends InputChannel implements BufferAvailabilit
     private final TaskEventPublisher taskEventPublisher;
 
     /** The consumed subpartition. */
+    //todo 上游的ResultSubpartitionView，当前LocalInputChannel读取数据的地方
     @Nullable private volatile ResultSubpartitionView subpartitionView;
 
     private volatile boolean isReleased;

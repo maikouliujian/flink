@@ -154,7 +154,7 @@ public class NettyShuffleServiceFactory
                             .map(File::getAbsolutePath)
                             .collect(Collectors.joining("\n\t")));
         }
-
+        //todo 创建NetworkBufferPool
         NetworkBufferPool networkBufferPool =
                 new NetworkBufferPool(
                         config.numNetworkBuffers(),
@@ -181,7 +181,7 @@ public class NettyShuffleServiceFactory
                         new ExecutorThreadFactory("blocking-shuffle-io"));
 
         registerShuffleMetrics(metricGroup, networkBufferPool);
-
+        //todo ResultPartition 持有 networkBufferPool
         ResultPartitionFactory resultPartitionFactory =
                 new ResultPartitionFactory(
                         resultPartitionManager,
@@ -199,7 +199,7 @@ public class NettyShuffleServiceFactory
                         config.sortShuffleMinBuffers(),
                         config.sortShuffleMinParallelism(),
                         config.isSSLEnabled());
-
+        //todo InputGate 持有 networkBufferPool
         SingleInputGateFactory singleInputGateFactory =
                 new SingleInputGateFactory(
                         taskExecutorResourceId,
