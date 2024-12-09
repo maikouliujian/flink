@@ -77,6 +77,7 @@ public class StreamOperatorFactoryUtil {
         }
 
         // TODO: what to do with ProcessingTimeServiceAware?
+        //todo 创建算子
         OP op =
                 operatorFactory.createStreamOperator(
                         new StreamOperatorParameters<>(

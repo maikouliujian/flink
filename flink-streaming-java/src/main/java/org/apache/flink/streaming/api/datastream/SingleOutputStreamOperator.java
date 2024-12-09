@@ -399,6 +399,7 @@ public class SingleOutputStreamOperator<T> extends DataStream<T> {
      * @see org.apache.flink.streaming.api.functions.ProcessFunction.Context#output(OutputTag,
      *     Object)
      */
+    //todo 获取SideOutput的入口：getSideOutput方法的主要作用为DataStream加入一个SideOutputTransformation
     public <X> DataStream<X> getSideOutput(OutputTag<X> sideOutputTag) {
         sideOutputTag = clean(requireNonNull(sideOutputTag));
 
@@ -414,7 +415,7 @@ public class SingleOutputStreamOperator<T> extends DataStream<T> {
         }
 
         requestedSideOutputs.put(sideOutputTag, sideOutputTag.getTypeInfo());
-
+        //todo 生成了一个SideOutputTransformation
         SideOutputTransformation<X> sideOutputTransformation =
                 new SideOutputTransformation<>(this.getTransformation(), sideOutputTag);
         return new DataStream<>(this.getExecutionEnvironment(), sideOutputTransformation);

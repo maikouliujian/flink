@@ -41,7 +41,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  */
 @Internal
 public class StreamTaskSourceInput<T> implements StreamTaskInput<T>, CheckpointableInput {
-
+    //todo 算子
     private final SourceOperator<T, ?> operator;
     private final int inputGateIndex;
     private final AvailabilityHelper isBlockedAvailability = new AvailabilityHelper();

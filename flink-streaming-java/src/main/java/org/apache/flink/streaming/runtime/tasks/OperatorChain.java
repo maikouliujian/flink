@@ -147,24 +147,27 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
     public OperatorChain(
             StreamTask<OUT, OP> containingTask,
             RecordWriterDelegate<SerializationDelegate<StreamRecord<OUT>>> recordWriterDelegate) {
-
+        //todo 创建发送和接收OperatorEvent的Dispatcher
         this.operatorEventDispatcher =
                 new OperatorEventDispatcherImpl(
                         containingTask.getEnvironment().getUserCodeClassLoader().asClassLoader(),
                         containingTask.getEnvironment().getOperatorCoordinatorEventGateway());
-
+        //todo 获取用户代码类加载器
         final ClassLoader userCodeClassloader = containingTask.getUserCodeClassLoader();
+        //todo 获取任务的配置
         final StreamConfig configuration = containingTask.getConfiguration();
-
+        //todo 获取StreamTask的StreamOperator工厂
         StreamOperatorFactory<OUT> operatorFactory =
                 configuration.getStreamOperatorFactory(userCodeClassloader);
 
         // we read the chained configs, and the order of record writer registrations by output name
+        // todo 获取OperatorChain中所有StreamOperator对应的StreamConfig，map的key为vertexID
         Map<Integer, StreamConfig> chainedConfigs =
                 configuration.getTransitiveChainedTaskConfigsWithSelf(userCodeClassloader);
 
         // create the final output stream writers
         // we iterate through all the out edges from this job vertex and create a stream output
+        // todo 按照数据流顺序，获取各个任务的StreamEdge
         List<StreamEdge> outEdgesInOrder = configuration.getOutEdgesInOrder(userCodeClassloader);
         Map<StreamEdge, RecordWriterOutput<?>> streamOutputMap =
                 new HashMap<>(outEdgesInOrder.size());
@@ -178,6 +181,9 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
         // from here on, we need to make sure that the output writers are shut down again on failure
         boolean success = false;
         try {
+            //todo 创建链式输出
+            //todo 用于初始化streamOutputMap变量
+            //todo streamOutputMap保存了每步操作的StreamEdge和output的对应关系
             createChainOutputs(
                     outEdgesInOrder,
                     recordWriterDelegate,
@@ -186,8 +192,12 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                     streamOutputMap);
 
             // we create the chain of operators and grab the collector that leads into the chain
+            //todo 创建包含所有operatorWrapper的集合
             List<StreamOperatorWrapper<?, ?>> allOpWrappers =
                     new ArrayList<>(chainedConfigs.size());
+            //todo 创建mainOperator对应的output
+            // OperatorChain的入口Operator为mainOperator
+            // 这个operator通过ChainingOutput按照数据流向顺序串联了OperatorChain中的所有operator
             this.mainOperatorOutput =
                     createOutputCollector(
                             containingTask,
@@ -199,6 +209,7 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                             containingTask.getMailboxExecutorFactory());
 
             if (operatorFactory != null) {
+                // todo 创建mainOperator和时间服务
                 Tuple2<OP, Optional<ProcessingTimeService>> mainOperatorAndTimeService =
                         StreamOperatorFactoryUtil.createOperator(
                                 operatorFactory,
@@ -208,11 +219,13 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                                 operatorEventDispatcher);
 
                 OP mainOperator = mainOperatorAndTimeService.f0;
+                // todo 设置Watermark监控项
                 mainOperator
                         .getMetricGroup()
                         .gauge(
                                 MetricNames.IO_CURRENT_OUTPUT_WATERMARK,
                                 mainOperatorOutput.getWatermarkGauge());
+                // todo 创建mainOperatorWrapper
                 this.mainOperatorWrapper =
                         createOperatorWrapper(
                                 mainOperator,
@@ -222,15 +235,18 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                                 true);
 
                 // add main operator to end of chain
+                // todo 将mainOperatorWrapper添加到chain的最后
                 allOpWrappers.add(mainOperatorWrapper);
-
+                // todo createOutputCollector方法将各个operator包装到operatorWrapper中
+                // todo 按照数据流相反的顺序加入到allOpWrappers集合
+                // todo 所以，尾部的operatorWrapper就是index为0的元素
                 this.tailOperatorWrapper = allOpWrappers.get(0);
             } else {
                 checkState(allOpWrappers.size() == 0);
                 this.mainOperatorWrapper = null;
                 this.tailOperatorWrapper = null;
             }
-
+            // todo 创建chain数据源
             this.chainedSources =
                     createChainedSources(
                             containingTask,
@@ -240,7 +256,7 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                             allOpWrappers);
 
             this.numOperators = allOpWrappers.size();
-
+            // todo 将所有的StreamOperatorWrapper按照从上游到下游的顺序，形成双向链表
             firstOperatorWrapper = linkOperatorWrappers(allOpWrappers);
 
             success = true;
@@ -371,6 +387,7 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
      * Returns an {@link Iterable} which traverses all operators in forward or reverse topological
      * order.
      */
+    //todo 读取链表上的所有算子
     protected Iterable<StreamOperatorWrapper<?, ?>> getAllOperators(boolean reverse) {
         return reverse
                 ? new StreamOperatorWrapper.ReadIterator(tailOperatorWrapper, true)
@@ -498,13 +515,14 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
     // ------------------------------------------------------------------------
     //  initialization utilities
     // ------------------------------------------------------------------------
-
+    //todo 生成并保存每个StreamEdge和streamOutput的对应关系
     private void createChainOutputs(
             List<StreamEdge> outEdgesInOrder,
             RecordWriterDelegate<SerializationDelegate<StreamRecord<OUT>>> recordWriterDelegate,
             Map<Integer, StreamConfig> chainedConfigs,
             StreamTask<OUT, OP> containingTask,
             Map<StreamEdge, RecordWriterOutput<?>> streamOutputMap) {
+        // todo 遍历已排序的StreamEdge
         for (int i = 0; i < outEdgesInOrder.size(); i++) {
             StreamEdge outEdge = outEdgesInOrder.get(i);
 
@@ -516,6 +534,7 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                             containingTask.getEnvironment());
 
             this.streamOutputs[i] = streamOutput;
+            // todo 保存每个StreamEdge和streamOutput的对应关系
             streamOutputMap.put(outEdge, streamOutput);
         }
     }
@@ -525,6 +544,7 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
             StreamEdge edge,
             StreamConfig upStreamConfig,
             Environment taskEnvironment) {
+        //todo 边上的OutputTag
         OutputTag sideOutputTag = edge.getOutputTag(); // OutputTag, return null if not sideOutput
 
         TypeSerializer outSerializer;
@@ -557,25 +577,28 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
             Map<Integer, StreamConfig> chainedConfigs,
             ClassLoader userCodeClassloader,
             List<StreamOperatorWrapper<?, ?>> allOpWrappers) {
+        // todo 如果所有的configuredInputs都不是SourceInputConfig类型，返回空map
         if (Arrays.stream(configuredInputs)
                 .noneMatch(input -> input instanceof StreamConfig.SourceInputConfig)) {
             return Collections.emptyMap();
         }
+        // todo chained 数据源只适用于多个输入的StreamOperator
         checkState(
                 mainOperatorWrapper.getStreamOperator() instanceof MultipleInputStreamOperator,
                 "Creating chained input is only supported with MultipleInputStreamOperator and MultipleInputStreamTask");
         Map<StreamConfig.SourceInputConfig, ChainedSource> chainedSourceInputs = new HashMap<>();
         MultipleInputStreamOperator<?> multipleInputOperator =
                 (MultipleInputStreamOperator<?>) mainOperatorWrapper.getStreamOperator();
+        // todo 获取它所有的Input
         List<Input> operatorInputs = multipleInputOperator.getInputs();
-
+        // todo 计算InputGate的Index，为所有InputGate的index最大值加1
         int sourceInputGateIndex =
                 Arrays.stream(containingTask.getEnvironment().getAllInputGates())
                                 .mapToInt(IndexedInputGate::getInputGateIndex)
                                 .max()
                                 .orElse(-1)
                         + 1;
-
+        // todo 遍历每个Input
         for (int inputId = 0; inputId < configuredInputs.length; inputId++) {
             if (!(configuredInputs[inputId] instanceof StreamConfig.SourceInputConfig)) {
                 continue;
@@ -583,9 +606,12 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
             StreamConfig.SourceInputConfig sourceInput =
                     (StreamConfig.SourceInputConfig) configuredInputs[inputId];
             int sourceEdgeId = sourceInput.getInputEdge().getSourceId();
+            // todo 根据input edge获取sourceInputConfig
             StreamConfig sourceInputConfig = chainedConfigs.get(sourceEdgeId);
             OutputTag outputTag = sourceInput.getInputEdge().getOutputTag();
-
+            // todo 创建链式的数据源output
+            // todo 目前只支持Object Reuse开启
+            // todo 实际返回的类型为ChainingOutput
             WatermarkGaugeExposingOutput chainedSourceOutput =
                     createChainedSourceOutput(
                             containingTask,
@@ -594,7 +620,8 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                             getFinishedOnRestoreInputOrDefault(operatorInputs.get(inputId)),
                             multipleInputOperator.getMetricGroup(),
                             outputTag);
-
+            // todo 创建数据源operator
+            // createOperator前面分析过，不再赘述
             SourceOperator<?, ?> sourceOperator =
                     (SourceOperator<?, ?>)
                             createOperator(
@@ -612,6 +639,7 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                             this.isTaskDeployedAsFinished()
                                     ? new StreamTaskFinishedOnRestoreSourceInput<>(
                                             sourceOperator, sourceInputGateIndex++, inputId)
+                                    //todo StreamTaskSourceInput
                                     : new StreamTaskSourceInput<>(
                                             sourceOperator, sourceInputGateIndex++, inputId)));
         }
@@ -655,6 +683,9 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                 new ArrayList<>(4);
 
         // create collectors for the network outputs
+        // todo 获取所有非chained的出边，即NetworkOutput
+        // todo 遍历非链式StreamEdge，非链式的StreamEdge输出需要走网络连接
+        // todo 因此生成的Output类型为RecordWriterOutput
         for (StreamEdge outputEdge : operatorConfig.getNonChainedOutputs(userCodeClassloader)) {
             @SuppressWarnings("unchecked")
             RecordWriterOutput<T> output = (RecordWriterOutput<T>) streamOutputs.get(outputEdge);
@@ -663,11 +694,18 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
         }
 
         // Create collectors for the chained outputs
+        // todo 这里会遍历它的所有chained的出边
+        // todo 获取该Operator对应的所有chained StreamEdge
+        // todo 如果这个Operator具有多个chained的下游，这里会获取到多个outEdge
         for (StreamEdge outputEdge : operatorConfig.getChainedOutputs(userCodeClassloader)) {
             int outputId = outputEdge.getTargetId();
             StreamConfig chainedOpConfig = chainedConfigs.get(outputId);
-
+            //todo 例子中创建出的实际类型为RecordWriterOutput
+            // 根据StreamEdge生成streamOutput，为WatermarkGaugeExposingOutput类型
+            // WatermarkGaugeExposingOutput包装了Output和一个监控watermark的仪表盘
+            // 如果存在可以chain的operator，需要递归调用，将下游与上游链接起来
             WatermarkGaugeExposingOutput<StreamRecord<T>> output =
+                    //todo 递归调用
                     createOperatorChain(
                             containingTask,
                             chainedOpConfig,
@@ -677,6 +715,7 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                             allOperatorWrappers,
                             outputEdge.getOutputTag(),
                             mailboxExecutorFactory);
+            // todo 存入allOutputs集合
             allOutputs.add(new Tuple2<>(output, outputEdge));
         }
 
@@ -685,6 +724,7 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
         } else {
             // send to N outputs. Note that this includes the special case
             // of sending to zero outputs
+            //todo 将allOutputs集合转换为数组
             @SuppressWarnings({"unchecked"})
             Output<StreamRecord<T>>[] asArray = new Output[allOutputs.size()];
             for (int i = 0; i < allOutputs.size(); i++) {
@@ -694,7 +734,11 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
             // This is the inverse of creating the normal ChainingOutput.
             // If the chaining output does not copy we need to copy in the broadcast output,
             // otherwise multi-chaining would not work correctly.
+            //todo 将allOutputs传递给CopyingBroadcastingOutputCollector或者BroadcastingOutputCollector
             if (containingTask.getExecutionConfig().isObjectReuseEnabled()) {
+                // todo 在StreamRecord发往下游的时候实际发送的是StreamRecord的浅拷贝
+                // todo 避免使用深拷贝，从而提高性能，但是需要注意如果开启ObjectReuse
+                // todo 避免在下游改变流数据元素的值，否则会出现线程安全问题
                 return closer.register(new CopyingBroadcastingOutputCollector<>(asArray));
             } else {
                 return closer.register(new BroadcastingOutputCollector<>(asArray));
@@ -726,8 +770,8 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                         streamOutputs,
                         allOperatorWrappers,
                         mailboxExecutorFactory);
-
         OneInputStreamOperator<IN, OUT> chainedOperator =
+                //todo
                 createOperator(
                         containingTask,
                         operatorConfig,
@@ -735,7 +779,7 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                         chainedOperatorOutput,
                         allOperatorWrappers,
                         false);
-
+        //todo 创建output
         return wrapOperatorIntoOutput(
                 chainedOperator, containingTask, operatorConfig, userCodeClassloader, outputTag);
     }
@@ -762,6 +806,8 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
                         operatorEventDispatcher);
 
         OP chainedOperator = chainedOperatorAndTimeService.f0;
+        // todo 由于是递归调用，最先执行到这里的是最下游的算子
+        // todo 因此allOperatorWrappers保存的顺序实际上是operator按照数据流向反向排列
         allOperatorWrappers.add(
                 createOperatorWrapper(
                         chainedOperator,
@@ -786,9 +832,13 @@ public abstract class OperatorChain<OUT, OP extends StreamOperator<OUT>>
             OutputTag<IN> outputTag) {
 
         WatermarkGaugeExposingOutput<StreamRecord<IN>> currentOperatorOutput;
+        //todo 如果开启了对象重用，创建ChainingOutput
+        //    具体ChainingOutput相关内容在接下来章节分析
         if (containingTask.getExecutionConfig().isObjectReuseEnabled()) {
             currentOperatorOutput = new ChainingOutput<>(operator, outputTag);
         } else {
+            //todo 否则创建CopyingChainingOutput
+            // 传递StreamRecord时会进行深拷贝
             TypeSerializer<IN> inSerializer =
                     operatorConfig.getTypeSerializerIn1(userCodeClassloader);
             currentOperatorOutput = new CopyingChainingOutput<>(operator, inSerializer, outputTag);

@@ -70,6 +70,7 @@ public class SideOutputTransformationTranslator<OUT>
         final Transformation<?> parentTransformation = parentTransformations.get(0);
         for (int inputId : context.getStreamNodeIds(parentTransformation)) {
             final int virtualId = Transformation.getNewNodeId();
+            //todo 为StreamGraph加入了一个虚拟node，虚拟node并不会引入额外计算
             streamGraph.addVirtualSideOutputNode(inputId, virtualId, transformation.getOutputTag());
             virtualResultIds.add(virtualId);
         }

@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
 
 class ChainingOutput<T> implements WatermarkGaugeExposingOutput<StreamRecord<T>> {
     private static final Logger LOG = LoggerFactory.getLogger(ChainingOutput.class);
-
+    //todo 下游算子的input
     protected final Input<T> input;
     protected final Counter numRecordsIn;
     protected final WatermarkGauge watermarkGauge = new WatermarkGauge();
@@ -76,13 +76,14 @@ class ChainingOutput<T> implements WatermarkGaugeExposingOutput<StreamRecord<T>>
             // we are not responsible for emitting to the main output.
             return;
         }
-
+        //todo 发送数据
         pushToOperator(record);
     }
 
     @Override
     public <X> void collect(OutputTag<X> outputTag, StreamRecord<X> record) {
         if (OutputTag.isResponsibleFor(this.outputTag, outputTag)) {
+            //todo 发送数据
             pushToOperator(record);
         }
     }

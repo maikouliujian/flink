@@ -77,17 +77,23 @@ public class StreamConfig implements Serializable {
 
     private static final String NUMBER_OF_OUTPUTS = "numberOfOutputs";
     private static final String NUMBER_OF_NETWORK_INPUTS = "numberOfNetworkInputs";
+    //todo chain的output
     private static final String CHAINED_OUTPUTS = "chainedOutputs";
+    //todo 生成jobgraph时，会将配置写入
     private static final String CHAINED_TASK_CONFIG = "chainedTaskConfig_";
     private static final String IS_CHAINED_VERTEX = "isChainedSubtask";
+    //todo chain index
     private static final String CHAIN_INDEX = "chainIndex";
     private static final String VERTEX_NAME = "vertexID";
     private static final String ITERATION_ID = "iterationId";
+    //todo 输入
     private static final String INPUTS = "inputs";
     private static final String TYPE_SERIALIZER_OUT_1 = "typeSerializer_out";
     private static final String TYPE_SERIALIZER_SIDEOUT_PREFIX = "typeSerializer_sideout_";
     private static final String ITERATON_WAIT = "iterationWait";
+    //todo 非chain的output
     private static final String NONCHAINED_OUTPUTS = "nonChainedOutputs";
+    //todo 出边顺序
     private static final String EDGES_IN_ORDER = "edgesInOrder";
     private static final String IN_STREAM_EDGES = "inStreamEdges";
     private static final String OPERATOR_NAME = "operatorName";
@@ -129,7 +135,7 @@ public class StreamConfig implements Serializable {
     // ------------------------------------------------------------------------
     //  Config
     // ------------------------------------------------------------------------
-
+    //todo 真正承载配置的类
     private final Configuration config;
 
     public StreamConfig(Configuration config) {

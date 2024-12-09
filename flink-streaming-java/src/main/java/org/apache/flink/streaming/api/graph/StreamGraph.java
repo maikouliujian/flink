@@ -116,6 +116,7 @@ public class StreamGraph implements Pipeline {
     private Map<Integer, StreamNode> streamNodes;
     private Set<Integer> sources;
     private Set<Integer> sinks;
+    //todo <virtualId, new Tuple2<>(originalId, outputTag)>
     private Map<Integer, Tuple2<Integer, OutputTag>> virtualSideOutputNodes;
     private Map<Integer, Tuple3<Integer, StreamPartitioner<?>, StreamExchangeMode>>
             virtualPartitionNodes;
@@ -554,7 +555,7 @@ public class StreamGraph implements Pipeline {
                                 + tag.f1.getId());
             }
         }
-
+        //todo // 加入虚拟node到virtualSideOutputNodes集合
         virtualSideOutputNodes.put(virtualId, new Tuple2<>(originalId, outputTag));
     }
 
