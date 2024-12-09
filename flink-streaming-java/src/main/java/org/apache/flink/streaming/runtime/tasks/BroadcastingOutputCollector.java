@@ -30,7 +30,7 @@ import org.apache.flink.util.XORShiftRandom;
 import java.util.Random;
 
 class BroadcastingOutputCollector<T> implements WatermarkGaugeExposingOutput<StreamRecord<T>> {
-
+    //todo BroadcastingOutputCollector包含了所有的下游output
     protected final Output<StreamRecord<T>>[] outputs;
     private final Random random = new XORShiftRandom();
     private final WatermarkGauge watermarkGauge = new WatermarkGauge();

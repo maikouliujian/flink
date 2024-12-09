@@ -50,7 +50,7 @@ public class RecordWriterOutput<OUT> implements WatermarkGaugeExposingOutput<Str
     private SerializationDelegate<StreamElement> serializationDelegate;
 
     private final boolean supportsUnalignedCheckpoints;
-
+    //todo outputTag，侧输出流才有，否则为null
     private final OutputTag outputTag;
 
     private final WatermarkGauge watermarkGauge = new WatermarkGauge();
@@ -90,9 +90,10 @@ public class RecordWriterOutput<OUT> implements WatermarkGaugeExposingOutput<Str
 
         pushToRecordWriter(record);
     }
-
+    //todo 发送数据
     @Override
     public <X> void collect(OutputTag<X> outputTag, StreamRecord<X> record) {
+        //todo 两个outputtag相等时，才会发送数据
         if (OutputTag.isResponsibleFor(this.outputTag, outputTag)) {
             pushToRecordWriter(record);
         }

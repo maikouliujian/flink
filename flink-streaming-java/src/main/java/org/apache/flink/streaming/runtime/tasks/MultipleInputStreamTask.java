@@ -122,6 +122,7 @@ public class MultipleInputStreamTask<OUT>
                 networkInputLists.add(inputList);
             }
         }
+        //todo 获取InputProcessor
         createInputProcessor(
                 networkInputLists.toArray(new ArrayList[0]),
                 inputs,
@@ -157,7 +158,7 @@ public class MultipleInputStreamTask<OUT>
                         getEnvironment().getMetricGroup().getIOMetricGroup(),
                         checkpointBarrierHandler,
                         configuration);
-
+        //todo
         inputProcessor =
                 StreamMultipleInputProcessorFactory.create(
                         this,

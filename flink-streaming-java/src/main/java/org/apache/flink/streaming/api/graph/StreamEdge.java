@@ -56,6 +56,7 @@ public class StreamEdge implements Serializable {
     /** The type number of the input for co-tasks. */
     private final int typeNumber;
     /** The side-output tag (if any) of this {@link StreamEdge}. */
+    //todo 边上记录的outputTag
     private final OutputTag outputTag;
 
     /** The {@link StreamPartitioner} on this {@link StreamEdge}. */

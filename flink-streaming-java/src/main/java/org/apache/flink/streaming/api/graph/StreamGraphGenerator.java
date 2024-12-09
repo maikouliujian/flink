@@ -197,6 +197,7 @@ public class StreamGraphGenerator {
         tmp.put(LegacySourceTransformation.class, new LegacySourceTransformationTranslator<>());
         tmp.put(UnionTransformation.class, new UnionTransformationTranslator<>());
         tmp.put(PartitionTransformation.class, new PartitionTransformationTranslator<>());
+        //todo SideOutput的翻译器
         tmp.put(SideOutputTransformation.class, new SideOutputTransformationTranslator<>());
         tmp.put(ReduceTransformation.class, new ReduceTransformationTranslator<>());
         tmp.put(

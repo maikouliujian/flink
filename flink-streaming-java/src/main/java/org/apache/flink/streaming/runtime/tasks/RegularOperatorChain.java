@@ -102,6 +102,8 @@ public class RegularOperatorChain<OUT, OP extends StreamOperator<OUT>>
     @Override
     public void initializeStateAndOpenOperators(
             StreamTaskStateInitializer streamTaskStateInitializer) throws Exception {
+        //todo 在StreamTask开始接收数据之前，需要初始化各个operator的状态（state）和
+        // 开启operator（调用各个operator的open方法）。initializeStateAndOpenOperators正是用来完成这个工作的。
         for (StreamOperatorWrapper<?, ?> operatorWrapper : getAllOperators(true)) {
             StreamOperator<?> operator = operatorWrapper.getStreamOperator();
             operator.initializeState(streamTaskStateInitializer);

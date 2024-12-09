@@ -217,6 +217,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
     protected OP mainOperator;
 
     /** The chain of operators executed by this task. */
+    //todo 该task对应的OperatorChain
     protected OperatorChain<OUT, OP> operatorChain;
 
     /** The configuration of this streaming task. */
@@ -689,6 +690,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
                 .ifPresent(restoreId -> latestReportCheckpointId = restoreId);
 
         // task specific initialization
+        //todo 初始化
         init();
 
         // save the work of reloading state, etc, if the task is already canceled
@@ -699,6 +701,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 
         // we need to make sure that any triggers scheduled in open() cannot be
         // executed before all operators are opened
+        //todo restoreGates
         CompletableFuture<Void> allGatesRecoveredFuture = actionExecutor.call(this::restoreGates);
 
         // Run mailbox until all gates will be recovered.
@@ -722,7 +725,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
                 getEnvironment().getTaskStateManager().getSequentialChannelStateReader();
         reader.readOutputData(
                 getEnvironment().getAllWriters(), !configuration.isGraphContainingLoops());
-
+        //todo 初始化
         operatorChain.initializeStateAndOpenOperators(createStreamTaskStateInitializer());
 
         IndexedInputGate[] inputGates = getEnvironment().getAllInputGates();
