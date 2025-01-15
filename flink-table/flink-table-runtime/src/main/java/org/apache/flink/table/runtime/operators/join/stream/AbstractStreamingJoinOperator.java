@@ -156,6 +156,7 @@ public abstract class AbstractStreamingJoinOperator extends AbstractStreamOperat
                 Iterable<Tuple2<RowData, Integer>> records =
                         outerStateView.getRecordsAndNumOfAssociations();
                 for (Tuple2<RowData, Integer> record : records) {
+                    //todo 是否join成功！！！！！！
                     boolean matched =
                             inputIsLeft
                                     ? condition.apply(input, record.f0)
@@ -173,6 +174,7 @@ public abstract class AbstractStreamingJoinOperator extends AbstractStreamOperat
                                     : condition.apply(record, input);
                     if (matched) {
                         // use -1 as the default number of associations
+                        //todo -1，因为是inner join，不需要补充null
                         associations.add(new OuterRecord(record, -1));
                     }
                 }
@@ -221,6 +223,13 @@ public abstract class AbstractStreamingJoinOperator extends AbstractStreamOperat
      */
     protected static final class OuterRecord {
         public final RowData record;
+        /***
+         * todo
+         * todo 如果是left join：
+         * 左表记录的匹配情况：通过 numOfAssociations 判断，若为 0 则补充 null padding row。
+         * 右表记录的特殊处理：右表记录设置 numOfAssociations = -1，简化逻辑处理。
+         * 这种设计避免了每次重新计算关联数，从而优化了连接的效率和结果处理逻辑。
+         */
         public final int numOfAssociations;
 
         private OuterRecord(RowData record, int numOfAssociations) {

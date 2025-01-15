@@ -63,6 +63,7 @@ import static org.apache.flink.table.runtime.util.TimeWindowUtil.isWindowFired;
  *
  * <p>Note: currently, {@link WindowJoinOperator} doesn't support DELETE or UPDATE_BEFORE input row.
  */
+//todo window join
 public abstract class WindowJoinOperator extends TableStreamOperator<RowData>
         implements TwoInputStreamOperator<RowData, RowData, RowData>,
                 Triggerable<RowData, Long>,
@@ -99,8 +100,9 @@ public abstract class WindowJoinOperator extends TableStreamOperator<RowData>
 
     /** This is used for emitting elements with a given timestamp. */
     protected transient TimestampedCollector<RowData> collector;
-
+    //todo 左窗口的数据
     private transient WindowListState<Long> leftWindowState;
+    //todo 右窗口的数据
     private transient WindowListState<Long> rightWindowState;
 
     // ------------------------------------------------------------------------
@@ -155,6 +157,7 @@ public abstract class WindowJoinOperator extends TableStreamOperator<RowData>
                 new ListStateDescriptor<>(LEFT_RECORDS_STATE_NAME, leftSerializer);
         ListState<RowData> leftListState =
                 getOrCreateKeyedState(windowSerializer, leftRecordStateDesc);
+        //todo 左侧window state
         this.leftWindowState =
                 new WindowListState<>((InternalListState<RowData, Long, RowData>) leftListState);
 
@@ -162,6 +165,7 @@ public abstract class WindowJoinOperator extends TableStreamOperator<RowData>
                 new ListStateDescriptor<>(RIGHT_RECORDS_STATE_NAME, rightSerializer);
         ListState<RowData> rightListState =
                 getOrCreateKeyedState(windowSerializer, rightRecordStateDesc);
+        //todo 右侧window state
         this.rightWindowState =
                 new WindowListState<>((InternalListState<RowData, Long, RowData>) rightListState);
 
@@ -215,6 +219,7 @@ public abstract class WindowJoinOperator extends TableStreamOperator<RowData>
             WindowListState<Long> recordState)
             throws Exception {
         RowData inputRow = element.getValue();
+        //todo 窗口结束时间
         long windowEnd = inputRow.getLong(windowEndIndex);
         if (isWindowFired(windowEnd, windowTimerService.currentWatermark(), shiftTimeZone)) {
             // element is late and should be dropped
@@ -238,7 +243,7 @@ public abstract class WindowJoinOperator extends TableStreamOperator<RowData>
         throw new UnsupportedOperationException(
                 "This is a bug and should not happen. Please file an issue.");
     }
-
+    //todo 窗口结束时,定时器触发！！！！！！
     @Override
     public void onEventTime(InternalTimer<RowData, Long> timer) throws Exception {
         setCurrentKey(timer.getKey());
@@ -246,6 +251,7 @@ public abstract class WindowJoinOperator extends TableStreamOperator<RowData>
         // join left records and right records
         List<RowData> leftData = leftWindowState.get(window);
         List<RowData> rightData = rightWindowState.get(window);
+        //todo 两边的数据进行join
         join(leftData, rightData);
         // clear state
         if (leftData != null) {

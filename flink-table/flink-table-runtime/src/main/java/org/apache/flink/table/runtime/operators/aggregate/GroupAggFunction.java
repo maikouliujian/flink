@@ -40,6 +40,16 @@ import static org.apache.flink.table.data.util.RowDataUtil.isRetractMsg;
 import static org.apache.flink.table.runtime.util.StateConfigUtil.createTtlConfig;
 
 /** Aggregate Function used for the groupby (without window) aggregate. */
+
+/***
+ * select
+ *   ord_date,
+ *   count (order_code) as dp_crt_cnt --大盘创建单量
+ * from
+ *   valid_ord_detail
+ * group by
+ *   ord_date;
+ */
 public class GroupAggFunction extends KeyedProcessFunction<RowData, RowData, RowData> {
 
     private static final long serialVersionUID = -4767158666069797704L;

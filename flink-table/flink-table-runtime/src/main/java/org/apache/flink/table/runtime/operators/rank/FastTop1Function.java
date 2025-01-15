@@ -61,6 +61,7 @@ public class FastTop1Function extends AbstractTopNFunction implements Checkpoint
     private final long cacheSize;
 
     // a map state stores list of records
+    //todo 存储key对应的中间数据
     private transient ValueState<RowData> dataState;
 
     // the kvMap stores mapping from partition key to its current top-1 value
@@ -141,7 +142,7 @@ public class FastTop1Function extends AbstractTopNFunction implements Checkpoint
             }
             return;
         }
-
+        //todo 排序key
         RowData curSortKey = sortKeySelector.getKey(input);
         RowData oldSortKey = sortKeySelector.getKey(prevRow);
         int compare = sortKeyComparator.compare(curSortKey, oldSortKey);

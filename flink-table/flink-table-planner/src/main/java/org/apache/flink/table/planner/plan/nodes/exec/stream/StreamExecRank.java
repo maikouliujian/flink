@@ -234,6 +234,16 @@ public class StreamExecRank extends ExecNodeBase<RowData>
                                 outputRankNumber);
                 //todo top1
             } else if (RankUtil.isTop1(rankRange)) {
+                /***
+                 * row_number () over (
+                 *         partition by order_code
+                 *         order by
+                 *           col_1 desc
+                 *       ) as rn
+                 *
+                 *
+                 * where rn = 1
+                 */
                 processFunction =
                         new FastTop1Function(
                                 ttlConfig,

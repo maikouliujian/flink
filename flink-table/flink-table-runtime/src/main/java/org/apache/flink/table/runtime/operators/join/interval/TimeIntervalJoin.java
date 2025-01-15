@@ -151,7 +151,7 @@ abstract class TimeIntervalJoin extends KeyedCoProcessFunction<RowData, RowData,
         joinFunction.setJoinKey(ctx.getCurrentKey());
         joinCollector.setInnerCollector(out);
         updateOperatorTime(ctx);
-
+        //todo 左侧时间
         long timeForLeftRow = getTimeForLeftStream(ctx, leftRow);
         long rightQualifiedLowerBound = timeForLeftRow - rightRelativeSize;
         long rightQualifiedUpperBound = timeForLeftRow + leftRelativeSize;
@@ -167,6 +167,7 @@ abstract class TimeIntervalJoin extends KeyedCoProcessFunction<RowData, RowData,
             // with.
             rightExpirationTime = calExpirationTime(leftOperatorTime, rightRelativeSize);
             // Join the leftRow with rows from the right cache.
+            //todo 右侧的数据
             Iterator<Map.Entry<Long, List<Tuple2<RowData, Boolean>>>> rightIterator =
                     rightCache.iterator();
             while (rightIterator.hasNext()) {
@@ -178,6 +179,7 @@ abstract class TimeIntervalJoin extends KeyedCoProcessFunction<RowData, RowData,
                     boolean entryUpdated = false;
                     for (Tuple2<RowData, Boolean> tuple : rightRows) {
                         joinCollector.reset();
+                        //todo join，并发送数据
                         joinFunction.join(leftRow, tuple.f0, joinCollector);
                         emitted = emitted || joinCollector.isEmitted();
                         if (joinType.isRightOuter()) {

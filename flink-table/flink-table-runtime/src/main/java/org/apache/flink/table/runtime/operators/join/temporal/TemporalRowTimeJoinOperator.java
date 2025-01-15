@@ -200,7 +200,7 @@ public class TemporalRowTimeJoinOperator extends BaseTwoInputStreamOperatorWithS
 
         registerProcessingCleanupTimer();
     }
-
+    //todo 由TimerService.registerEventTimeTimer()来触发，当watermark大于等于注册时间时触发
     @Override
     public void onEventTime(InternalTimer<Object, VoidNamespace> timer) throws Exception {
         registeredTimer.clear();

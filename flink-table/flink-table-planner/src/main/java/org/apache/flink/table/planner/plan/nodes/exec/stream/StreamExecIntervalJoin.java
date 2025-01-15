@@ -173,6 +173,7 @@ public class StreamExecIntervalJoin extends ExecNodeBase<RowData>
                                     joinCondition, returnTypeInfo, joinSpec.getFilterNulls());
 
                     TwoInputTransformation<RowData, RowData, RowData> transform;
+                    //todo eventtime语义
                     if (windowBounds.isEventTime()) {
                         transform =
                                 createRowTimeJoin(
@@ -184,6 +185,7 @@ public class StreamExecIntervalJoin extends ExecNodeBase<RowData>
                                         windowBounds,
                                         config);
                     } else {
+                        //todo processtime语义
                         transform =
                                 createProcTimeJoin(
                                         leftInputTransform,

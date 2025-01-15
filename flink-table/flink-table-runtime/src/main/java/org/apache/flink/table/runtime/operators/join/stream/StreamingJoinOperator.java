@@ -33,14 +33,15 @@ import org.apache.flink.table.runtime.typeutils.InternalTypeInfo;
 import org.apache.flink.types.RowKind;
 
 /** Streaming unbounded Join operator which supports INNER/LEFT/RIGHT/FULL JOIN. */
+//todo regular join
 public class StreamingJoinOperator extends AbstractStreamingJoinOperator {
 
     private static final long serialVersionUID = -376944622236540545L;
 
     // whether left side is outer side, e.g. left is outer but right is not when LEFT OUTER JOIN
-    private final boolean leftIsOuter;
+    private final boolean leftIsOuter;//todo 左边驱动
     // whether right side is outer side, e.g. right is outer but left is not when RIGHT OUTER JOIN
-    private final boolean rightIsOuter;
+    private final boolean rightIsOuter; //todo 右边驱动
 
     private transient JoinedRowData outRow;
     private transient RowData leftNullRow;
@@ -206,9 +207,10 @@ public class StreamingJoinOperator extends AbstractStreamingJoinOperator {
         boolean isAccumulateMsg = RowDataUtil.isAccumulateMsg(input);
         RowKind inputRowKind = input.getRowKind();
         input.setRowKind(RowKind.INSERT); // erase RowKind for later state updating
-
+        //todo join处理
         AssociatedRecords associatedRecords =
                 AssociatedRecords.of(input, inputIsLeft, otherSideStateView, joinCondition);
+        //todo 非回撤
         if (isAccumulateMsg) { // record is accumulate
             if (inputIsOuter) { // input side is outer
                 OuterJoinRecordStateView inputSideOuterStateView =
@@ -239,6 +241,7 @@ public class StreamingJoinOperator extends AbstractStreamingJoinOperator {
                     // send +I[record+other]s
                     outRow.setRowKind(RowKind.INSERT);
                     for (RowData other : associatedRecords.getRecords()) {
+                        //todo 产出数据
                         output(input, other, inputIsLeft);
                     }
                     // state.add(record, other.size)
@@ -276,6 +279,7 @@ public class StreamingJoinOperator extends AbstractStreamingJoinOperator {
             }
         } else { // input record is retract
             // state.retract(record)
+            //todo 回撤
             inputSideStateView.retractRecord(input);
             if (associatedRecords.isEmpty()) { // there is no matched rows on the other side
                 if (inputIsOuter) { // input side is outer

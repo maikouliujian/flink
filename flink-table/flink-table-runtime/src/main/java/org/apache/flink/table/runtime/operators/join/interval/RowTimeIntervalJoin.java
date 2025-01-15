@@ -23,6 +23,7 @@ import org.apache.flink.table.runtime.operators.join.FlinkJoinType;
 import org.apache.flink.table.runtime.typeutils.InternalTypeInfo;
 
 /** The function to execute row(event) time interval stream inner-join. */
+//todo interval join (eventtime 语义)
 public final class RowTimeIntervalJoin extends TimeIntervalJoin {
 
     private static final long serialVersionUID = -2923709329817468698L;
