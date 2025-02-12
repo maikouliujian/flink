@@ -74,7 +74,7 @@ public final class Schema {
     private final List<UnresolvedColumn> columns;
 
     private final List<UnresolvedWatermarkSpec> watermarkSpecs;
-
+    //todo primary key
     private final @Nullable UnresolvedPrimaryKey primaryKey;
 
     private Schema(

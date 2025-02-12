@@ -36,6 +36,7 @@ import java.util.Optional;
  * CatalogTable#getOptions()}. Catalog implementations are encouraged to use {@link
  * ResolvedCatalogTable#toProperties()}.
  */
+//todo flinksql table信息
 @PublicEvolving
 public final class ResolvedCatalogTable
         implements ResolvedCatalogBaseTable<CatalogTable>, CatalogTable {

@@ -105,6 +105,7 @@ public class SqlTableConstraint extends SqlCall {
     }
 
     /** Returns whether the constraint is PRIMARY KEY. */
+    //todo primary key
     public boolean isPrimaryKey() {
         return this.uniqueSpec.getValueAs(SqlUniqueSpec.class) == SqlUniqueSpec.PRIMARY_KEY;
     }

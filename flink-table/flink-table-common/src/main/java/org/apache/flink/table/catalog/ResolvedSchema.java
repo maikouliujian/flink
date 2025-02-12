@@ -159,6 +159,7 @@ public final class ResolvedSchema {
     }
 
     /** Returns the primary key if it has been defined. */
+    //todo 获取主键信息
     public Optional<UniqueConstraint> getPrimaryKey() {
         return Optional.ofNullable(primaryKey);
     }

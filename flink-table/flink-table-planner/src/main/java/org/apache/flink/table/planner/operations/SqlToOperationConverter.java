@@ -1208,7 +1208,7 @@ public class SqlToOperationConverter {
                         catalogManager,
                         compileAndExecutePlan.getOperandList().get(0)));
     }
-
+    //todo
     private void validateTableConstraint(SqlTableConstraint constraint) {
         if (constraint.isUnique()) {
             throw new UnsupportedOperationException("UNIQUE constraint is not supported yet");

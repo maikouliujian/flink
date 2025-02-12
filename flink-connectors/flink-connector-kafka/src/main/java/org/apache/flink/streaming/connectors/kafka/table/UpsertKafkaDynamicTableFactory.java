@@ -134,7 +134,7 @@ public class UpsertKafkaDynamicTableFactory
                 context.getPhysicalRowDataType(),
                 keyDecodingFormat,
                 new DecodingFormatWrapper(valueDecodingFormat),
-                keyValueProjections.f0,
+                keyValueProjections.f0,//todo primary key的pos信息
                 keyValueProjections.f1,
                 keyPrefix,
                 getSourceTopics(tableOptions),

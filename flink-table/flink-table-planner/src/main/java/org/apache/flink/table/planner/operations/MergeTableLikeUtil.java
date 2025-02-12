@@ -210,6 +210,7 @@ class MergeTableLikeUtil {
 
         Map<String, TableColumn> columns = new LinkedHashMap<>();
         Map<String, WatermarkSpec> watermarkSpecs = new HashMap<>();
+        //todo primary key
         UniqueConstraint primaryKey = null;
 
         // Intermediate state

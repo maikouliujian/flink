@@ -77,6 +77,7 @@ public class TableSchema {
     private final List<TableColumn> columns;
 
     private final List<WatermarkSpec> watermarkSpecs;
+    //todo primaryKey
     private final @Nullable UniqueConstraint primaryKey;
 
     private TableSchema(
@@ -307,7 +308,7 @@ public class TableSchema {
     public List<WatermarkSpec> getWatermarkSpecs() {
         return watermarkSpecs;
     }
-
+    //todo !!!!!!
     public Optional<UniqueConstraint> getPrimaryKey() {
         return Optional.ofNullable(primaryKey);
     }
@@ -621,7 +622,7 @@ public class TableSchema {
         private List<TableColumn> columns;
 
         private final List<WatermarkSpec> watermarkSpecs;
-
+        //todo 主键
         private UniqueConstraint primaryKey;
 
         public Builder() {
