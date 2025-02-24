@@ -26,7 +26,7 @@ package org.apache.flink.runtime.state;
  * differently, for example put it into different folders or tables.
  */
 public enum CheckpointedStateScope {
-
+    //todo 应用于全量ckp
     /** Exclusive state belongs exclusively to one specific checkpoint / savepoint. */
     EXCLUSIVE,
 
@@ -37,5 +37,6 @@ public enum CheckpointedStateScope {
      * where only deltas are written, and state from prior checkpoints is referenced in newer
      * checkpoints as well.
      */
+    //todo 应用于增量ckp
     SHARED
 }

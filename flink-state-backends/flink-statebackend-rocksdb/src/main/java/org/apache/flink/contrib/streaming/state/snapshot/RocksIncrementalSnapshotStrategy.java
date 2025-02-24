@@ -106,6 +106,7 @@ public class RocksIncrementalSnapshotStrategy<K>
      * history. Once the checkpoint is confirmed by JM, only the ID paired with {@link
      * PlaceholderStreamStateHandle} can be sent.
      */
+    //todo 记录已经被上传的sst文件
     @Nonnull private final SortedMap<Long, Map<StateHandleID, Long>> uploadedStateIDs;
 
     /** The identifier of the last completed checkpoint. */
@@ -162,7 +163,7 @@ public class RocksIncrementalSnapshotStrategy<K>
     @Override
     public IncrementalRocksDBSnapshotResources syncPrepareResources(long checkpointId)
             throws Exception {
-
+        //todo 状态存放的本地目录（永久或临时）
         final SnapshotDirectory snapshotDirectory = prepareLocalSnapshotDirectory(checkpointId);
         LOG.trace("Local RocksDB checkpoint goes to backup path {}.", snapshotDirectory);
 
@@ -249,7 +250,7 @@ public class RocksIncrementalSnapshotStrategy<K>
 
     @Nonnull
     private SnapshotDirectory prepareLocalSnapshotDirectory(long checkpointId) throws IOException {
-
+        //todo 是否开启本地恢复
         if (localRecoveryConfig.isLocalRecoveryEnabled()) {
             // create a "permanent" snapshot directory for local recovery.
             LocalRecoveryDirectoryProvider directoryProvider =
@@ -330,9 +331,11 @@ public class RocksIncrementalSnapshotStrategy<K>
         // create hard links of living files in the output path
         try (ResourceGuard.Lease ignored = rocksDBResourceGuard.acquireResource();
                 Checkpoint checkpoint = Checkpoint.create(db)) {
+            //todo 对本地目录的数据进行ckp
             checkpoint.createCheckpoint(outputDirectory.getDirectory().toString());
         } catch (Exception ex) {
             try {
+                //todo 删除本立目录
                 outputDirectory.cleanup();
             } catch (IOException cleanupEx) {
                 ex = ExceptionUtils.firstOrSuppressed(cleanupEx, ex);
@@ -357,6 +360,7 @@ public class RocksIncrementalSnapshotStrategy<K>
         @Nonnull private final List<StateMetaInfoSnapshot> stateMetaInfoSnapshots;
 
         /** Local directory for the RocksDB native backup. */
+        //todo 文件先放本地
         @Nonnull private final SnapshotDirectory localBackupDirectory;
 
         /** All sst files that were part of the last previously completed checkpoint. */
@@ -373,6 +377,7 @@ public class RocksIncrementalSnapshotStrategy<K>
                 @Nonnull List<StateMetaInfoSnapshot> stateMetaInfoSnapshots) {
 
             this.checkpointStreamFactory = checkpointStreamFactory;
+            //todo 之前的快照
             this.previousSnapshot = previousSnapshot;
             this.checkpointId = checkpointId;
             this.localBackupDirectory = localBackupDirectory;
@@ -389,8 +394,10 @@ public class RocksIncrementalSnapshotStrategy<K>
             // Handle to the meta data file
             SnapshotResult<StreamStateHandle> metaStateHandle = null;
             // Handles to new sst files since the last completed checkpoint will go here
+            //todo 已经完成的sst文件
             final Map<StateHandleID, StreamStateHandle> sstFiles = new HashMap<>();
             // Handles to the misc files in the current snapshot will go here
+            //todo 当前ckp对应的文件
             final Map<StateHandleID, StreamStateHandle> miscFiles = new HashMap<>();
 
             try {
@@ -402,7 +409,7 @@ public class RocksIncrementalSnapshotStrategy<K>
                 Preconditions.checkNotNull(
                         metaStateHandle.getJobManagerOwnedSnapshot(),
                         "Metadata for job manager was not properly created.");
-
+                //todo 异步上传文件！！！！！！
                 uploadSstFiles(sstFiles, miscFiles, snapshotCloseableRegistry);
                 long checkpointedSize = metaStateHandle.getStateSize();
                 checkpointedSize += getUploadedStateSize(sstFiles.values());
@@ -432,7 +439,7 @@ public class RocksIncrementalSnapshotStrategy<K>
                                     keyGroupRange,
                                     metaStateHandle.getTaskLocalSnapshot(),
                                     sstFiles);
-
+                    //todo 远程和本地的目录
                     snapshotResult =
                             SnapshotResult.withLocalState(
                                     jmIncrementalKeyedStateHandle, localDirKeyedStateHandle);
@@ -494,7 +501,7 @@ public class RocksIncrementalSnapshotStrategy<K>
 
             Map<StateHandleID, Path> sstFilePaths = new HashMap<>();
             Map<StateHandleID, Path> miscFilePaths = new HashMap<>();
-
+            //todo 本地备份文件！！！！！！
             Path[] files = localBackupDirectory.listDirectory();
             if (files != null) {
                 createUploadFilePaths(files, sstFiles, sstFilePaths, miscFilePaths);
@@ -503,6 +510,7 @@ public class RocksIncrementalSnapshotStrategy<K>
                         sharingFilesStrategy == SnapshotType.SharingFilesStrategy.NO_SHARING
                                 ? CheckpointedStateScope.EXCLUSIVE
                                 : CheckpointedStateScope.SHARED;
+                //todo 上传文件
                 sstFiles.putAll(
                         stateUploader.uploadFilesToCheckpointFs(
                                 sstFilePaths,
@@ -651,7 +659,7 @@ public class RocksIncrementalSnapshotStrategy<K>
             new PreviousSnapshot(Collections.emptyMap());
 
     private static class PreviousSnapshot {
-
+        //todo 已经提交的sst文件s
         @Nullable private final Map<StateHandleID, Long> confirmedSstFiles;
 
         private PreviousSnapshot(@Nullable Map<StateHandleID, Long> confirmedSstFiles) {

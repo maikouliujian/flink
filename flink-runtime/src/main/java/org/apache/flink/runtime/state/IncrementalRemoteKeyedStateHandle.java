@@ -327,6 +327,7 @@ public class IncrementalRemoteKeyedStateHandle implements IncrementalKeyedStateH
                     createSharedStateRegistryKeyFromFileName(sharedStateHandle.getKey());
 
             StreamStateHandle reference =
+                    //todo 注册共享状态
                     stateRegistry.registerReference(
                             registryKey, sharedStateHandle.getValue(), checkpointID);
 

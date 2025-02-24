@@ -89,7 +89,7 @@ public class RocksFullSnapshotStrategy<K>
         this.keyGroupCompressionDecorator = keyGroupCompressionDecorator;
         this.registeredPQStates = registeredPQStates;
     }
-
+    //todo 全量快照
     @Override
     public FullSnapshotResources<K> syncPrepareResources(long checkpointId) throws Exception {
         return RocksDBFullSnapshotResources.create(

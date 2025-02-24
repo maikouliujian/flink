@@ -523,7 +523,7 @@ public class SourceOperator<OUT, SplitT extends SourceSplit> extends AbstractStr
         super.notifyCheckpointComplete(checkpointId);
         sourceReader.notifyCheckpointComplete(checkpointId);
     }
-
+    //todo 回滚
     @Override
     public void notifyCheckpointAborted(long checkpointId) throws Exception {
         super.notifyCheckpointAborted(checkpointId);

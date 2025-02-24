@@ -29,6 +29,7 @@ import java.util.Optional;
  * ByteStreamStateHandle}. This class is used in the referenced states of {@link
  * IncrementalRemoteKeyedStateHandle}.
  */
+//todo 占位符句柄，应用于已经上传过的sst文件
 public class PlaceholderStreamStateHandle implements StreamStateHandle {
 
     private static final long serialVersionUID = 1L;

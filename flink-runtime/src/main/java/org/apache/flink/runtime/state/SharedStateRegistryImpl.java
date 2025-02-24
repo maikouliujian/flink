@@ -39,12 +39,14 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 import static org.apache.flink.util.Preconditions.checkState;
 
 /** {@link SharedStateRegistry} implementation. */
+//todo 共享状态实现类
 @Internal
 public class SharedStateRegistryImpl implements SharedStateRegistry {
 
     private static final Logger LOG = LoggerFactory.getLogger(SharedStateRegistryImpl.class);
 
     /** All registered state objects by an artificial key */
+    //todo 存储共享状态
     private final Map<SharedStateRegistryKey, SharedStateEntry> registeredStates;
 
     /** This flag indicates whether or not the registry is open or if close() was called */
@@ -54,6 +56,7 @@ public class SharedStateRegistryImpl implements SharedStateRegistry {
     private final Executor asyncDisposalExecutor;
 
     /** Checkpoint ID below which no state is discarded, inclusive. */
+    //todo 低于该 ID 的 checkpoint 状态不会被删除，确保 NO_CLAIM/LEGACY 模式下状态不会被误删
     private long highestNotClaimedCheckpointID = -1L;
 
     /** Default uses direct executor to delete unreferenced state */
@@ -97,6 +100,7 @@ public class SharedStateRegistryImpl implements SharedStateRegistry {
                 // Note that task (backend) is not required to re-upload state
                 // if the confirmation notification was missing.
                 // However, it's also not required to use exactly the same handle or placeholder
+                //todo 处理重复注册的情况
                 if (!Objects.equals(state, entry.stateHandle)) {
                     if (entry.confirmed || isPlaceholder(state)) {
                         scheduledStateDeletion = state;
@@ -233,7 +237,7 @@ public class SharedStateRegistryImpl implements SharedStateRegistry {
             }
         }
     }
-
+    //todo
     private boolean isPlaceholder(StreamStateHandle stateHandle) {
         return stateHandle instanceof PlaceholderStreamStateHandle;
     }
@@ -296,7 +300,7 @@ public class SharedStateRegistryImpl implements SharedStateRegistry {
                     + lastUsedCheckpointID
                     + '}';
         }
-
+        //todo 更新有引用的ckp
         private void advanceLastUsingCheckpointID(long checkpointID) {
             lastUsedCheckpointID = Math.max(checkpointID, lastUsedCheckpointID);
         }
