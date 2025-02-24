@@ -62,6 +62,7 @@ public final class ResolvedSchema {
 
     private final List<Column> columns;
     private final List<WatermarkSpec> watermarkSpecs;
+    //todo 主键信息
     private final @Nullable UniqueConstraint primaryKey;
 
     public ResolvedSchema(

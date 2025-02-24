@@ -53,6 +53,7 @@ import java.util.concurrent.TimeUnit;
  * tableAPI and also useful for temporal table join plan in SQL. It looks up the result as {@link
  * RowData}.
  */
+//todo lookup for hbase
 @Internal
 public class HBaseRowDataLookupFunction extends TableFunction<RowData> {
 

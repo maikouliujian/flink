@@ -61,6 +61,7 @@ public class HBaseDynamicTableSource extends AbstractHBaseDynamicTableSource {
                         .get(context.getKeys()[0][0])
                         .equals(hbaseSchema.getRowKeyName().get()),
                 "Currently, HBase table only supports lookup by rowkey field.");
+        //todo 同步或者异步
         if (lookupOptions.getLookupAsync()) {
             return AsyncTableFunctionProvider.of(
                     new HBaseRowDataAsyncLookupFunction(
