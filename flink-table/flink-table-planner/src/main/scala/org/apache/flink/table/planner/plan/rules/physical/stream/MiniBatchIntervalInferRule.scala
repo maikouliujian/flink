@@ -45,6 +45,7 @@ import scala.collection.JavaConversions._
  *
  * NOTES: This rule only supports HepPlanner with TOP_DOWN match order.
  */
+//todo minibatch对应的优化器
 class MiniBatchIntervalInferRule
   extends RelOptRule(operand(classOf[StreamPhysicalRel], any()), "MiniBatchIntervalInferRule") {
 
@@ -65,6 +66,7 @@ class MiniBatchIntervalInferRule
     val miniBatchIntervalTrait = rel.getTraitSet.getTrait(MiniBatchIntervalTraitDef.INSTANCE)
     val inputs = getInputs(rel)
     val tableConfig = unwrapTableConfig(rel)
+    //todo 是否开启minibatch
     val miniBatchEnabled = tableConfig.get(ExecutionConfigOptions.TABLE_EXEC_MINIBATCH_ENABLED)
 
     val updatedTrait = rel match {
@@ -92,6 +94,7 @@ class MiniBatchIntervalInferRule
       input =>
         // add mini-batch watermark assigner node.
         if (shouldAppendMiniBatchAssignerNode(input)) {
+          //todo StreamPhysicalMiniBatchAssigner
           new StreamPhysicalMiniBatchAssigner(
             input.getCluster,
             input.getTraitSet,

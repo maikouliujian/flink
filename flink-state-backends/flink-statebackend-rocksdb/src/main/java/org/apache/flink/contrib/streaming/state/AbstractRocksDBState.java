@@ -61,6 +61,7 @@ public abstract class AbstractRocksDBState<K, N, V> implements InternalKvState<K
     protected RocksDBKeyedStateBackend<K> backend;
 
     /** The column family of this particular instance of state. */
+    //todo 一个state实例对应一个columnFamily
     protected ColumnFamilyHandle columnFamily;
 
     protected final V defaultValue;

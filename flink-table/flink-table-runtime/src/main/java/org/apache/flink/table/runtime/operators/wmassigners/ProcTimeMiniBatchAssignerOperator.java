@@ -74,6 +74,7 @@ public class ProcTimeMiniBatchAssignerOperator extends AbstractStreamOperator<Ro
     public void processElement(StreamRecord<RowData> element) throws Exception {
         long now = getProcessingTimeService().getCurrentProcessingTime();
         long currentBatch = now - now % intervalMs;
+        //todo 攒一波发一批watermark
         if (currentBatch > currentWatermark) {
             currentWatermark = currentBatch;
             // emit

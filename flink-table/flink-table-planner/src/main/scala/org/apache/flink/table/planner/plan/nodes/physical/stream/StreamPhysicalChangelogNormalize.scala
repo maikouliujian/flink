@@ -35,7 +35,7 @@ import java.util
  * changelog stream containing duplicate events. This node normalize such stream into a regular
  * changelog stream that contains INSERT/UPDATE_BEFORE/UPDATE_AFTER/DELETE records without
  * duplication.
- * //todo changelog
+ * //todo changelog 规范化
  */
 class StreamPhysicalChangelogNormalize(
     cluster: RelOptCluster,

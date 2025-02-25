@@ -454,6 +454,7 @@ object FlinkStreamRuleSets {
   )
 
   /** RuleSet related to mini-batch. */
+    //todo minibatch优化器
   val MINI_BATCH_RULES: RuleSet = RuleSets.ofList(
     // mini-batch interval infer rule
     MiniBatchIntervalInferRule.INSTANCE

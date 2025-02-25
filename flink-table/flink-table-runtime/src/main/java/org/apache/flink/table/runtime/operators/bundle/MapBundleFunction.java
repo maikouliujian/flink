@@ -51,11 +51,13 @@ public abstract class MapBundleFunction<K, V, IN, OUT> implements Function {
      * @param value the existing bundle value, maybe null
      * @param input the given input, not null
      */
+    //todo 添加元素到map中
     public abstract V addInput(@Nullable V value, IN input) throws Exception;
 
     /**
      * Called when a bundle is finished. Transform a bundle to zero, one, or more output elements.
      */
+    //todo 处理map中的元素
     public abstract void finishBundle(Map<K, V> buffer, Collector<OUT> out) throws Exception;
 
     public void close() throws Exception {}

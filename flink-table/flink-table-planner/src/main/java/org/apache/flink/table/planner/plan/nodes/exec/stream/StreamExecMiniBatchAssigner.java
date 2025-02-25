@@ -110,6 +110,7 @@ public class StreamExecMiniBatchAssigner extends ExecNodeBase<RowData>
                 (Transformation<RowData>) getInputEdges().get(0).translateToPlan(planner);
 
         final OneInputStreamOperator<RowData, RowData> operator;
+        //todo 设置minibatch assigner
         if (miniBatchInterval.getMode() == MiniBatchMode.ProcTime) {
             operator = new ProcTimeMiniBatchAssignerOperator(miniBatchInterval.getInterval());
         } else if (miniBatchInterval.getMode() == MiniBatchMode.RowTime) {

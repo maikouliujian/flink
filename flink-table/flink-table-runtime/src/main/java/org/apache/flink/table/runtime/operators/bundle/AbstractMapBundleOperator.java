@@ -56,12 +56,15 @@ public abstract class AbstractMapBundleOperator<K, V, IN, OUT> extends AbstractS
     private static final long serialVersionUID = 5081841938324118594L;
 
     /** The map in heap to store elements. */
+    //todo 通过一个map维护一批数据，一个map中key可能对应一个list
     private transient Map<K, V> bundle;
 
     /** The trigger that determines how many elements should be put into a bundle. */
+    //todo 确定访问状态的触发器：CountBundleTrigger
     private final BundleTrigger<IN> bundleTrigger;
 
     /** The function used to process when receiving element. */
+    //todo minibatch function
     private final MapBundleFunction<K, V, IN, OUT> function;
 
     /** Output for stream records. */
@@ -117,22 +120,26 @@ public abstract class AbstractMapBundleOperator<K, V, IN, OUT> extends AbstractS
         final V bundleValue = bundle.get(bundleKey);
 
         // get a new value after adding this element to bundle
+        //todo 将input添加到bundleValue中
         final V newBundleValue = function.addInput(bundleValue, input);
 
         // update to map bundle
+        //todo 更新map
         bundle.put(bundleKey, newBundleValue);
 
         numOfElements++;
+        //todo 触发器记录元素个数
         bundleTrigger.onElement(input);
     }
 
     /** Get the key for current processing element, which will be used as the map bundle's key. */
     protected abstract K getKey(final IN input) throws Exception;
-
+    //todo 当bundle中元素个数大于等于table.exec.mini-batch.size时触发
     @Override
     public void finishBundle() throws Exception {
         if (bundle != null && !bundle.isEmpty()) {
             numOfElements = 0;
+            //todo 处理bundle中的数据
             function.finishBundle(bundle, collector);
             bundle.clear();
         }

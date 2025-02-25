@@ -171,6 +171,7 @@ public class MiniBatchGroupAggFunction
             // step 1: get the accumulator for the current key
 
             // set current key to access state under the key
+            //todo 设置访问state的key
             ctx.setCurrentKey(currentKey);
             RowData acc = accState.value();
             if (acc == null) {
@@ -198,7 +199,7 @@ public class MiniBatchGroupAggFunction
 
             // get previous aggregate result
             RowData prevAggValue = function.getValue();
-
+            //todo 处理一批的数据
             for (RowData input : inputRows) {
                 if (isAccumulateMsg(input)) {
                     function.accumulate(input);

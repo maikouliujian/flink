@@ -209,6 +209,7 @@ public class StreamExecGroupAggregate extends StreamExecAggregateBase {
                 config.get(ExecutionConfigOptions.TABLE_EXEC_MINIBATCH_ENABLED);
 
         final OneInputStreamOperator<RowData, RowData> operator;
+        //todo 开启minibatch
         if (isMiniBatchEnabled) {
             MiniBatchGroupAggFunction aggFunction =
                     new MiniBatchGroupAggFunction(
