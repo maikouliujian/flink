@@ -69,7 +69,7 @@ public class SinkUpsertMaterializer extends TableStreamOperator<RowData>
     private final StateTtlConfig ttlConfig;
     private final TypeSerializer<RowData> serializer;
     private final GeneratedRecordEqualiser generatedEqualiser;
-
+    //todo 判断两行数据是否相等
     private transient RecordEqualiser equaliser;
     // Buffer of emitted insertions on which deletions will be applied first.
     // The row kind might be +I or +U and will be ignored when applying the deletion.

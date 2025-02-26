@@ -397,6 +397,7 @@ public abstract class CommonExecSink extends ExecNodeBase<Object>
         GeneratedRecordEqualiser equaliser =
                 new EqualiserCodeGenerator(physicalRowType)
                         .generateRecordEqualiser("SinkMaterializeEqualiser");
+        //todo 新建SinkUpsertMaterializer
         SinkUpsertMaterializer operator =
                 new SinkUpsertMaterializer(
                         StateConfigUtil.createTtlConfig(
