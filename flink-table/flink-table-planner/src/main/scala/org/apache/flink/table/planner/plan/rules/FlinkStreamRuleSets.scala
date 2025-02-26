@@ -422,6 +422,7 @@ object FlinkStreamRuleSets {
     StreamPhysicalGroupWindowTableAggregateRule.INSTANCE,
     StreamPhysicalPythonGroupWindowAggregateRule.INSTANCE,
     // window TVFs
+    //todo window tvf相关的
     StreamPhysicalWindowTableFunctionRule.INSTANCE,
     StreamPhysicalWindowAggregateRule.INSTANCE,
     PullUpWindowTableFunctionIntoWindowAggregateRule.INSTANCE,

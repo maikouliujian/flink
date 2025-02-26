@@ -99,7 +99,7 @@ public abstract class StreamExecWindowAggregateBase extends StreamExecAggregateB
             throw new UnsupportedOperationException(windowingStrategy + " is not supported yet.");
         }
     }
-
+    //todo SliceAssigner
     protected SliceAssigner createSliceAssigner(
             WindowSpec windowSpec, int timeAttributeIndex, ZoneId shiftTimeZone) {
         if (windowSpec instanceof TumblingWindowSpec) {

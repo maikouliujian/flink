@@ -76,6 +76,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  * other is from the legacy GROUP WINDOW FUNCTION syntax. In the long future, {@link
  * StreamExecGroupWindowAggregate} will be dropped.
  */
+//todo tvf聚合算子
 @ExecNodeMetadata(
         name = "stream-exec-window-aggregate",
         version = 1,
@@ -159,6 +160,7 @@ public class StreamExecWindowAggregate extends StreamExecWindowAggregateBase {
                 TimeWindowUtil.getShiftTimeZone(
                         windowing.getTimeAttributeType(),
                         TableConfigUtils.getLocalTimeZone(config));
+        //todo 1、切片器
         final SliceAssigner sliceAssigner = createSliceAssigner(windowing, shiftTimeZone);
 
         // Hopping window requires additional COUNT(*) to determine whether to register next timer
@@ -170,7 +172,7 @@ public class StreamExecWindowAggregate extends StreamExecWindowAggregateBase {
                         JavaScalaConversionUtil.toScala(Arrays.asList(aggCalls)),
                         windowing.getWindow(),
                         true); // isStateBackendDataViews
-
+        //todo 2、聚合函数
         final GeneratedNamespaceAggsHandleFunction<Long> generatedAggsHandler =
                 createAggsHandler(
                         sliceAssigner,
@@ -183,7 +185,7 @@ public class StreamExecWindowAggregate extends StreamExecWindowAggregateBase {
         final RowDataKeySelector selector =
                 KeySelectorUtil.getRowDataSelector(grouping, InternalTypeInfo.of(inputRowType));
         final LogicalType[] accTypes = convertToLogicalTypes(aggInfoList.getAccTypes());
-
+        //todo 3、核心算子
         final OneInputStreamOperator<RowData, RowData> windowOperator =
                 SlicingWindowAggOperatorBuilder.builder()
                         .inputSerializer(new RowDataSerializer(inputRowType))

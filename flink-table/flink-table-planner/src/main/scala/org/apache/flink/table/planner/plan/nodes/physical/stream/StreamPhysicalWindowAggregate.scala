@@ -104,6 +104,7 @@ class StreamPhysicalWindowAggregate(
 
   override def translateToExecNode(): ExecNode[_] = {
     checkEmitConfiguration(unwrapTableConfig(this))
+    //todo window 聚合算子
     new StreamExecWindowAggregate(
       unwrapTableConfig(this),
       grouping,

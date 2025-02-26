@@ -62,6 +62,7 @@ import static org.apache.flink.table.types.logical.utils.LogicalTypeChecks.canBe
  * org.apache.calcite.sql.SqlWindowTableFunction}, but support return additional {@code window_time}
  * time attribute column which should keep the same type with original time attribute.
  */
+//todo flinksql tvf基类
 public class SqlWindowTableFunction extends SqlFunction implements SqlTableFunction {
 
     /** The data source which the table function computes with. */

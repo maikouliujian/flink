@@ -84,7 +84,7 @@ public final class SliceSharedWindowAggProcessor extends AbstractWindowAggProces
             }
         }
     }
-
+    //todo 合并windowstate中的数据
     @Override
     public void merge(@Nullable Long mergeResult, Iterable<Long> toBeMerged) throws Exception {
         // get base accumulator
@@ -105,6 +105,7 @@ public final class SliceSharedWindowAggProcessor extends AbstractWindowAggProces
 
         // merge slice accumulators
         for (Long slice : toBeMerged) {
+            //todo 将不同slice中状态数据进行合并！！！！！！
             RowData sliceAcc = windowState.value(slice);
             if (sliceAcc != null) {
                 aggregator.merge(slice, sliceAcc);

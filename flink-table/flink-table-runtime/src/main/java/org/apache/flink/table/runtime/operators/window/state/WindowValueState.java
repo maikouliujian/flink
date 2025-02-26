@@ -40,6 +40,7 @@ public final class WindowValueState<W> implements WindowState<W> {
 
     /** Returns the current value for the state under current key and the given window. */
     public RowData value(W window) throws IOException {
+        //todo windowstate需要设置namespace
         windowState.setCurrentNamespace(window);
         return windowState.value();
     }

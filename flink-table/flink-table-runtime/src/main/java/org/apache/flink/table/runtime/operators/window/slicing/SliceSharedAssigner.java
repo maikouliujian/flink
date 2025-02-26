@@ -41,6 +41,7 @@ public interface SliceSharedAssigner extends SliceAssigner {
      * @param sliceEnd the triggered slice, identified by end timestamp
      * @param callback a callback that can be invoked to signal which slices should be merged.
      */
+    //todo // 合并slice。sliceEnd为触发合并操作的slice，callback为合并slice的操作
     void mergeSlices(long sliceEnd, MergeCallback callback) throws Exception;
 
     /**
@@ -59,6 +60,9 @@ public interface SliceSharedAssigner extends SliceAssigner {
      * @param isWindowEmpty a supplier that can be invoked to get whether the triggered window is
      *     empty (i.e. no records in the window).
      */
+    //todo // 返回下一个需要触发计算的window
+    //    // windowEnd为当前触发计算的window的结束时间戳
+    //    // isWindowEmpty为触发计算的window内是否有数据，是一个supplier类型，在需要计算的时候再返回结果
     Optional<Long> nextTriggerWindow(long windowEnd, Supplier<Boolean> isWindowEmpty);
 
     // ------------------------------------------------------------------------
@@ -67,6 +71,7 @@ public interface SliceSharedAssigner extends SliceAssigner {
      * Callback to be used in {@link #mergeSlices(long, MergeCallback)} for specifying which slices
      * should be merged.
      */
+    //todo // 合并slice的回调函数，确定哪些slice需要合并，执行合并操作
     interface MergeCallback {
 
         /**
@@ -76,6 +81,8 @@ public interface SliceSharedAssigner extends SliceAssigner {
          *     namespace.
          * @param toBeMerged The list of slices that should be merged into one slice.
          */
+        //todo         // mergeResult 合并后的slice（结束时间戳表示）
+        //        // toBeMerged 需要合并的slice（同样是结束时间戳表示）
         void merge(@Nullable Long mergeResult, Iterable<Long> toBeMerged) throws Exception;
     }
 }

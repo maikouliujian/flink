@@ -139,9 +139,11 @@ public final class SliceAssigners {
         public TumblingSliceAssigner withOffset(Duration offset) {
             return new TumblingSliceAssigner(rowtimeIndex, shiftTimeZone, size, offset.toMillis());
         }
-
+        //todo 窗口大小（时间跨度）
         private final long size;
+        //todo 窗口起始时间偏移量
         private final long offset;
+        //todo 用来保存需要清除数据（过期）的slice的end
         private final ReusableListIterable reuseExpiredList = new ReusableListIterable();
 
         private TumblingSliceAssigner(
@@ -163,27 +165,35 @@ public final class SliceAssigners {
 
         @Override
         public long assignSliceEnd(long timestamp) {
+            //todo // 获取window的开始时间
             long start = TimeWindow.getWindowStartWithOffset(timestamp, offset, size);
+            //todo / 开始时间+窗口大小即window的结束时间
+            //        // slice不共享，window即slice
             return start + size;
         }
 
         @Override
         public long getLastWindowEnd(long sliceEnd) {
+            //todo // 对于Tumbling Window，每个slice对应着一个window，因此sliceEnd就是windowEnd
             return sliceEnd;
         }
 
         public long getWindowStart(long windowEnd) {
+            //todo // 结束 - 大小 = 开始
             return windowEnd - size;
         }
 
         @Override
         public Iterable<Long> expiredSlices(long windowEnd) {
+            //todo // 清空reuseExpiredList，只加入windowEnd
+            //        // 每次都过期当前window对应的slice，因为Tumbling window的slice不共享
             reuseExpiredList.reset(windowEnd);
             return reuseExpiredList;
         }
 
         @Override
         public long getSliceEndInterval() {
+            //todo slice间隔时间为window的size
             return size;
         }
     }
@@ -224,7 +234,9 @@ public final class SliceAssigners {
             this.size = size;
             this.slide = slide;
             this.offset = offset;
+            //todo // slice大小为window size和滑动距离的最大公约数
             this.sliceSize = ArithmeticUtils.gcd(size, slide);
+            //todo 一个window可以切分的切片个数
             this.numSlicesPerWindow = MathUtils.checkedDownCast(size / sliceSize);
         }
 
@@ -278,6 +290,8 @@ public final class SliceAssigners {
     }
 
     /** The {@link SliceAssigner} for cumulative windows. */
+    //todo 用于Cumulaive window。Cumulative window有一个最大长度maxSize，超过这个长度之后这一批数据的累计统计结束，开始新一批的统计。
+    // 还有一个步进step，即在同一批数据累计过程中，每过多久输出一次中间结果。maxSize必须是step的整数倍。所以说Cumulaive window每个step划分为一个slice。Slice需要共享。
     public static final class CumulativeSliceAssigner extends AbstractSliceAssigner
             implements SliceSharedAssigner {
         private static final long serialVersionUID = 1L;
@@ -287,11 +301,14 @@ public final class SliceAssigners {
             return new CumulativeSliceAssigner(
                     rowtimeIndex, shiftTimeZone, maxSize, step, offset.toMillis());
         }
-
+        //todo // window的最大长度
         private final long maxSize;
+        // todo 每隔多久输出一次累计值
         private final long step;
         private final long offset;
+        // todo 记录需要合并的slice
         private final ReusableListIterable reuseToBeMergedList = new ReusableListIterable();
+        //todo // 记录需要过期的slice
         private final ReusableListIterable reuseExpiredList = new ReusableListIterable();
 
         protected CumulativeSliceAssigner(
@@ -317,6 +334,9 @@ public final class SliceAssigners {
 
         @Override
         public long assignSliceEnd(long timestamp) {
+            //todo 计算window的开始时间
+            // 注意这里头传入的windowSize实际上是step而不是maxSize。这里将每个slice作为一个window来计算window start
+            // 因此，实际上计算出来的是slice start
             long start = TimeWindow.getWindowStartWithOffset(timestamp, offset, step);
             return start + step;
         }
@@ -334,18 +354,25 @@ public final class SliceAssigners {
 
         @Override
         public Iterable<Long> expiredSlices(long windowEnd) {
+            //todo // 获取window开始时间
             long windowStart = getWindowStart(windowEnd);
+            //todo // 获取第一个slice结束时间
             long firstSliceEnd = windowStart + step;
+            //todo // 获取属于这个窗口的最后一个slice的结束时间
             long lastSliceEnd = windowStart + maxSize;
             if (windowEnd == firstSliceEnd) {
                 // we share state in the first slice, skip cleanup for the first slice
+                //todo // 如果是第一个slice，不清除任何slice
                 reuseExpiredList.clear();
             } else if (windowEnd == lastSliceEnd) {
                 // when this is the last slice,
                 // we need to cleanup the shared state (i.e. first slice) and the current slice
+                //todo // 如果到达了window最后的slice，需要清除第一个slice和当前的slice
+                //     // 为什么不用清除所有的slice，是因为下面mergeSlices方法将后面slice的计算结果合并到了第一个slice中
                 reuseExpiredList.reset(windowEnd, firstSliceEnd);
             } else {
                 // clean up current slice
+                //todo // 其他情况，清除当前的slice即可
                 reuseExpiredList.reset(windowEnd);
             }
             return reuseExpiredList;
@@ -358,20 +385,27 @@ public final class SliceAssigners {
 
         @Override
         public void mergeSlices(long sliceEnd, MergeCallback callback) throws Exception {
+            //todo // 该方法将sliceEnd对应的slice内容合并到window第一个slice中
+            //        // 获取window开始时间
             long windowStart = getWindowStart(sliceEnd);
+            //todo // 第一个slice的结束时间
             long firstSliceEnd = windowStart + step;
             if (sliceEnd == firstSliceEnd) {
                 // if this is the first slice, there is nothing to merge
+                //todo // 如果相等，说明这是window中的第一个slice，不需要合并
                 reuseToBeMergedList.clear();
             } else {
                 // otherwise, merge the current slice state into the first slice state
+                //todo // 否则，返回当前slice
                 reuseToBeMergedList.reset(sliceEnd);
             }
+            //todo // 将当前slice合并到第一个slice中
             callback.merge(firstSliceEnd, reuseToBeMergedList);
         }
 
         @Override
         public Optional<Long> nextTriggerWindow(long windowEnd, Supplier<Boolean> isWindowEmpty) {
+            //todo // 下一个window的结束时间为这个window的结束时间+步长
             long nextWindowEnd = windowEnd + step;
             long maxWindowEnd = getWindowStart(windowEnd) + maxSize;
             if (nextWindowEnd > maxWindowEnd) {
@@ -536,9 +570,11 @@ public final class SliceAssigners {
     /** A base implementation for {@link SliceAssigner}. */
     private abstract static class AbstractSliceAssigner implements SliceAssigner {
         private static final long serialVersionUID = 1L;
-
+        //todo // rowtime字段位于RowData的第几列
         protected final int rowtimeIndex;
+        //todo // 是否使用event time
         protected final boolean isEventTime;
+        //todo // 时区ID
         protected final ZoneId shiftTimeZone;
 
         protected AbstractSliceAssigner(int rowtimeIndex, ZoneId shiftTimeZone) {
@@ -546,11 +582,13 @@ public final class SliceAssigners {
             this.shiftTimeZone = shiftTimeZone;
             this.isEventTime = rowtimeIndex >= 0;
         }
-
+        //todo // 引出一个新的抽象方法。传入的参数为数据对应的timestamp
+        //    // 详细请见下面的方法分析
         public abstract long assignSliceEnd(long timestamp);
 
         @Override
         public final long assignSliceEnd(RowData element, ClockService clock) {
+            //todo 元素对应的时间戳
             final long timestamp;
             if (rowtimeIndex >= 0) {
                 // Precision for row timestamp is always 3
@@ -560,6 +598,7 @@ public final class SliceAssigners {
                 // in processing time mode
                 timestamp = toUtcTimestampMills(clock.currentProcessingTime(), shiftTimeZone);
             }
+            //todo 分配slice
             return assignSliceEnd(timestamp);
         }
 

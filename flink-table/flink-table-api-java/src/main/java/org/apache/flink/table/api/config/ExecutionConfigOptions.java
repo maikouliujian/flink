@@ -75,7 +75,7 @@ public class ExecutionConfigOptions {
                                     + "tasks to advance their watermarks without the need to wait for "
                                     + "watermarks from this source while it is idle. "
                                     + "Default value is 0, which means detecting source idleness is not enabled.");
-
+    //todo
     @Documentation.TableOption(execMode = Documentation.ExecMode.STREAMING)
     public static final ConfigOption<Boolean> TABLE_EXEC_SOURCE_CDC_EVENTS_DUPLICATE =
             key("table.exec.source.cdc-events-duplicate")

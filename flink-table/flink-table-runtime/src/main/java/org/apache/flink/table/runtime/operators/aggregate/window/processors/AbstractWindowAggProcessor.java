@@ -72,7 +72,7 @@ public abstract class AbstractWindowAggProcessor implements SlicingWindowProcess
     protected transient WindowTimerService<Long> windowTimerService;
 
     protected transient NamespaceAggsHandleFunction<Long> aggregator;
-
+    //todo 存储window中的元素
     protected transient WindowBuffer windowBuffer;
 
     /** state schema: [key, window_end, accumulator]. */
